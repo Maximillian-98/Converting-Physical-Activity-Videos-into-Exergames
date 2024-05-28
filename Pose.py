@@ -1,8 +1,11 @@
 import cv2
 import mediapipe as mp
+import numpy as np
 
 class PoselandmarkdetectionVIDEO:
-    def __init__(self):
+    def __init__(self, model, video):
+        self.model = model
+        self.video = video
         BaseOptions = mp.tasks.BaseOptions
         PoseLandmarker = mp.tasks.vision.PoseLandmarker
         PoseLandmarkerOptions = mp.tasks.vision.PoseLandmarkerOptions
