@@ -1,1 +1,2 @@
-import numpy
+import mediapipe as mp
+
