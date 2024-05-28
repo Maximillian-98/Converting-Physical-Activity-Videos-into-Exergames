@@ -3,9 +3,10 @@ import mediapipe as mp
 import numpy as np
 
 class PoselandmarkdetectionVIDEO:
-    def __init__(self, model, video):
-        self.model = model
-        self.video = video
+    def __init__(self, model_path, video_path):
+        self.model_path = model_path
+        self.video_path = video_path
+
         BaseOptions = mp.tasks.BaseOptions
         PoseLandmarker = mp.tasks.vision.PoseLandmarker
         PoseLandmarkerOptions = mp.tasks.vision.PoseLandmarkerOptions
@@ -17,6 +18,14 @@ class PoselandmarkdetectionVIDEO:
             running_mode=VisionRunningMode.VIDEO)
         
         self.landmarker = PoseLandmarker.create_from_options(options)
+
+# Initialise video capture
+        self.cap = cv2.VideoCapture(video_path)
+        if not self.cap.isOpened():
+            raise ValueError("Error opening video file")
+        
+# Video Properties
+        self.fps = self.cap.get(cv2.CAP_PROP_FPS) #Used for timestamping each frame
 
 # The __enter__ method returns the landmarker instance, allowing the class to be used with a with statement.
     def __enter__(self):
