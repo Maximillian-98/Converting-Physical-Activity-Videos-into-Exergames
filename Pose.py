@@ -20,7 +20,7 @@ class PoselandmarkdetectionVIDEO:
         self.landmarker = PoseLandmarker.create_from_options(options)
 
 # Initialise video capture
-        self.cap = cv2.VideoCapture(video_path)
+        self.cap = cv2.VideoCapture(self.video_path)
         if not self.cap.isOpened(): #Checks if it opens properly
             raise ValueError("Error opening video file")
         
