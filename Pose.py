@@ -40,21 +40,22 @@ class PoselandmarkdetectionVIDEO:
         frame_index = 0
         success, frame = self.cap.read()
         while success:
+            # Recolor image to RGB, openCV is in BGR
             rgb_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+
+            # Get image timestamp from frame
             mp_image = mp.Image(image_format=mp.ImageFormat.SRGB, data=rgb_frame)
             timestamp = int((frame_index / self.fps) * 1000)
+
+            # Detect pose landmarks from image
             pose_landmarks = self.landmarker.detect_for_video(mp_image, timestamp)
-            
-            # Add here the landmarker stuff to output the object
-            results = pose.process(mp_image)
-            print(pose_landmarks)
 
             # Apply visual landmarks to video
             # Currently this uses a premade utility from the mp library
-            mp_drawing.draw_landmarks(mp_image, results.pose_landmarks, mp_pose.POSE_CONNECTIONS)
+            mp_drawing.draw_landmarks(mp_image, pose_landmarks, mp_pose.POSE_CONNECTIONS)
             
             # Shows the video running
-            cv2.imshow('Video_feed', frame)
+            cv2.imshow('Video_feed', mp_image)
             
             # Read the next frame
             success, frame = self.cap.read()
