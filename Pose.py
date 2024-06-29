@@ -53,4 +53,10 @@ class PoselandmarkdetectionVIDEO:
         self.cap.release()
 
 
+model_path = 'C:\\Users\\max\\Documents\\Bath Uni Dissertation\\Landmarkers\\pose_landmarker_full.task'
+video_path = 'C:\\Users\\max\\Documents\\Bath Uni Dissertation\\Exercise\\VideosPushupsTop.mp4'
+
+with PoselandmarkdetectionVIDEO(model_path, video_path) as video_landmarker:
+    video_landmarker.process_video()
+
 # Need to finish, add poselanmarkerresult to get the returned object 
