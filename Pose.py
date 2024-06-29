@@ -81,8 +81,8 @@ class PoselandmarkdetectionVIDEO:
         self.cap.release()
 
 # These need to be moved so that they are options in the UI
-model_path = r'C:\Users\max\Documents\Bath Uni Dissertation\Landmarkers\pose_landmarker_lite.task'
-video_path = 'C:\\Users\\max\\Documents\\Bath Uni Dissertation\\Exercise Videos\\PushupsTop.mp4'
+model_path = r'C:\Users\max\Documents\GitHub\Converting-Physical-Activity-Videos-into-Exergames\Landmarkers\pose_landmarker_lite.task'
+video_path = r'C:\Users\max\Documents\GitHub\Converting-Physical-Activity-Videos-into-Exergames\Exercise Videos\PushupsTop.mp4'
 
 video_landmarker = PoselandmarkdetectionVIDEO(model_path, video_path)
 video_landmarker.process_video()
