@@ -40,10 +40,16 @@ class PoselandmarkdetectionVIDEO:
             
             # Add here the landmarker stuff to output the object
             
+            # Shows the video running
+            cv2.imshow('Video_feed', frame)
             
             # Read the next frame
             success, frame = self.cap.read()
             frame_index += 1
+
+            # Break the loop if ESC key is pressed
+            if cv2.waitKey(5) & 0xFF == ord('q'):
+                break
 
 # The __enter__ method returns the landmarker instance, allowing the class to be used with a with statement.
     def __enter__(self):
