@@ -1,6 +1,7 @@
 import cv2
 import mediapipe as mp
 import numpy as np
+import os
 
 # For drawing on to the image
 mp_drawing = mp.solutions.drawing_utils
@@ -13,6 +14,10 @@ class PoselandmarkdetectionVIDEO:
     def __init__(self, model_path, video_path):
         self.model_path = model_path
         self.video_path = video_path
+
+        # Having trouble with landmarker so adding this path check
+        if not os.path.exists(self.model_path):
+            raise ValueError(f"Model file not found: {self.model_path}")
 
         BaseOptions = mp.tasks.BaseOptions
         PoseLandmarker = mp.tasks.vision.PoseLandmarker
@@ -50,9 +55,11 @@ class PoselandmarkdetectionVIDEO:
             # Detect pose landmarks from image
             pose_landmarks = self.landmarker.detect_for_video(mp_image, timestamp)
 
+            print(pose_landmarks.pose_landmarks)
+
             # Apply visual landmarks to video
             # Currently this uses a premade utility from the mp library
-            mp_drawing.draw_landmarks(mp_image, pose_landmarks, mp_pose.POSE_CONNECTIONS)
+            # mp_drawing.draw_landmarks(mp_image, pose_landmarks.pose_landmarks, mp_pose.POSE_CONNECTIONS)
             
             # Shows the video running
             cv2.imshow('Video_feed', mp_image)
@@ -74,7 +81,7 @@ class PoselandmarkdetectionVIDEO:
         self.cap.release()
 
 # These need to be moved so that they are options in the UI
-model_path = 'C:\\Users\\max\\Documents\\Bath Uni Dissertation\\Landmarkers\\pose_landmarker_full.task'
+model_path = r'C:\Users\max\Documents\Bath Uni Dissertation\Landmarkers\pose_landmarker_lite.task'
 video_path = 'C:\\Users\\max\\Documents\\Bath Uni Dissertation\\Exercise Videos\\PushupsTop.mp4'
 
 video_landmarker = PoselandmarkdetectionVIDEO(model_path, video_path)
