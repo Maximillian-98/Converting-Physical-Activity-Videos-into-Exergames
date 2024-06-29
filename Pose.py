@@ -35,10 +35,11 @@ class PoselandmarkdetectionVIDEO:
         while success:
             rgb_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
             mp_image = mp.Image(image_format=mp.ImageFormat.SRGB, data=rgb_frame)
-            timestamp_ms = (frame_index / self.fps) * 1000
+            timestamp_ms = int((frame_index / self.fps) * 1000)
             pose_landmarks = self.landmarker.detect_for_video(mp_image, timestamp_ms)
             
             # Add here the landmarker stuff to output the object
+            
             
             # Read the next frame
             success, frame = self.cap.read()
@@ -46,7 +47,7 @@ class PoselandmarkdetectionVIDEO:
 
 # The __enter__ method returns the landmarker instance, allowing the class to be used with a with statement.
     def __enter__(self):
-        return self.landmarker
+        return self
 # The __exit__ method ensures the landmarker is properly closed when exiting the with block.
     def __exit__(self, exc_type, exc_value, traceback):
         self.landmarker.close()
@@ -54,9 +55,9 @@ class PoselandmarkdetectionVIDEO:
 
 # These need to be moved so that they are options in the UI
 model_path = 'C:\\Users\\max\\Documents\\Bath Uni Dissertation\\Landmarkers\\pose_landmarker_full.task'
-video_path = 'C:\\Users\\max\\Documents\\Bath Uni Dissertation\\Exercise\\VideosPushupsTop.mp4'
+video_path = 'C:\\Users\\max\\Documents\\Bath Uni Dissertation\\Exercise Videos\\PushupsTop.mp4'
 
-with PoselandmarkdetectionVIDEO(model_path, video_path) as video_landmarker:
-    video_landmarker.process_video()
+video_landmarker = PoselandmarkdetectionVIDEO(model_path, video_path)
+video_landmarker.process_video()
 
 # Need to finish, add poselanmarkerresult to get the returned object 
