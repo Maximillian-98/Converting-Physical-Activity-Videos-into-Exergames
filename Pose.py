@@ -6,6 +6,9 @@ import numpy as np
 mp_drawing = mp.solutions.drawing_utils
 mp_pose = mp.solutions.pose
 
+# Make the pose method to use to process the image later
+pose = mp_pose.Pose()
+
 class PoselandmarkdetectionVIDEO:
     def __init__(self, model_path, video_path):
         self.model_path = model_path
@@ -43,11 +46,12 @@ class PoselandmarkdetectionVIDEO:
             pose_landmarks = self.landmarker.detect_for_video(mp_image, timestamp)
             
             # Add here the landmarker stuff to output the object
+            results = pose.process(mp_image)
             print(pose_landmarks)
 
             # Apply visual landmarks to video
             # Currently this uses a premade utility from the mp library
-            mp_drawing.draw_landmarks(mp_image, pose_landmarks, mp_pose.POSE_CONNECTIONS)
+            mp_drawing.draw_landmarks(mp_image, results.pose_landmarks, mp_pose.POSE_CONNECTIONS)
             
             # Shows the video running
             cv2.imshow('Video_feed', frame)
