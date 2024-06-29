@@ -7,9 +7,6 @@ import os
 mp_drawing = mp.solutions.drawing_utils
 mp_pose = mp.solutions.pose
 
-# Make the pose method to use to process the image later
-pose = mp_pose.Pose()
-
 class PoselandmarkdetectionVIDEO:
     def __init__(self, model_path, video_path):
         self.model_path = model_path
@@ -55,14 +52,20 @@ class PoselandmarkdetectionVIDEO:
             # Detect pose landmarks from image
             pose_landmarks = self.landmarker.detect_for_video(mp_image, timestamp)
 
-            print(pose_landmarks.pose_landmarks)
+            #print(pose_landmarks.pose_landmarks)
+
+            # Converts to numpy view for cv
+            np_image = mp_image.numpy_view()
 
             # Apply visual landmarks to video
             # Currently this uses a premade utility from the mp library
-            # mp_drawing.draw_landmarks(mp_image, pose_landmarks.pose_landmarks, mp_pose.POSE_CONNECTIONS)
+            pose_image = mp_drawing.draw_landmarks(np_image, pose_landmarks.pose_landmarks, mp_pose.POSE_CONNECTIONS)
+
+            # Converts to BGR for cv
+            bgr_frame = cv2.cvtColor(pose_image, cv2.COLOR_RGB2BGR)
             
             # Shows the video running
-            cv2.imshow('Video_feed', mp_image)
+            cv2.imshow('Video_feed', bgr_frame)
             
             # Read the next frame
             success, frame = self.cap.read()
@@ -81,7 +84,8 @@ class PoselandmarkdetectionVIDEO:
         self.cap.release()
 
 # These need to be moved so that they are options in the UI
-model_path = r'C:\Users\max\Documents\GitHub\Converting-Physical-Activity-Videos-into-Exergames\Landmarkers\pose_landmarker_lite.task'
+# model_path = r'C:\Users\max\Documents\GitHub\Converting-Physical-Activity-Videos-into-Exergames\Landmarkers\pose_landmarker_full.task'
+model_path = 'pose_landmarker_full.task'
 video_path = r'C:\Users\max\Documents\GitHub\Converting-Physical-Activity-Videos-into-Exergames\Exercise Videos\PushupsTop.mp4'
 
 video_landmarker = PoselandmarkdetectionVIDEO(model_path, video_path)
