@@ -57,15 +57,15 @@ class PoselandmarkdetectionVIDEO:
             # Converts to numpy view for cv
             np_image = mp_image.numpy_view()
 
+            # Converts to BGR for cv
+            bgr_image = cv2.cvtColor(np_image, cv2.COLOR_RGB2BGR)
+
             # Apply visual landmarks to video
             # Currently this uses a premade utility from the mp library
-            pose_image = mp_drawing.draw_landmarks(np_image, pose_landmarks.pose_landmarks, mp_pose.POSE_CONNECTIONS)
-
-            # Converts to BGR for cv
-            bgr_frame = cv2.cvtColor(pose_image, cv2.COLOR_RGB2BGR)
+            pose_image = mp_drawing.draw_landmarks(bgr_image, pose_landmarks.pose_landmarks, mp_pose.POSE_CONNECTIONS)
             
             # Shows the video running
-            cv2.imshow('Video_feed', bgr_frame)
+            cv2.imshow('Video_feed', pose_image)
             
             # Read the next frame
             success, frame = self.cap.read()
