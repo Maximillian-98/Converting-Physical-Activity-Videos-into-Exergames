@@ -52,7 +52,7 @@ class PoselandmarkdetectionVIDEO:
         self.landmarker.close()
         self.cap.release()
 
-
+# These need to be moved so that they are options in the UI
 model_path = 'C:\\Users\\max\\Documents\\Bath Uni Dissertation\\Landmarkers\\pose_landmarker_full.task'
 video_path = 'C:\\Users\\max\\Documents\\Bath Uni Dissertation\\Exercise\\VideosPushupsTop.mp4'
 
