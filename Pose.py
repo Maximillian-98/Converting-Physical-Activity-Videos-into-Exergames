@@ -116,6 +116,9 @@ class PoselandmarkdetectionLIVE:
         def print_result(result: PoseLandmarkerResult, output_image: mp.Image, timestamp_ms: int):
             print('pose landmarker result: {}'.format(result))
 
+        # Define detection result for later
+        self.detection_result = PoseLandmarkerResult
+
         options = PoseLandmarkerOptions(
             base_options=BaseOptions(model_asset_path=model_path),
             running_mode=VisionRunningMode.LIVE_STREAM,
@@ -163,6 +166,10 @@ class PoselandmarkdetectionLIVE:
 
             # Detect pose landmarks from image and stores them
             pose_landmarks = self.landmarker.detect_async(mp_image, frame_timestamp)
+
+            # Detection CHECK
+            if self.detection_result is None:
+                print("Error printing detection")
             
             # STEP 5: Process the detection result. In this case, visualize it.
             annotated_image = self.draw_landmarks_on_image(mp_image.numpy_view(), pose_landmarks)
@@ -189,7 +196,10 @@ class PoselandmarkdetectionLIVE:
 model_path = 'pose_landmarker_full.task'
 video_path = r'C:\Users\max\Documents\GitHub\Converting-Physical-Activity-Videos-into-Exergames\Exercise Videos\PushupsTop.mp4'
 
-video_landmarker = PoselandmarkdetectionVIDEO(model_path, video_path)
-video_landmarker.process_video()
+#video_landmarker = PoselandmarkdetectionVIDEO(model_path, video_path)
+#video_landmarker.process_video()
+
+live_landmarker = PoselandmarkdetectionLIVE(model_path)
+live_landmarker.process_video()
 
 # Need to finish, add poselanmarkerresult to get the returned object 
