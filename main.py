@@ -85,8 +85,8 @@ class livePose:
 
 video_path = r'C:\Users\max\Documents\GitHub\Converting-Physical-Activity-Videos-into-Exergames\Exercise Videos\PushupsTop.mp4'
 
-video_landmarker = videoPose(video_path)
-video_landmarker.drawPose
+#video_landmarker = videoPose(video_path)
+#video_landmarker.drawPose
 
 live_landmarker = livePose()
 live_landmarker.drawPose()
