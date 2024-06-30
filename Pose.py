@@ -1,5 +1,7 @@
 import cv2
 import mediapipe as mp
+from mediapipe import solutions
+from mediapipe.framework.formats import landmark_pb2
 import numpy as np
 import os
 
@@ -36,6 +38,28 @@ class PoselandmarkdetectionVIDEO:
 # Video Properties
         self.fps = self.cap.get(cv2.CAP_PROP_FPS) #Used for timestamping each frame
 
+
+# Custom Landmarks, Can be edited to change the which landmarks are drawn etc...
+    def draw_landmarks_on_image(rgb_image, detection_result):
+        pose_landmarks_list = detection_result.pose_landmarks
+        annotated_image = np.copy(rgb_image)
+
+        # Loop through the detected poses to visualize.
+        for idx in range(len(pose_landmarks_list)):
+            pose_landmarks = pose_landmarks_list[idx]
+
+            # Draw the pose landmarks.
+            pose_landmarks_proto = landmark_pb2.NormalizedLandmarkList()
+            pose_landmarks_proto.landmark.extend([
+            landmark_pb2.NormalizedLandmark(x=landmark.x, y=landmark.y, z=landmark.z) for landmark in pose_landmarks
+            ])
+            solutions.drawing_utils.draw_landmarks(
+            annotated_image,
+            pose_landmarks_proto,
+            solutions.pose.POSE_CONNECTIONS,
+            solutions.drawing_styles.get_default_pose_landmarks_style())
+        return annotated_image
+
     
 # Processes the video and creates and maps the landmarks
     def process_video(self):
@@ -52,17 +76,16 @@ class PoselandmarkdetectionVIDEO:
             # Detect pose landmarks from image and stores them
             pose_landmarks = self.landmarker.detect_for_video(mp_image, frame_timestamp)
 
-            # Converts back to BGR
-            # bgr_image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
+            # STEP 5: Process the detection result. In this case, visualize it.
+            annotated_image = self.draw_landmarks_on_image(mp_image.numpy_view(), pose_landmarks)
+            cv2.imshow('Video_Feed',cv2.cvtColor(annotated_image, cv2.COLOR_RGB2BGR))
 
             # Apply visual landmarks to video
             # Currently this uses a premade utility from the mp library
-            pose_image = mp_drawing.draw_landmarks(image, pose_landmarks.pose_landmarks, mp_pose.POSE_CONNECTIONS)
-
-            finish_frame = cv2.resize(pose_image, (480,720))
+            #pose_image = mp_drawing.draw_landmarks(mp_image, pose_landmarks.pose_landmarks, mp_pose.POSE_CONNECTIONS)
             
             # Shows the video running
-            cv2.imshow('Video_feed', finish_frame)
+            #cv2.imshow('Video_feed', annotated_image)
             
             # Read the next frame
             success, frame = self.cap.read()
