@@ -183,7 +183,8 @@ class PoselandmarkdetectionLIVE:
 
             # Break the loop if ESC key is pressed
             if cv2.waitKey(10) & 0xFF == ord('q'):
-                break
+                self.cap.release()
+                break            
 
 # The __enter__ method returns the landmarker instance, allowing the class to be used with a with statement.
     def __enter__(self):
