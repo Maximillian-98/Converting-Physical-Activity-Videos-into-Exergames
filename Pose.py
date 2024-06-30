@@ -101,6 +101,7 @@ class PoselandmarkdetectionVIDEO:
 class PoselandmarkdetectionLIVE:
     def __init__(self, model_path):
         self.model_path = model_path
+        self.detection_result = None
 
         # Having trouble with landmarker so adding this path check
         if not os.path.exists(self.model_path):
@@ -109,20 +110,14 @@ class PoselandmarkdetectionLIVE:
         BaseOptions = mp.tasks.BaseOptions
         PoseLandmarker = mp.tasks.vision.PoseLandmarker
         PoseLandmarkerOptions = mp.tasks.vision.PoseLandmarkerOptions
-        PoseLandmarkerResult = mp.tasks.vision.PoseLandmarkerResult
         VisionRunningMode = mp.tasks.vision.RunningMode
 
         # Create a pose landmarker instance with the live stream mode:
-        def print_result(result: PoseLandmarkerResult, output_image: mp.Image, timestamp_ms: int):
-            print('pose landmarker result: {}'.format(result))
-
-        # Define detection result for later
-        self.detection_result = PoseLandmarkerResult
-
+        # This currently uses a function defined below
         options = PoseLandmarkerOptions(
             base_options=BaseOptions(model_asset_path=model_path),
             running_mode=VisionRunningMode.LIVE_STREAM,
-            result_callback=print_result)
+            result_callback=self.print_result)
         
         self.landmarker = PoseLandmarker.create_from_options(options)
 
@@ -130,6 +125,9 @@ class PoselandmarkdetectionLIVE:
         self.cap = cv2.VideoCapture(0)
         if not self.cap.isOpened(): #Checks if it opens properly
             raise ValueError("Error opening camera")
+        
+    def print_result(self, result: mp.tasks.vision.PoseLandmarkerResult, output_image: mp.Image, timestamp_ms: int):
+        print('pose landmarker result: {}'.format(result))
 
 # Custom Landmarks, Can be edited to change the which landmarks are drawn etc...
     def draw_landmarks_on_image(self, rgb_image, detection_result):
@@ -166,14 +164,18 @@ class PoselandmarkdetectionLIVE:
 
             # Detect pose landmarks from image and stores them
             pose_landmarks = self.landmarker.detect_async(mp_image, frame_timestamp)
+            #pose_landmarks = mp.solutions.pose.Pose().process(mp_image)
 
-            # Detection CHECK
-            if self.detection_result is None:
-                print("Error printing detection")
+            if pose_landmarks is not None:
+                # Process the detection result
+                annotated_image = self.draw_landmarks_on_image(mp_image.numpy_view(), pose_landmarks)
+                cv2.imshow('Live_Feed', cv2.cvtColor(annotated_image, cv2.COLOR_RGB2BGR))
+            else:
+                print('No detection result')
             
             # STEP 5: Process the detection result. In this case, visualize it.
-            annotated_image = self.draw_landmarks_on_image(mp_image.numpy_view(), pose_landmarks)
-            cv2.imshow('Live_Feed',cv2.cvtColor(annotated_image, cv2.COLOR_RGB2BGR))
+            #annotated_image = self.draw_landmarks_on_image(mp_image.numpy_view(), pose_landmarks)
+            #cv2.imshow('Live_Feed',cv2.cvtColor(annotated_image, cv2.COLOR_RGB2BGR))
             
             # Read the next frame
             success, frame = self.cap.read()
@@ -201,5 +203,3 @@ video_path = r'C:\Users\max\Documents\GitHub\Converting-Physical-Activity-Videos
 
 live_landmarker = PoselandmarkdetectionLIVE(model_path)
 live_landmarker.process_video()
-
-# Need to finish, add poselanmarkerresult to get the returned object 
