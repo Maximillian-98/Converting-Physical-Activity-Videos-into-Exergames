@@ -40,7 +40,7 @@ class PoselandmarkdetectionVIDEO:
 
 
 # Custom Landmarks, Can be edited to change the which landmarks are drawn etc...
-    def draw_landmarks_on_image(rgb_image, detection_result):
+    def draw_landmarks_on_image(self, rgb_image, detection_result):
         pose_landmarks_list = detection_result.pose_landmarks
         annotated_image = np.copy(rgb_image)
 
@@ -66,7 +66,6 @@ class PoselandmarkdetectionVIDEO:
         frame_index = 0
         success, frame = self.cap.read()
         while success:
-
             # Convert the frame received from OpenCV to a MediaPipe’s Image object.
             mp_image = mp.Image(image_format=mp.ImageFormat.SRGB, data=frame)
 
@@ -75,7 +74,7 @@ class PoselandmarkdetectionVIDEO:
 
             # Detect pose landmarks from image and stores them
             pose_landmarks = self.landmarker.detect_for_video(mp_image, frame_timestamp)
-
+            
             # STEP 5: Process the detection result. In this case, visualize it.
             annotated_image = self.draw_landmarks_on_image(mp_image.numpy_view(), pose_landmarks)
             cv2.imshow('Video_Feed',cv2.cvtColor(annotated_image, cv2.COLOR_RGB2BGR))
