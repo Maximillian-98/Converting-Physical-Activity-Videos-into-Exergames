@@ -166,16 +166,16 @@ class PoselandmarkdetectionLIVE:
             pose_landmarks = self.landmarker.detect_async(mp_image, frame_timestamp)
             #pose_landmarks = mp.solutions.pose.Pose().process(mp_image)
 
-            if pose_landmarks is not None:
+            #if pose_landmarks is not None:
                 # Process the detection result
-                annotated_image = self.draw_landmarks_on_image(mp_image.numpy_view(), pose_landmarks)
-                cv2.imshow('Live_Feed', cv2.cvtColor(annotated_image, cv2.COLOR_RGB2BGR))
-            else:
-                print('No detection result')
+             #   annotated_image = self.draw_landmarks_on_image(mp_image.numpy_view(), pose_landmarks)
+             #   cv2.imshow('Live_Feed', cv2.cvtColor(annotated_image, cv2.COLOR_RGB2BGR))
+            #else:
+            #    print('No detection result')
             
             # STEP 5: Process the detection result. In this case, visualize it.
-            #annotated_image = self.draw_landmarks_on_image(mp_image.numpy_view(), pose_landmarks)
-            #cv2.imshow('Live_Feed',cv2.cvtColor(annotated_image, cv2.COLOR_RGB2BGR))
+            annotated_image = self.draw_landmarks_on_image(mp_image.numpy_view(), pose_landmarks)
+            cv2.imshow('Live_Feed',cv2.cvtColor(annotated_image, cv2.COLOR_RGB2BGR))
             
             # Read the next frame
             success, frame = self.cap.read()
