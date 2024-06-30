@@ -4,6 +4,7 @@ from mediapipe import solutions
 from mediapipe.framework.formats import landmark_pb2
 import numpy as np
 import os
+import time # For live timestamp
 
 # For drawing on to the image
 mp_drawing = mp.solutions.drawing_utils
@@ -25,7 +26,7 @@ class PoselandmarkdetectionVIDEO:
 
 # Create a pose landmarker instance with the video mode:
         options = PoseLandmarkerOptions(
-            base_options=BaseOptions(model_asset_path=model_path),
+            base_options=BaseOptions(model_asset_path=model_path), #doesnt this need to be self.model_path?
             running_mode=VisionRunningMode.VIDEO)
         
         self.landmarker = PoseLandmarker.create_from_options(options)
@@ -112,13 +113,13 @@ class PoselandmarkdetectionLIVE:
         VisionRunningMode = mp.tasks.vision.RunningMode
 
         # Create a pose landmarker instance with the live stream mode:
-        #def print_result(result: PoseLandmarkerResult, output_image: mp.Image, timestamp_ms: int):
-        #    print('pose landmarker result: {}'.format(result))
+        def print_result(result: PoseLandmarkerResult, output_image: mp.Image, timestamp_ms: int):
+            print('pose landmarker result: {}'.format(result))
 
         options = PoseLandmarkerOptions(
             base_options=BaseOptions(model_asset_path=model_path),
-            running_mode=VisionRunningMode.LIVE_STREAM)
-            #result_callback=print_result)
+            running_mode=VisionRunningMode.LIVE_STREAM,
+            result_callback=print_result)
         
         self.landmarker = PoseLandmarker.create_from_options(options)
 
@@ -156,6 +157,9 @@ class PoselandmarkdetectionLIVE:
         while success:
             # Convert the frame received from OpenCV to a MediaPipe’s Image object.
             mp_image = mp.Image(image_format=mp.ImageFormat.SRGB, data=frame)
+
+            # Get the current timestamp in milliseconds
+            frame_timestamp = int(time.time() * 1000)
 
             # Detect pose landmarks from image and stores them
             pose_landmarks = self.landmarker.detect_async(mp_image, frame_timestamp)
