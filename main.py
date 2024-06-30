@@ -4,14 +4,10 @@ from mediapipe import solutions
 from mediapipe.framework.formats import landmark_pb2
 import numpy as np
 
-# For drawing on to the image
-mp_drawing = mp.solutions.drawing_utils
-mp_pose = mp.solutions.pose
-
 class videoPose:
     def __init__(self, video_path):
         self.video_path = video_path
-        self.cap = cv2.Videocapture(self.video_path)
+        self.cap = cv2.VideoCapture(self.video_path)
 
         self.mp_drawing = mp.solutions.drawing_utils
         self.mp_pose = mp.solutions.pose
@@ -35,7 +31,7 @@ class videoPose:
             image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
             
             # Render detections
-            mp_drawing.draw_landmarks(image, results.pose_landmarks, mp_pose.POSE_CONNECTIONS,
+            self.mp_drawing.draw_landmarks(image, results.pose_landmarks, self.mp_pose.POSE_CONNECTIONS,
                                     self.mp_drawing.DrawingSpec(color=(245,117,66), thickness=2, circle_radius=2), 
                                     self.mp_drawing.DrawingSpec(color=(245,66,230), thickness=2, circle_radius=2) 
                                     )               
@@ -49,3 +45,6 @@ class videoPose:
         cv2.destroyAllWindows()
 
 video_path = r'C:\Users\max\Documents\GitHub\Converting-Physical-Activity-Videos-into-Exergames\Exercise Videos\PushupsTop.mp4'
+
+video_landmarker = videoPose(video_path)
+video_landmarker.drawPose()
