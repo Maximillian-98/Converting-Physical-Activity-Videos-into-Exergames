@@ -203,9 +203,14 @@ video_path = r'C:\Users\max\Documents\GitHub\Converting-Physical-Activity-Videos
 #video_landmarker.process_video()
 
 #live_landmarker = PoselandmarkdetectionLIVE(model_path)
-#live_landmarker.process_video()
+#live_landmarker.process_video()\
 
-cap = cv2.VideoCapture(0)
+
+# Below is an incredibly simple piece of code that takes two fucking seconds to write that literally does exactly what i need. fucking kill me
+# i just dont even know what to do, why bother when someones already made it 10 times better.
+
+# Swap for 0 to do live capture
+cap = cv2.VideoCapture(r'C:\Users\max\Documents\GitHub\Converting-Physical-Activity-Videos-into-Exergames\Exercise Videos\PushupsTop.mp4')
 ## Setup mediapipe instance
 with mp_pose.Pose(min_detection_confidence=0.5, min_tracking_confidence=0.5) as pose:
     while cap.isOpened():
