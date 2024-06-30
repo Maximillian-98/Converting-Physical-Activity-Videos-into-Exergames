@@ -78,13 +78,6 @@ class PoselandmarkdetectionVIDEO:
             # STEP 5: Process the detection result. In this case, visualize it.
             annotated_image = self.draw_landmarks_on_image(mp_image.numpy_view(), pose_landmarks)
             cv2.imshow('Video_Feed',cv2.cvtColor(annotated_image, cv2.COLOR_RGB2BGR))
-
-            # Apply visual landmarks to video
-            # Currently this uses a premade utility from the mp library
-            #pose_image = mp_drawing.draw_landmarks(mp_image, pose_landmarks.pose_landmarks, mp_pose.POSE_CONNECTIONS)
-            
-            # Shows the video running
-            #cv2.imshow('Video_feed', annotated_image)
             
             # Read the next frame
             success, frame = self.cap.read()
@@ -170,13 +163,6 @@ class PoselandmarkdetectionLIVE:
             # STEP 5: Process the detection result. In this case, visualize it.
             annotated_image = self.draw_landmarks_on_image(mp_image.numpy_view(), pose_landmarks)
             cv2.imshow('Live_Feed',cv2.cvtColor(annotated_image, cv2.COLOR_RGB2BGR))
-
-            # Apply visual landmarks to video
-            # Currently this uses a premade utility from the mp library
-            #pose_image = mp_drawing.draw_landmarks(mp_image, pose_landmarks.pose_landmarks, mp_pose.POSE_CONNECTIONS)
-            
-            # Shows the video running
-            #cv2.imshow('Video_feed', annotated_image)
             
             # Read the next frame
             success, frame = self.cap.read()
