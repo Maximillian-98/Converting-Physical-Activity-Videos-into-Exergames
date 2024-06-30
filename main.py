@@ -45,7 +45,7 @@ class videoPose:
             if cv2.waitKey(10) & 0xFF == ord('q'):
                 break
 
-        cap.release()
+        self.cap.release()
         cv2.destroyAllWindows()
 
 video_path = r'C:\Users\max\Documents\GitHub\Converting-Physical-Activity-Videos-into-Exergames\Exercise Videos\PushupsTop.mp4'
