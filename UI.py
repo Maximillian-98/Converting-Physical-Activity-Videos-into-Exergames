@@ -4,7 +4,8 @@ import cv2
 class MainFrame:
     def __init__(self, root, video_path):
         self.root = root
-        self.video_path = video_path
+
+        self.canvas = tk.Canvas(self)
 
 
 class ExvidFrame:
