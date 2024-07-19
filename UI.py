@@ -10,11 +10,12 @@ class MainFrame:
         self.windowPlace = 0.2
         self.windowHeight = 0.5
 
-        self.text = tk.button(self.canvas, text="Upload", command=none)
 
         # Create Base canvas layer
         self.canvas = tk.Canvas(self.root, width=1000, height=800, bg='white')
         self.canvas.pack(anchor=tk.CENTER, expand=True)
+
+        self.uploadButton = tk.Button(self.canvas, text="Upload", command=none)
 
 
         # Video Canvas
