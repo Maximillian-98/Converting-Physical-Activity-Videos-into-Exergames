@@ -7,8 +7,10 @@ class MainFrame:
         self.root = root
         self.root.title("to be named")
 
+        self.windowHeight = 0.5
+
         # Create Base canvas layer
-        self.canvas = tk.Canvas(self.root, width=600, height=400, bg='white')
+        self.canvas = tk.Canvas(self.root, width=1000, height=800, bg='white')
         self.canvas.pack(anchor=tk.CENTER, expand=True)
 
 
@@ -28,8 +30,8 @@ class MainFrame:
         self.exVidCanvas.create_window((0, 0), window=self.exVidFrame, anchor="nw")
         self.exVidCanvas.configure(yscrollcommand=self.exVidScrollbar.set)
 
-        self.exVidCanvas.place(relx=0, rely=0, relwidth=0.5, relheight=1)
-        self.exVidScrollbar.place(relx=0.5, rely=0, relheight=1, anchor='ne')
+        self.exVidCanvas.place(relx=0, rely=0, relwidth=0.5, relheight=self.windowHeight)
+        self.exVidScrollbar.place(relx=0.5, rely=0, relheight=self.windowHeight, anchor='ne')
 
 
         # Workout Canvas
@@ -48,8 +50,8 @@ class MainFrame:
         self.workoutCanvas.create_window((0, 0), window=self.workoutFrame, anchor="nw")
         self.workoutCanvas.configure(yscrollcommand=self.workoutScrollbar.set)
 
-        self.workoutCanvas.place(relx=0.5, rely=0, relwidth=0.5, relheight=1)
-        self.workoutScrollbar.place(relx=1, rely=0, relheight=1, anchor='ne')
+        self.workoutCanvas.place(relx=0.5, rely=0, relwidth=0.5, relheight=self.windowHeight)
+        self.workoutScrollbar.place(relx=1, rely=0, relheight=self.windowHeight, anchor='ne')
 
 
 
