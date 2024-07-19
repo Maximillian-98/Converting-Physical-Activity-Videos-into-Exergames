@@ -17,7 +17,7 @@ class MainFrame:
         self.exVidScrollbar = ttk.Scrollbar(self.canvas, orient="vertical", command=self.exVidCanvas.yview)
         self.exVidFrame = ttk.Frame(self.exVidCanvas)
 
-        # This handles when the box changes size due to increase in videos
+        # This handles when the box changes in size due to increase in videos
         self.exVidFrame.bind(
             "<Configure>",
             lambda e: self.exVidCanvas.configure(
@@ -37,7 +37,7 @@ class MainFrame:
         self.workoutScrollbar = ttk.Scrollbar(self.canvas, orient="vertical", command=self.workoutCanvas.yview)
         self.workoutFrame = ttk.Frame(self.workoutCanvas)
 
-        # This handles when the box changes size due to increase in videos
+        # This handles when the box changes in size due to increase in videos
         self.workoutFrame.bind(
             "<Configure>",
             lambda e: self.workoutCanvas.configure(
