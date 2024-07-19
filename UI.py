@@ -10,6 +10,8 @@ class MainFrame:
         self.windowPlace = 0.2
         self.windowHeight = 0.5
 
+        self.text = tk.button(self.canvas, text="Upload", command=none)
+
         # Create Base canvas layer
         self.canvas = tk.Canvas(self.root, width=1000, height=800, bg='white')
         self.canvas.pack(anchor=tk.CENTER, expand=True)
@@ -53,6 +55,10 @@ class MainFrame:
 
         self.workoutCanvas.place(relx=0.5, rely=self.windowPlace, relwidth=0.5, relheight=self.windowHeight)
         self.workoutScrollbar.place(relx=1, rely=self.windowPlace, relheight=self.windowHeight, anchor='ne')
+
+        def none(self):
+            print("Success")
+        
 
 
 
