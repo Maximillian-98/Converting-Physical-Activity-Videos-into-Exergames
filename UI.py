@@ -15,7 +15,7 @@ class MainFrame:
         self.canvas = tk.Canvas(self.root, width=1000, height=800, bg='white')
         self.canvas.pack(anchor=tk.CENTER, expand=True)
 
-        self.uploadButton = tk.Button(self.canvas, text="Upload", command=none)
+        self.uploadButton = tk.Button(self.canvas, text="Upload", command=check)
 
 
         # Video Canvas
@@ -57,7 +57,7 @@ class MainFrame:
         self.workoutCanvas.place(relx=0.5, rely=self.windowPlace, relwidth=0.5, relheight=self.windowHeight)
         self.workoutScrollbar.place(relx=1, rely=self.windowPlace, relheight=self.windowHeight, anchor='ne')
 
-        def none(self):
+        def check(self):
             print("Success")
         
 
