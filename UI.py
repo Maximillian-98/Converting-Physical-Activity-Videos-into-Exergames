@@ -31,3 +31,5 @@ class PlayFrame:
 # Test
 testroot = tk.Tk()
 Test = MainFrame(testroot)
+
+testroot.mainloop()
