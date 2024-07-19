@@ -3,6 +3,9 @@ from tkinter import ttk
 import cv2
 
 class MainFrame:
+    def check(self):
+            print("Success")
+
     def __init__(self, root):
         self.root = root
         self.root.title("to be named")
@@ -15,7 +18,13 @@ class MainFrame:
         self.canvas = tk.Canvas(self.root, width=1000, height=800, bg='white')
         self.canvas.pack(anchor=tk.CENTER, expand=True)
 
-        self.uploadButton = tk.Button(self.canvas, text="Upload", command=check)
+        # Text
+        self.title = tk.Label(self.canvas, text="To be Named")
+        self.title.place(relx=0.5, rely=0, relwidth=0.1, relheight=0.1)
+
+        # Buttons
+        self.uploadButton = tk.Button(self.canvas, text="Upload", command=self.check)
+        self.uploadButton.place(relx=0, rely=0.8, relwidth=0.1, relheight=0.1)
 
 
         # Video Canvas
@@ -56,9 +65,6 @@ class MainFrame:
 
         self.workoutCanvas.place(relx=0.5, rely=self.windowPlace, relwidth=0.5, relheight=self.windowHeight)
         self.workoutScrollbar.place(relx=1, rely=self.windowPlace, relheight=self.windowHeight, anchor='ne')
-
-        def check(self):
-            print("Success")
         
 
 
