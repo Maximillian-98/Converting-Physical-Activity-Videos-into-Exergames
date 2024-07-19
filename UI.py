@@ -15,9 +15,14 @@ class ExvidFrame:
     def __init__(self, root, videos):
         self.root = root
 
+        self.frame = tk.Frame(self)
+
 class WorkoutFrame:
     def __init__(self, root, videos):
         self.root = root
+
+        self.frame = tk.Frame(self)
+
 
 
 # Test
