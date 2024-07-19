@@ -10,7 +10,7 @@ class MainFrame:
         self.canvas = tk.Canvas(self.root, width=600, height=400, bg='white')
         self.canvas.pack(anchor=tk.CENTER, expand=True)
 
-        # Scrollable frames for videos and workout
+        # Video Canvas
         self.exVidCanvas = tk.Canvas(self.canvas, bg='lightblue')
         self.exVidScrollbar = ttk.Scrollbar(self.canvas, orient="vertical", command=self.exVidCanvas.yview)
         self.exVidFrame = ttk.Frame(self.exVidCanvas)
@@ -28,9 +28,23 @@ class MainFrame:
         self.exVidCanvas.place(relx=0, rely=0, relwidth=0.5, relheight=1)
         self.exVidScrollbar.place(relx=0.5, rely=0, relheight=1, anchor='ne')
 
+        # Workout Canvas
+        self.workoutCanvas = tk.Canvas(self.canvas, bg='lightgreen')
+        self.workoutScrollbar = ttk.Scrollbar(self.canvas, orient="vertical", command=self.workoutCanvas.yview)
+        self.workoutFrame = ttk.Frame(self.workoutCanvas)
 
-        self.workoutFrame = tk.Frame(self.canvas)
-        self.workoutFrame.place(relx=0.5, rely=0, relwidth=0.5, relheight=1)
+        self.workoutFrame.bind(
+            "<Configure>",
+            lambda e: self.workoutCanvas.configure(
+                scrollregion=self.workoutCanvas.bbox("all")
+            )
+        )
+
+        self.workoutCanvas.create_window((0, 0), window=self.workoutFrame, anchor="nw")
+        self.workoutCanvas.configure(yscrollcommand=self.workoutScrollbar.set)
+
+        self.workoutCanvas.place(relx=0.5, rely=0, relwidth=0.5, relheight=1)
+        self.workoutScrollbar.place(relx=1, rely=0, relheight=1, anchor='ne')
 
 
 
