@@ -2,10 +2,13 @@ import tkinter as tk
 import cv2
 
 class MainFrame:
-    def __init__(self, root, video_path):
+    def __init__(self, root):
         self.root = root
 
-        self.canvas = tk.Canvas(self)
+        # Create Base canvas layer
+        self.canvas = tk.Canvas(self.root, width=600, height=400, bg='white')
+        self.canvas.pack(anchor=tk.CENTER, expand=True)
+
 
 
 class ExvidFrame:
@@ -15,3 +18,8 @@ class ExvidFrame:
 class WorkoutFrame:
     def __init__(self, root, videos):
         self.root = root
+
+
+# Test
+testroot = tk.Tk()
+Test = MainFrame(testroot)
