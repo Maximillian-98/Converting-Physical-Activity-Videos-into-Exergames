@@ -5,7 +5,7 @@ import cv2
 class MainFrame:
     def __init__(self, root):
         self.root = root
-
+        self.root.title("to be named")
 
         # Create Base canvas layer
         self.canvas = tk.Canvas(self.root, width=600, height=400, bg='white')
@@ -64,6 +64,7 @@ class PlayFrame:
 
 # Test
 testroot = tk.Tk()
+
 Test = MainFrame(testroot)
 
 testroot.mainloop()
