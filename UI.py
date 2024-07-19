@@ -10,12 +10,12 @@ class MainFrame:
         self.canvas.pack(anchor=tk.CENTER, expand=True)
 
         # Scrollable frames for videos and workout
-        self.Exvidframe = tk.Frame(self.canvas)
-        self.ExvidFrame.place(relx=0, rely=0, relwidth=0.5, relheight=1)
+        self.exVidFrame = tk.Frame(self.canvas)
+        self.exVidFrame.place(relx=0, rely=0, relwidth=0.5, relheight=1)
 
-        
-        self.Workoutframe = tk.Frame(self.canvas)
-        self.WorkoutFrame.place(relx=0.5, rely=0, relwidth=0.5, relheight=1)
+
+        self.workoutFrame = tk.Frame(self.canvas)
+        self.workoutFrame.place(relx=0.5, rely=0, relwidth=0.5, relheight=1)
 
 
 
