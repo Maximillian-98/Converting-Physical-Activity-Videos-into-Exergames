@@ -89,12 +89,13 @@ class MainFrame:
     def upload(self):
         file_path = filedialog.askopenfilename(filetypes=[("Video files", "*.mp4")])
         if file_path:
-            self.processVideo(file_path)
-            self.addThumbnail(file_path)
+            output_path = file_path.replace(".mp4", "_processed.mp4") # This creates the output path for use in processing the video and add _process onto the end to differentiate the video
+            processed_video = self.processVideo(file_path, output_path)
+            self.addThumbnail(output_path)
 
-    def processVideo(self, video_path):
+    def processVideo(self, video_path, output_path):
         try:
-            processedVideo = videoPose(video_path)
+            processedVideo = videoPose(video_path, output_path)
             processedVideo.drawPose()
             return processedVideo
         except:
