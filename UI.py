@@ -93,9 +93,13 @@ class MainFrame:
             self.addThumbnail(file_path)
 
     def processVideo(self, video_path):
-        processedVideo = videoPose(video_path)
-        processedVideo.drawPose()
-        return processedVideo
+        try:
+            processedVideo = videoPose(video_path)
+            processedVideo.drawPose()
+            return processedVideo
+        except:
+            print("error processing video") 
+            return None
 
     def getThumbnail(self, video_path):
         cap = cv2.VideoCapture(video_path)
