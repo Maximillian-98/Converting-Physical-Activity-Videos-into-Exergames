@@ -5,10 +5,21 @@ from mediapipe.framework.formats import landmark_pb2
 import numpy as np
 
 class videoPose:
-    def __init__(self, video_path):
+    def __init__(self, video_path, output_path):
         self.video_path = video_path
+        self.output_path = output_path
         self.cap = cv2.VideoCapture(self.video_path)
 
+        # Get video properties
+        fourcc = cv2.VideoWriter_fourcc(*'mp4v')
+        fps = self.cap.get(cv2.CAP_PROP_FPS)
+        width = int(self.cap.get(cv2.CAP_PROP_FRAME_WIDTH))
+        height = int(self.cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
+        
+        # Initialize VideoWriter
+        self.out = cv2.VideoWriter(self.output_path, fourcc, fps, (width, height))
+
+        # Setup drawing tools
         self.mp_drawing = mp.solutions.drawing_utils
         self.mp_pose = mp.solutions.pose
 
@@ -36,6 +47,10 @@ class videoPose:
                                     self.mp_drawing.DrawingSpec(color=(245,66,230), thickness=2, circle_radius=2) 
                                     )               
             
+            # Write the frame to the output video file
+            self.out.write(image)
+            
+            # Display the frame
             cv2.imshow('Mediapipe Feed', image)
 
             if cv2.waitKey(10) & 0xFF == ord('q'):
