@@ -88,5 +88,5 @@ video_path = r'C:\Users\max\Documents\GitHub\Converting-Physical-Activity-Videos
 #video_landmarker = videoPose(video_path)
 #video_landmarker.drawPose
 
-live_landmarker = livePose()
-live_landmarker.drawPose()
+#live_landmarker = livePose()
+#live_landmarker.drawPose()

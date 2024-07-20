@@ -89,12 +89,13 @@ class MainFrame:
     def upload(self):
         file_path = filedialog.askopenfilename(filetypes=[("Video files", "*.mp4")])
         if file_path:
-            #self.processVideo(file_path)
-            self.getThumbnail(file_path)
+            self.processVideo(file_path)
+            self.addThumbnail(file_path)
 
     def processVideo(self, video_path):
-        landmarks = videoPose(video_path)
-        return landmarks
+        processedVideo = videoPose(video_path)
+        processedVideo.drawPose()
+        return processedVideo
 
     def getThumbnail(self, video_path):
         cap = cv2.VideoCapture(video_path)
@@ -106,6 +107,34 @@ class MainFrame:
             return ImageTk.PhotoImage(image)
         cap.release()
         return None
+    
+    def addThumbnail(self, video_path):
+        thumbnail = self.getThumbnail(video_path)
+        label = tk.Label(self.exVidFrame, image=thumbnail)
+        label.image = thumbnail  # Keep a reference to avoid garbage collection, python may delet the image without a reference
+        label.video_path # Store the video path in the thumbnail
+        label.pack(padx=10, pady=10)
+        label.bind("<Button-1>", lambda e: self.selectThumbnail(label))
+        label.bind("<Button-3>", lambda e: self.playVideo(label.video_path))
+
+    def selectThumbnail(self, label):
+        self.selected_thumbnail = label
+        self.selected_thumbnail.config(borderwidth=2, relief="solid")
+
+    def playVideo(self, video_path):
+        cap = cv2.VideoCapture(video_path)
+        while cap.isOpened():
+            ret, frame = cap.read()
+            if ret:
+                cv2.imshow('Video', frame)
+                if cv2.waitKey(25) & 0xFF == ord('q'):
+                    break
+            else:
+                break
+        cap.release()
+        cv2.destroyAllWindows()
+
+
 
 
 
