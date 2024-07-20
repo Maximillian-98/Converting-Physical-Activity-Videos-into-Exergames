@@ -1,8 +1,8 @@
 import tkinter as tk
-from tkinter import ttk
+from tkinter import ttk, filedialog
 import cv2
 from PIL import Image, ImageTk # For getting image for thumbnail
-from main import videoPose, livePose
+from main import videoPose
 
 class MainFrame:
     def __init__(self, root):
@@ -87,7 +87,14 @@ class MainFrame:
             print("Success")
 
     def upload(self, video_path):
-        print("Success")
+        file_path = filedialog.askopenfilename(filetypes=[("Video files", "*.mp4")])
+        if file_path:
+            #self.processVideo(file_path)
+            self.getThumbnail(file_path)
+
+    def processVideo(self, video_path):
+        landmarks = videoPose(video_path)
+        return landmarks
 
     def getThumbnail(self, video_path):
         cap = cv2.VideoCapture(video_path)
