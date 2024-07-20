@@ -2,6 +2,7 @@ import tkinter as tk
 from tkinter import ttk
 import cv2
 from PIL import Image, ImageTk # For getting image for thumbnail
+from main import videoPose, livePose
 
 class MainFrame:
     def __init__(self, root):
