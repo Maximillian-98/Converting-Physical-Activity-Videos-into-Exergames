@@ -10,8 +10,9 @@ class MainFrame:
         self.root = root
         self.root.title("to be named")
 
-        self.windowPlace = 0.2
-        self.windowHeight = 0.5
+        self.windowPlacey = 0.1
+        self.windowHeight = 0.65
+        self.buttonPlacey = 0.75
 
 
         # Create Base canvas layer
@@ -20,11 +21,27 @@ class MainFrame:
 
         # Text
         self.title = tk.Label(self.canvas, text="To be Named")
-        self.title.place(relx=0.5, rely=0, relwidth=0.1, relheight=0.1)
+        self.title.place(relx=0.45, rely=0, relwidth=0.1, relheight=0.05)
+        self.exVidTitle = tk.Label(self.canvas, text="Exercise Videos")
+        self.exVidTitle.place(relx=0.2, rely=0.05, relwidth=0.1, relheight=0.05)
+        self.workoutTitle = tk.Label(self.canvas, text="Workout")
+        self.workoutTitle.place(relx=0.7, rely=0.05, relwidth=0.1, relheight=0.05)
+        self.breakText = tk.Label(self.canvas, text="Current Break length:")
+        self.breakText.place(relx=0.1, rely=0.9, relwidth=0.15, relheight=0.05)
 
         # Buttons
         self.uploadButton = tk.Button(self.canvas, text="Upload", command=self.check)
-        self.uploadButton.place(relx=0, rely=0.8, relwidth=0.1, relheight=0.1)
+        self.uploadButton.place(relx=0.1, rely=self.buttonPlacey, relwidth=0.1, relheight=0.05)
+        self.deleteButton = tk.Button(self.canvas, text="Delete", command=self.check)
+        self.deleteButton.place(relx=0.3, rely=self.buttonPlacey, relwidth=0.1, relheight=0.05)
+        self.addButton = tk.Button(self.canvas, text="Add", command=self.check)
+        self.addButton.place(relx=0.6, rely=self.buttonPlacey, relwidth=0.1, relheight=0.05)
+        self.removeButton = tk.Button(self.canvas, text="Remove", command=self.check)
+        self.removeButton.place(relx=0.8, rely=self.buttonPlacey, relwidth=0.1, relheight=0.05)
+        self.playButton = tk.Button(self.canvas, text="Play", command=self.check)
+        self.playButton.place(relx=0.7, rely=0.85, relwidth=0.1, relheight=0.1)
+        self.setBreakButton = tk.Button(self.canvas, text="Set Break", command=self.check)
+        self.setBreakButton.place(relx=0.35, rely=0.85, relwidth=0.1, relheight=0.05)
 
 
         # Video Canvas
@@ -43,8 +60,8 @@ class MainFrame:
         self.exVidCanvas.create_window((0, 0), window=self.exVidFrame, anchor="nw")
         self.exVidCanvas.configure(yscrollcommand=self.exVidScrollbar.set)
 
-        self.exVidCanvas.place(relx=0, rely=self.windowPlace, relwidth=0.5, relheight=self.windowHeight)
-        self.exVidScrollbar.place(relx=0.5, rely=self.windowPlace, relheight=self.windowHeight, anchor='ne')
+        self.exVidCanvas.place(relx=0, rely=self.windowPlacey, relwidth=0.5, relheight=self.windowHeight)
+        self.exVidScrollbar.place(relx=0.5, rely=self.windowPlacey, relheight=self.windowHeight, anchor='ne')
 
 
         # Workout Canvas
@@ -63,8 +80,8 @@ class MainFrame:
         self.workoutCanvas.create_window((0, 0), window=self.workoutFrame, anchor="nw")
         self.workoutCanvas.configure(yscrollcommand=self.workoutScrollbar.set)
 
-        self.workoutCanvas.place(relx=0.5, rely=self.windowPlace, relwidth=0.5, relheight=self.windowHeight)
-        self.workoutScrollbar.place(relx=1, rely=self.windowPlace, relheight=self.windowHeight, anchor='ne')
+        self.workoutCanvas.place(relx=0.5, rely=self.windowPlacey, relwidth=0.5, relheight=self.windowHeight)
+        self.workoutScrollbar.place(relx=1, rely=self.windowPlacey, relheight=self.windowHeight, anchor='ne')
         
 
 
