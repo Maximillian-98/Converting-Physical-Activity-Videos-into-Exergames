@@ -1,0 +1,110 @@
+import tkinter as tk
+from tkinter import ttk
+import cv2
+from PIL import Image, ImageTk # For getting image for thumbnail
+
+class MainFrame:
+    def __init__(self, root):
+        self.root = root
+        self.root.title("to be named")
+
+        self.windowPlacey = 0.1
+        self.windowHeight = 0.65
+        self.buttonPlacey = 0.75
+
+
+        # Create Base canvas layer
+        self.canvas = tk.Canvas(self.root, width=1000, height=800, bg='white')
+        self.canvas.pack(anchor=tk.CENTER, expand=True)
+
+        # Text
+        self.title = tk.Label(self.canvas, text="To be Named")
+        self.title.place(relx=0.45, rely=0, relwidth=0.1, relheight=0.05)
+        self.exVidTitle = tk.Label(self.canvas, text="Exercise Videos")
+        self.exVidTitle.place(relx=0.2, rely=0.05, relwidth=0.1, relheight=0.05)
+        self.workoutTitle = tk.Label(self.canvas, text="Workout")
+        self.workoutTitle.place(relx=0.7, rely=0.05, relwidth=0.1, relheight=0.05)
+        self.breakText = tk.Label(self.canvas, text="Current Break length:")
+        self.breakText.place(relx=0.1, rely=0.9, relwidth=0.15, relheight=0.05)
+
+        # Buttons
+        self.uploadButton = tk.Button(self.canvas, text="Upload", command=self.upload)
+        self.uploadButton.place(relx=0.1, rely=self.buttonPlacey, relwidth=0.1, relheight=0.05)
+        self.deleteButton = tk.Button(self.canvas, text="Delete", command=self.check)
+        self.deleteButton.place(relx=0.3, rely=self.buttonPlacey, relwidth=0.1, relheight=0.05)
+        self.addButton = tk.Button(self.canvas, text="Add", command=self.check)
+        self.addButton.place(relx=0.6, rely=self.buttonPlacey, relwidth=0.1, relheight=0.05)
+        self.removeButton = tk.Button(self.canvas, text="Remove", command=self.check)
+        self.removeButton.place(relx=0.8, rely=self.buttonPlacey, relwidth=0.1, relheight=0.05)
+        self.playButton = tk.Button(self.canvas, text="Play", command=self.check)
+        self.playButton.place(relx=0.7, rely=0.85, relwidth=0.1, relheight=0.1)
+        self.setBreakButton = tk.Button(self.canvas, text="Set Break", command=self.check)
+        self.setBreakButton.place(relx=0.2, rely=0.85, relwidth=0.1, relheight=0.05)
+
+
+        # Video Canvas
+        self.exVidCanvas = tk.Canvas(self.canvas, bg='lightblue')
+        self.exVidScrollbar = ttk.Scrollbar(self.canvas, orient="vertical", command=self.exVidCanvas.yview)
+        self.exVidFrame = ttk.Frame(self.exVidCanvas)
+
+        # This handles when the box changes in size due to increase in videos
+        self.exVidFrame.bind(
+            "<Configure>",
+            lambda e: self.exVidCanvas.configure(
+                scrollregion=self.exVidCanvas.bbox("all")
+            )
+        )
+
+        self.exVidCanvas.create_window((0, 0), window=self.exVidFrame, anchor="nw")
+        self.exVidCanvas.configure(yscrollcommand=self.exVidScrollbar.set)
+
+        self.exVidCanvas.place(relx=0, rely=self.windowPlacey, relwidth=0.5, relheight=self.windowHeight)
+        self.exVidScrollbar.place(relx=0.5, rely=self.windowPlacey, relheight=self.windowHeight, anchor='ne')
+
+
+        # Workout Canvas
+        self.workoutCanvas = tk.Canvas(self.canvas, bg='lightgreen')
+        self.workoutScrollbar = ttk.Scrollbar(self.canvas, orient="vertical", command=self.workoutCanvas.yview)
+        self.workoutFrame = ttk.Frame(self.workoutCanvas)
+
+        # This handles when the box changes in size due to increase in videos
+        self.workoutFrame.bind(
+            "<Configure>",
+            lambda e: self.workoutCanvas.configure(
+                scrollregion=self.workoutCanvas.bbox("all")
+            )
+        )
+
+        self.workoutCanvas.create_window((0, 0), window=self.workoutFrame, anchor="nw")
+        self.workoutCanvas.configure(yscrollcommand=self.workoutScrollbar.set)
+
+        self.workoutCanvas.place(relx=0.5, rely=self.windowPlacey, relwidth=0.5, relheight=self.windowHeight)
+        self.workoutScrollbar.place(relx=1, rely=self.windowPlacey, relheight=self.windowHeight, anchor='ne')
+
+    
+    def check(self):
+            print("Success")
+
+    def upload(self, video_path):
+        print("Success")
+
+    def getThumbnail(self, video_path):
+        cap = cv2.VideoCapture(video_path)
+        ret, frame = cap.read()
+        if ret:
+            frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+            frame = cv2.resize(frame, (120, 90))  # Resize to thumbnail size
+            image = Image.fromarray(frame)
+            return ImageTk.PhotoImage(image)
+        cap.release()
+        return None
+
+
+
+
+# Test
+testroot = tk.Tk()
+
+Test = MainFrame(testroot)
+
+testroot.mainloop()
