@@ -86,7 +86,7 @@ class MainFrame:
     def check(self):
             print("Success")
 
-    def upload(self, video_path):
+    def upload(self):
         file_path = filedialog.askopenfilename(filetypes=[("Video files", "*.mp4")])
         if file_path:
             #self.processVideo(file_path)
