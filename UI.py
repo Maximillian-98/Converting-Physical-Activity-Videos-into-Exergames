@@ -41,7 +41,7 @@ class MainFrame:
         self.playButton = tk.Button(self.canvas, text="Play", command=self.check)
         self.playButton.place(relx=0.7, rely=0.85, relwidth=0.1, relheight=0.1)
         self.setBreakButton = tk.Button(self.canvas, text="Set Break", command=self.check)
-        self.setBreakButton.place(relx=0.35, rely=0.85, relwidth=0.1, relheight=0.05)
+        self.setBreakButton.place(relx=0.2, rely=0.85, relwidth=0.1, relheight=0.05)
 
 
         # Video Canvas
