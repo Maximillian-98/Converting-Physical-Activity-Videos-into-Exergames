@@ -4,9 +4,6 @@ import cv2
 from PIL import Image, ImageTk # For getting image for thumbnail
 
 class MainFrame:
-    def check(self):
-            print("Success")
-
     def __init__(self, root):
         self.root = root
         self.root.title("to be named")
@@ -31,7 +28,7 @@ class MainFrame:
         self.breakText.place(relx=0.1, rely=0.9, relwidth=0.15, relheight=0.05)
 
         # Buttons
-        self.uploadButton = tk.Button(self.canvas, text="Upload", command=self.check)
+        self.uploadButton = tk.Button(self.canvas, text="Upload", command=self.upload)
         self.uploadButton.place(relx=0.1, rely=self.buttonPlacey, relwidth=0.1, relheight=0.05)
         self.deleteButton = tk.Button(self.canvas, text="Delete", command=self.check)
         self.deleteButton.place(relx=0.3, rely=self.buttonPlacey, relwidth=0.1, relheight=0.05)
@@ -84,19 +81,23 @@ class MainFrame:
         self.workoutCanvas.place(relx=0.5, rely=self.windowPlacey, relwidth=0.5, relheight=self.windowHeight)
         self.workoutScrollbar.place(relx=1, rely=self.windowPlacey, relheight=self.windowHeight, anchor='ne')
 
-        def upload(self, video_path):
-             
+    
+    def check(self):
+            print("Success")
 
-        def getThumbnail(self, video_path):
-            cap = cv2.VideoCapture(video_path)
-            ret, frame = cap.read()
-            if ret:
-                frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-                frame = cv2.resize(frame, (120, 90))  # Resize to thumbnail size
-                image = Image.fromarray(frame)
-                return ImageTk.PhotoImage(image)
-            cap.release()
-            return None
+    def upload(self, video_path):
+        print("Success")
+
+    def getThumbnail(self, video_path):
+        cap = cv2.VideoCapture(video_path)
+        ret, frame = cap.read()
+        if ret:
+            frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+            frame = cv2.resize(frame, (120, 90))  # Resize to thumbnail size
+            image = Image.fromarray(frame)
+            return ImageTk.PhotoImage(image)
+        cap.release()
+        return None
 
 
 
