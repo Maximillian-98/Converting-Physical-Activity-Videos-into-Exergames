@@ -57,6 +57,7 @@ class videoPose:
                 break
 
         self.cap.release()
+        self.out.release()
         cv2.destroyAllWindows()
 
 class livePose:
