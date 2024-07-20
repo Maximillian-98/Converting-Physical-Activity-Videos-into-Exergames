@@ -1,6 +1,7 @@
 import tkinter as tk
 from tkinter import ttk
 import cv2
+from PIL import Image, ImageTk # For getting image for thumbnail
 
 class MainFrame:
     def check(self):
@@ -82,15 +83,20 @@ class MainFrame:
 
         self.workoutCanvas.place(relx=0.5, rely=self.windowPlacey, relwidth=0.5, relheight=self.windowHeight)
         self.workoutScrollbar.place(relx=1, rely=self.windowPlacey, relheight=self.windowHeight, anchor='ne')
-        
 
+        def upload(self, video_path):
+             
 
-
-
-
-class PlayFrame:
-    def __init__(self, root):
-        self.root = root
+        def getThumbnail(self, video_path):
+            cap = cv2.VideoCapture(video_path)
+            ret, frame = cap.read()
+            if ret:
+                frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+                frame = cv2.resize(frame, (120, 90))  # Resize to thumbnail size
+                image = Image.fromarray(frame)
+                return ImageTk.PhotoImage(image)
+            cap.release()
+            return None
 
 
 
