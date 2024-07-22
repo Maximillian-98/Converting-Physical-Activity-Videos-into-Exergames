@@ -34,7 +34,7 @@ class MainFrame:
         self.uploadButton.place(relx=0.1, rely=self.buttonPlacey, relwidth=0.1, relheight=0.05)
         self.deleteButton = tk.Button(self.canvas, text="Delete", command=self.delete)
         self.deleteButton.place(relx=0.3, rely=self.buttonPlacey, relwidth=0.1, relheight=0.05)
-        self.addButton = tk.Button(self.canvas, text="Add", command=self.check)
+        self.addButton = tk.Button(self.canvas, text="Add", command=self.add)
         self.addButton.place(relx=0.6, rely=self.buttonPlacey, relwidth=0.1, relheight=0.05)
         self.removeButton = tk.Button(self.canvas, text="Remove", command=self.check)
         self.removeButton.place(relx=0.8, rely=self.buttonPlacey, relwidth=0.1, relheight=0.05)
@@ -118,7 +118,7 @@ class MainFrame:
     def addThumbnail(self, video_path):
         thumbnail = self.getThumbnail(video_path)
         label = tk.Label(self.exVidFrame, bg="lightgreen", image=thumbnail)
-        label.image = thumbnail  # Keep a reference to avoid garbage collection, python may delet the image without a reference
+        label.image = thumbnail  # Keep a reference to avoid garbage collection, python may delete the image without a reference
         label.video_path = video_path # Store the video path in the thumbnail
         label.pack(padx=10, pady=10)
         label.bind("<Button-1>", lambda e: self.selectThumbnail(label))
@@ -164,6 +164,16 @@ class MainFrame:
             self.selected_thumbnail.destroy()
             self.selected_thumbnail = None
 
+    def remove(self):
+        if self.selected_thumbnail:
+            new_label = tk.Label(self.exVidFrame, image=self.selected_thumbnail.image)
+            new_label.image = self.selected_thumbnail.image  # Keep a reference to avoid garbage collection
+            new_label.video_path = self.selected_thumbnail.video_path  # Store the video path in the new thumbnail
+            new_label.pack(padx=10, pady=10)
+            new_label.bind("<Button-1>", lambda e: self.selectThumbnail(new_label))
+            new_label.bind("<Button-3>", lambda e: self.playVideo(new_label.video_path))
+            self.selected_thumbnail.destroy()
+            self.selected_thumbnail = None
 
 
 
