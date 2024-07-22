@@ -3,6 +3,7 @@ from tkinter import ttk, filedialog
 import cv2
 from PIL import Image, ImageTk # For getting image for thumbnail
 from main import videoPose
+import os
 
 class MainFrame:
     def __init__(self, root):
@@ -31,7 +32,7 @@ class MainFrame:
         # Buttons
         self.uploadButton = tk.Button(self.canvas, text="Upload", command=self.upload)
         self.uploadButton.place(relx=0.1, rely=self.buttonPlacey, relwidth=0.1, relheight=0.05)
-        self.deleteButton = tk.Button(self.canvas, text="Delete", command=self.check)
+        self.deleteButton = tk.Button(self.canvas, text="Delete", command=self.delete)
         self.deleteButton.place(relx=0.3, rely=self.buttonPlacey, relwidth=0.1, relheight=0.05)
         self.addButton = tk.Button(self.canvas, text="Add", command=self.check)
         self.addButton.place(relx=0.6, rely=self.buttonPlacey, relwidth=0.1, relheight=0.05)
@@ -86,6 +87,7 @@ class MainFrame:
     def check(self):
             print("Success")
 
+    # Upload button functions
     def upload(self):
         file_path = filedialog.askopenfilename(filetypes=[("Video files", "*.mp4")])
         if file_path:
@@ -122,6 +124,7 @@ class MainFrame:
         label.bind("<Button-1>", lambda e: self.selectThumbnail(label))
         label.bind("<Button-3>", lambda e: self.playVideo(label.video_path))
 
+    # Thumbnail functions
     def selectThumbnail(self, label):
         self.selected_thumbnail = label
         self.selected_thumbnail.config(borderwidth=2, relief="solid")
@@ -138,6 +141,17 @@ class MainFrame:
                 break
         cap.release()
         cv2.destroyAllWindows()
+
+        # Remaining buttons
+    def delete(self):
+        if self.selected_thumbnail:
+            video_path = self.selected_thumbnail.video_path
+            self.selected_thumbnail.destroy()
+            self.selected_thumbnail = None
+            try:
+                os.remove(video_path)
+            except:
+                print("error deleting video path")
 
 
 
