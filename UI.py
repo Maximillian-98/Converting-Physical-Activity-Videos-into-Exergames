@@ -28,6 +28,11 @@ class MainFrame:
         self.workoutTitle.place(relx=0.7, rely=0.05, relwidth=0.1, relheight=0.05)
         self.breakText = tk.Label(self.canvas, text="Current Break length:")
         self.breakText.place(relx=0.1, rely=0.9, relwidth=0.15, relheight=0.05)
+        self.breakTime = tk.Label(self.canvas, text="00:00")
+        self.breakTime.place(relx=0.25, rely=0.9, relwidth=0.1, relheight=0.05)
+
+        self.breakEntry = tk.Text(self.canvas)
+        self.breakEntry.place(relx=0.1, rely=0.85, relwidth=0.15, relheight=0.05)
 
         # Buttons
         self.uploadButton = tk.Button(self.canvas, text="Upload", command=self.upload)
@@ -41,7 +46,7 @@ class MainFrame:
         self.playButton = tk.Button(self.canvas, text="Play", command=self.check)
         self.playButton.place(relx=0.7, rely=0.85, relwidth=0.1, relheight=0.1)
         self.setBreakButton = tk.Button(self.canvas, text="Set Break", command=self.setBreak)
-        self.setBreakButton.place(relx=0.2, rely=0.85, relwidth=0.1, relheight=0.05)
+        self.setBreakButton.place(relx=0.25, rely=0.85, relwidth=0.1, relheight=0.05)
 
 
         # Video Canvas
@@ -177,11 +182,6 @@ class MainFrame:
 
     def setBreak(self):
         print("Test")
-
-
-
-
-
 
 
 # Test
