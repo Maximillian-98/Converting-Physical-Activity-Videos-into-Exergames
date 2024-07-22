@@ -142,7 +142,7 @@ class MainFrame:
         cap.release()
         cv2.destroyAllWindows()
 
-        # Remaining buttons
+    # Remaining buttons
     def delete(self):
         if self.selected_thumbnail:
             video_path = self.selected_thumbnail.video_path
@@ -152,6 +152,10 @@ class MainFrame:
                 os.remove(video_path)
             except:
                 print("error deleting video path")
+
+    def add(self):
+        if self.selected_thumbnail:
+            
 
 
 
