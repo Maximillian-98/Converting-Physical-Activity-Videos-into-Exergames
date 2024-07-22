@@ -36,11 +36,11 @@ class MainFrame:
         self.deleteButton.place(relx=0.3, rely=self.buttonPlacey, relwidth=0.1, relheight=0.05)
         self.addButton = tk.Button(self.canvas, text="Add", command=self.add)
         self.addButton.place(relx=0.6, rely=self.buttonPlacey, relwidth=0.1, relheight=0.05)
-        self.removeButton = tk.Button(self.canvas, text="Remove", command=self.check)
+        self.removeButton = tk.Button(self.canvas, text="Remove", command=self.remove)
         self.removeButton.place(relx=0.8, rely=self.buttonPlacey, relwidth=0.1, relheight=0.05)
         self.playButton = tk.Button(self.canvas, text="Play", command=self.check)
         self.playButton.place(relx=0.7, rely=0.85, relwidth=0.1, relheight=0.1)
-        self.setBreakButton = tk.Button(self.canvas, text="Set Break", command=self.check)
+        self.setBreakButton = tk.Button(self.canvas, text="Set Break", command=self.setBreak)
         self.setBreakButton.place(relx=0.2, rely=0.85, relwidth=0.1, relheight=0.05)
 
 
@@ -174,6 +174,8 @@ class MainFrame:
             new_label.bind("<Button-3>", lambda e: self.playVideo(new_label.video_path))
             self.selected_thumbnail.destroy()
             self.selected_thumbnail = None
+
+    def setBreak(self):
 
 
 
