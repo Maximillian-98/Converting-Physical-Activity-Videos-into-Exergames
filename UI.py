@@ -181,7 +181,8 @@ class MainFrame:
             self.selected_thumbnail = None
 
     def setBreak(self):
-        print("Test")
+        time = self.breakEntry.get()
+        self.breakTime["text"]=time
 
 
 # Test
