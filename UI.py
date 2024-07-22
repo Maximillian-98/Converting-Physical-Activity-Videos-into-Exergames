@@ -117,7 +117,7 @@ class MainFrame:
     
     def addThumbnail(self, video_path):
         thumbnail = self.getThumbnail(video_path)
-        label = tk.Label(self.exVidFrame, image=thumbnail)
+        label = tk.Label(self.exVidFrame, bg="lightgreen", image=thumbnail)
         label.image = thumbnail  # Keep a reference to avoid garbage collection, python may delet the image without a reference
         label.video_path = video_path # Store the video path in the thumbnail
         label.pack(padx=10, pady=10)
@@ -155,7 +155,15 @@ class MainFrame:
 
     def add(self):
         if self.selected_thumbnail:
-            
+            new_label = tk.Label(self.workoutFrame, image=self.selected_thumbnail.image)
+            new_label.image = self.selected_thumbnail.image  # Keep a reference to avoid garbage collection
+            new_label.video_path = self.selected_thumbnail.video_path  # Store the video path in the new thumbnail
+            new_label.pack(padx=10, pady=10)
+            new_label.bind("<Button-1>", lambda e: self.selectThumbnail(new_label))
+            new_label.bind("<Button-3>", lambda e: self.playVideo(new_label.video_path))
+            self.selected_thumbnail.destroy()
+            self.selected_thumbnail = None
+
 
 
 
