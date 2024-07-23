@@ -185,10 +185,19 @@ class MainFrame:
         except:
             messagebox.showerror("Invalid input", "Invalid text format")
 
+
+    # Functions for switching canvas
     def play(self, video_path, break_time):
         self.root.withdraw()  # Hide the current window
         new_root = tk.Toplevel(self.root)
         PlayFrame(new_root, video_path, break_time)
+
+    def show(self):
+        self.canvas.pack(anchor=tk.CENTER, expand=True)
+
+    def hide(self):
+        self.canvas.pack_forget()
+
 
 
 
@@ -203,6 +212,21 @@ class PlayFrame:
         self.root.title("Workout")
         self.canvas = tk.Canvas(self.root, width=1000, height=800, bg='white')
         self.canvas.pack(anchor=tk.CENTER, expand=True)
+
+        # Canvas for video and live feed
+        self.vidCanvas = tk.Canvas(self.canvas, bg='lightblue')
+        self.vidFrame = ttk.Frame(self.vidCanvas)
+        self.vidCanvas.create_window((0, 0), window=self.vidFrame, anchor="nw")
+        self.vidCanvas.place(relx=0, rely=0, relwidth=1, relheight=0.5)
+
+        self.liveFeedCanvas = tk.Canvas(self.canvas, bg='lightgreen')
+        self.liveFeedFrame = ttk.Frame(self.liveFeedCanvas)
+        self.liveFeedCanvas.create_window((0, 0), window=self.workoutFrame, anchor="nw")
+        self.liveFeedCanvas.place(relx=0, rely=0.5, relwidth=1, relheight=0.5)
+
+    #def startLiveFeed(self):
+    #    liveFeed = livePose()
+
 
 
 
