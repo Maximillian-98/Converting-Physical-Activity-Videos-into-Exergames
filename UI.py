@@ -227,11 +227,27 @@ class PlayFrame:
 
     def playWorkout(self):
         for video_path in self.video_paths:
-            self.play_video(video_path)
+            self.playVideo(video_path)
             self.breakTime()
 
     #def startLiveFeed(self):
     #    liveFeed = livePose()
+    #    liveFeed.drawPose()
+
+    # Might have to change this to the dual thing that jim did in his thing
+    def playVideo(self, video_path):
+        cap = cv2.VideoCapture(video_path)
+        while cap.isOpened():
+            ret, frame = cap.read()
+            if ret:
+                cv2.imshow('Video', frame)
+                if cv2.waitKey(25) & 0xFF == ord('q'):
+                    break
+            else:
+                break
+        cap.release()
+        cv2.destroyAllWindows()
+
 
     def breakTime(self):
         break_time = tk.Label(self.vidCanvas, "Time Here")
