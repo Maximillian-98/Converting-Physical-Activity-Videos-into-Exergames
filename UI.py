@@ -203,10 +203,10 @@ class MainFrame:
 
 
 class PlayFrame:
-    def __init__(self, root, main_frame, video_path, break_time):
+    def __init__(self, root, main_frame, video_paths, break_time):
         self.root = root
         self.main_frame = main_frame
-        self.video_path = video_path
+        self.video_paths = video_paths
         self.break_time = break_time
 
         # Create Base canvas layer
@@ -225,8 +225,17 @@ class PlayFrame:
         self.liveFeedCanvas.create_window((0, 0), window=self.workoutFrame, anchor="nw")
         self.liveFeedCanvas.place(relx=0, rely=0.5, relwidth=1, relheight=0.5)
 
+    def playWorkout(self):
+        for video_path in self.video_paths:
+            self.play_video(video_path)
+            self.breakTime()
+
     #def startLiveFeed(self):
     #    liveFeed = livePose()
+
+    def breakTime(self):
+        break_time = tk.Label(self.vidCanvas, "Time Here")
+
 
 
 
