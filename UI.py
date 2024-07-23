@@ -189,7 +189,7 @@ class MainFrame:
     # Functions for switching canvas
     def play(self):
         video_paths = [label.viedo_path for label in self.workoutFrame.winfo_children()]
-        break_time = self.breakTime.get()
+        break_time = self.breakTime.cget("text")
         self.root.withdraw()  # Hide the current window
         new_root = tk.Toplevel(self.root)
         PlayFrame(new_root, video_paths, break_time)
