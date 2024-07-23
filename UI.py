@@ -187,7 +187,8 @@ class MainFrame:
 
 
     # Functions for switching canvas
-    def play(self, video_path, break_time):
+    def play(self, video_path):
+        break_time = self.breakTime.get()
         self.root.withdraw()  # Hide the current window
         new_root = tk.Toplevel(self.root)
         PlayFrame(new_root, video_path, break_time)
