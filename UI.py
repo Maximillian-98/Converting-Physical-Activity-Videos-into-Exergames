@@ -31,7 +31,7 @@ class MainFrame:
         self.breakTime = tk.Label(self.canvas, text="00:00")
         self.breakTime.place(relx=0.25, rely=0.9, relwidth=0.1, relheight=0.05)
 
-        self.breakEntry = tk.Text(self.canvas)
+        self.breakEntry = tk.Entry(self.canvas)
         self.breakEntry.place(relx=0.1, rely=0.85, relwidth=0.15, relheight=0.05)
 
         # Buttons
@@ -185,9 +185,9 @@ class MainFrame:
             time = int(self.breakEntry.get())
             mins, secs = divmod(time, 60)
             time_format = f"{mins:02d}:{secs:02d}"
-            self.breakTime.config(text=f"Timer: {time_format}")
+            self.breakTime.config(text=f"{time_format}")
         except:
-            messagebox.showerror("Invalid input")
+            messagebox.showerror("Invalid input", "Invalid text format")
 
 
 # Test
