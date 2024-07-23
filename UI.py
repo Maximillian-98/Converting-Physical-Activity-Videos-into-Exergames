@@ -1,5 +1,5 @@
 import tkinter as tk
-from tkinter import ttk, filedialog
+from tkinter import ttk, filedialog, messagebox
 import cv2
 from PIL import Image, ImageTk # For getting image for thumbnail
 from main import videoPose
@@ -181,8 +181,13 @@ class MainFrame:
             self.selected_thumbnail = None
 
     def setBreak(self):
-        time = self.breakEntry.get()
-        self.breakTime["text"]=time
+        try:
+            time = int(self.breakEntry.get())
+            mins, secs = divmod(time, 60)
+            time_format = f"{mins:02d}:{secs:02d}"
+            self.breakTime.config(text=f"Timer: {time_format}")
+        except:
+            messagebox.showerror("Invalid input")
 
 
 # Test
