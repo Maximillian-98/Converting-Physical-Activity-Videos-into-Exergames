@@ -189,6 +189,11 @@ class MainFrame:
         except:
             messagebox.showerror("Invalid input", "Invalid text format")
 
+class PlayFrame:
+    def __init__(self, root):
+        self.root = root
+        
+
 
 # Test
 testroot = tk.Tk()
