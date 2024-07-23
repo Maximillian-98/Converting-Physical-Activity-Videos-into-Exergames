@@ -187,11 +187,12 @@ class MainFrame:
 
 
     # Functions for switching canvas
-    def play(self, video_path):
+    def play(self):
+        video_paths = [label.viedo_path for label in self.workoutFrame.winfo_children()]
         break_time = self.breakTime.get()
         self.root.withdraw()  # Hide the current window
         new_root = tk.Toplevel(self.root)
-        PlayFrame(new_root, video_path, break_time)
+        PlayFrame(new_root, video_paths, break_time)
 
     def show(self):
         self.canvas.pack(anchor=tk.CENTER, expand=True)
