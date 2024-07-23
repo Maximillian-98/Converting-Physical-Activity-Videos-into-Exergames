@@ -43,7 +43,7 @@ class MainFrame:
         self.addButton.place(relx=0.6, rely=self.buttonPlacey, relwidth=0.1, relheight=0.05)
         self.removeButton = tk.Button(self.canvas, text="Remove", command=self.remove)
         self.removeButton.place(relx=0.8, rely=self.buttonPlacey, relwidth=0.1, relheight=0.05)
-        self.playButton = tk.Button(self.canvas, text="Play", command=self.check)
+        self.playButton = tk.Button(self.canvas, text="Play", command=self.play)
         self.playButton.place(relx=0.7, rely=0.85, relwidth=0.1, relheight=0.1)
         self.setBreakButton = tk.Button(self.canvas, text="Set Break", command=self.setBreak)
         self.setBreakButton.place(relx=0.25, rely=0.85, relwidth=0.1, relheight=0.05)
@@ -87,10 +87,6 @@ class MainFrame:
 
         self.workoutCanvas.place(relx=0.5, rely=self.windowPlacey, relwidth=0.5, relheight=self.windowHeight)
         self.workoutScrollbar.place(relx=1, rely=self.windowPlacey, relheight=self.windowHeight, anchor='ne')
-
-    
-    def check(self):
-            print("Success")
 
     # Upload button functions
     def upload(self):
@@ -189,7 +185,7 @@ class MainFrame:
         except:
             messagebox.showerror("Invalid input", "Invalid text format")
 
-    def playVideo(self, video_path, break_time):
+    def play(self, video_path, break_time):
         self.root.withdraw()  # Hide the current window
         new_root = tk.Toplevel(self.root)
         PlayFrame(new_root, video_path, break_time)
