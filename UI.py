@@ -189,10 +189,25 @@ class MainFrame:
         except:
             messagebox.showerror("Invalid input", "Invalid text format")
 
+    def playVideo(self, video_path, break_time):
+        self.root.withdraw()  # Hide the current window
+        new_root = tk.Toplevel(self.root)
+        PlayFrame(new_root, video_path, break_time)
+
+
+
 class PlayFrame:
-    def __init__(self, root):
+    def __init__(self, root, main_frame, video_path, break_time):
         self.root = root
-        
+        self.main_frame = main_frame
+        self.video_path = video_path
+        self.break_time = break_time
+
+        # Create Base canvas layer
+        self.root.title("Workout")
+        self.canvas = tk.Canvas(self.root, width=1000, height=800, bg='white')
+        self.canvas.pack(anchor=tk.CENTER, expand=True)
+
 
 
 # Test
