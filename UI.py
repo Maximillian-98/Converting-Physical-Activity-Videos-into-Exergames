@@ -188,7 +188,7 @@ class MainFrame:
 
     # Functions for switching canvas
     def play(self):
-        video_paths = [label.viedo_path for label in self.workoutFrame.winfo_children()]
+        video_paths = [label.video_path for label in self.workoutFrame.winfo_children()]
         time = self.breakTime.cget("text")
         minutes, seconds = map(int, time.split(":"))
         break_time = minutes * 60 + seconds
@@ -232,6 +232,9 @@ class PlayFrame:
         self.liveFeedCanvas.create_window((0, 0), window=self.workoutFrame, anchor="nw")
         self.liveFeedCanvas.place(relx=0, rely=0.5, relwidth=1, relheight=0.5)
 
+        self.backButton = tk.Button(self.canvas, text="Back", command=self.back)
+        self.backButton.place(relx=0.4, rely=0.8, relwidth=0.1, relheight=0.05)
+
 
     def playWorkout(self, break_time):
         for video_path in self.video_paths:
@@ -266,6 +269,10 @@ class PlayFrame:
             self.root.after(1000, self.breakTime, break_time - 1)
         else:
             self.breakText.config(text="")
+
+
+    def back(self):
+        self
 
 
 
