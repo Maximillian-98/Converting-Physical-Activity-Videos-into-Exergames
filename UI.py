@@ -194,7 +194,7 @@ class MainFrame:
         break_time = minutes * 60 + seconds
         print(break_time)
         self.root.withdraw()  # Hide the current window
-        new_root = tk.Toplevel(self.root)
+        new_root = tk.Toplevel(self.root, height=1000, width=800)
         PlayFrame(new_root, video_paths, break_time)
 
     def show(self):
@@ -278,7 +278,8 @@ class PlayFrame:
 
 
     def back(self):
-        self
+        self.canvas.destroy()
+        self.canvas.master.deiconify()
 
 
 
