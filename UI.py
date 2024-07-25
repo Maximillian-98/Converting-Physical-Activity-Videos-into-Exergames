@@ -197,15 +197,6 @@ class MainFrame:
         new_root = tk.Toplevel(self.root, height=1000, width=800)
         PlayFrame(new_root, self.root, video_paths, break_time)
 
-    '''
-    not used currently
-    def show(self):
-        self.canvas.pack(anchor=tk.CENTER, expand=True)
-
-    def hide(self):
-        self.canvas.pack_forget()
-    '''
-
 
 
 
