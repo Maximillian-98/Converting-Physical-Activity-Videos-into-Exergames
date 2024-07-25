@@ -44,8 +44,8 @@ class videoPose:
             
             # Render detections
             self.mp_drawing.draw_landmarks(image, results.pose_landmarks, self.mp_pose.POSE_CONNECTIONS,
-                                    self.mp_drawing.DrawingSpec(color=(245,117,66), thickness=2, circle_radius=2), 
-                                    self.mp_drawing.DrawingSpec(color=(245,66,230), thickness=2, circle_radius=2) 
+                                    self.mp_drawing.DrawingSpec(color=(245,0,0), thickness=2, circle_radius=2), 
+                                    self.mp_drawing.DrawingSpec(color=(0,0,245), thickness=2, circle_radius=2) 
                                     )               
             
             # Write the frame to the output video file
@@ -91,8 +91,8 @@ class livePose:
 
             # Render detections
             self.mp_drawing.draw_landmarks(image, results.pose_landmarks, self.mp_pose.POSE_CONNECTIONS,
-                                    self.mp_drawing.DrawingSpec(color=(245,117,66), thickness=2, circle_radius=2),
-                                    self.mp_drawing.DrawingSpec(color=(245,66,230), thickness=2, circle_radius=2) 
+                                    self.mp_drawing.DrawingSpec(color=(245,0,0), thickness=2, circle_radius=2),
+                                    self.mp_drawing.DrawingSpec(color=(0,0,245), thickness=2, circle_radius=2) 
                                     )           
 
             # Convert image to PhotoImage
