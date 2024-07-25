@@ -85,11 +85,9 @@ class livePose:
             # Make detection
             results = self.pose.process(image)
 
-            '''
             # Recolor back to BGR
             image.flags.writeable = True
             image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
-            '''
 
             # Render detections
             self.mp_drawing.draw_landmarks(image, results.pose_landmarks, self.mp_pose.POSE_CONNECTIONS,
@@ -98,7 +96,7 @@ class livePose:
                                     )           
 
             # Convert image to PhotoImage
-            # image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+            image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
             image = Image.fromarray(image)
             photo = ImageTk.PhotoImage(image=image)
 
