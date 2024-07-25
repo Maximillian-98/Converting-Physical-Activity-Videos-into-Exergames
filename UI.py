@@ -189,7 +189,9 @@ class MainFrame:
     # Functions for switching canvas
     def play(self):
         video_paths = [label.viedo_path for label in self.workoutFrame.winfo_children()]
-        break_time = self.breakTime.cget("text")
+        time = self.breakTime.cget("text")
+        minutes, seconds = map(int, time.split(":"))
+        break_time = minutes * 60 + seconds
         self.root.withdraw()  # Hide the current window
         new_root = tk.Toplevel(self.root)
         PlayFrame(new_root, video_paths, break_time)
@@ -215,21 +217,25 @@ class PlayFrame:
         self.canvas = tk.Canvas(self.root, width=1000, height=800, bg='white')
         self.canvas.pack(anchor=tk.CENTER, expand=True)
 
-        # Canvas for video and live feed
+        # Canvas for video and break text
         self.vidCanvas = tk.Canvas(self.canvas, bg='lightblue')
         self.vidFrame = ttk.Frame(self.vidCanvas)
         self.vidCanvas.create_window((0, 0), window=self.vidFrame, anchor="nw")
         self.vidCanvas.place(relx=0, rely=0, relwidth=1, relheight=0.5)
 
+        self.breakText = tk.Label(self.vidCanvas, text="00:00")
+        self.breakText.place(relx=0.4, rely=0.4, relwidth=0.1, relheight=0.05)
+
+        # Canvas for live feed
         self.liveFeedCanvas = tk.Canvas(self.canvas, bg='lightgreen')
         self.liveFeedFrame = ttk.Frame(self.liveFeedCanvas)
         self.liveFeedCanvas.create_window((0, 0), window=self.workoutFrame, anchor="nw")
         self.liveFeedCanvas.place(relx=0, rely=0.5, relwidth=1, relheight=0.5)
 
-    def playWorkout(self):
+    def playWorkout(self, break_time):
         for video_path in self.video_paths:
             self.playVideo(video_path)
-            self.breakTime()
+            self.breakTime(break_time)
 
     #def startLiveFeed(self):
     #    liveFeed = livePose()
@@ -250,8 +256,15 @@ class PlayFrame:
         cv2.destroyAllWindows()
 
 
-    def breakTime(self):
-        break_time = tk.Label(self.vidCanvas, "Time Here")
+    def breakTime(self, break_time):
+        if break_time > 0:
+            minutes, seconds = divmod(break_time, 60)
+            time_str = f"{minutes:02}:{seconds:02}"
+            self.breakText.config(text=time_str)
+            # Call this function again after 1 second (1000 ms)
+            self.root.after(1000, self.breakTime, break_time - 1)
+        else:
+            self.breakText
 
 
 
