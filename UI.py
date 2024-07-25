@@ -226,7 +226,7 @@ class PlayFrame:
         self.breakText = tk.Label(self.vidCanvas, text="00:00")
         self.breakText.place(relx=0.45, rely=0.2, relwidth=0.1, relheight=0.1)
 
-        self.playButton = tk.Button(self.vidCanvas, text="Play", command=self.playWorkout(self.break_time))
+        self.playButton = tk.Button(self.vidCanvas, text="Play", command=self.playWorkout(self.break_time, self.liveFeedCanvas))
         self.playButton.place(relx=0.45, rely=0.3, relwidth=0.1, relheight=0.1)
 
         self.backButton = tk.Button(self.vidCanvas, text="Back", command=self.back)
@@ -239,8 +239,8 @@ class PlayFrame:
         self.liveFeedCanvas.place(relx=0, rely=0.5, relwidth=1, relheight=0.5)
 
 
-    def playWorkout(self, break_time):
-        liveVideo = livePose(self.liveFeedCanvas)
+    def playWorkout(self, break_time, canvas):
+        liveVideo = livePose(canvas)
 
         # Start live feed in a separate thread
         self.livePose_thread = threading.Thread(target=liveVideo.drawPose, daemon=True)
