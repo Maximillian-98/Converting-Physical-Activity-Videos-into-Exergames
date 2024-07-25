@@ -239,8 +239,8 @@ class PlayFrame:
         self.playButton.place(relx=0.45, rely=0.3, relwidth=0.1, relheight=0.1)
 
 
-    def playWorkout(self, break_time, canvas):
-        liveVideo = livePose(canvas)
+    def playWorkout(self, break_time, liveCanvas):
+        liveVideo = livePose(liveCanvas)
 
         # Start live feed in a separate thread
         self.livePose_thread = threading.Thread(target=liveVideo.drawPose, daemon=True)
