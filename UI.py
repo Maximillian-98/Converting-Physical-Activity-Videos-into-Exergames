@@ -252,10 +252,6 @@ class PlayFrame:
             self.playVideo(video_path)
             self.breakTime(break_time)
 
-    #def startLiveFeed(self):
-    #    liveFeed = livePose()
-    #    liveFeed.drawPose()
-
     # Might have to change this to the dual thing that jim did in his thing
     def playVideo(self, video_path):
         cap = cv2.VideoCapture(video_path)
