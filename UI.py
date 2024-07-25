@@ -195,13 +195,16 @@ class MainFrame:
         print(break_time)
         self.root.withdraw()  # Hide the current window
         new_root = tk.Toplevel(self.root, height=1000, width=800)
-        PlayFrame(new_root, video_paths, break_time)
+        PlayFrame(new_root, self.root, video_paths, break_time)
 
+    '''
+    not used currently
     def show(self):
         self.canvas.pack(anchor=tk.CENTER, expand=True)
 
     def hide(self):
         self.canvas.pack_forget()
+    '''
 
 
 
@@ -235,7 +238,7 @@ class PlayFrame:
         # Canvas for live feed
         self.liveFeedCanvas = tk.Canvas(self.canvas, bg='lightgreen')
         self.liveFeedFrame = ttk.Frame(self.liveFeedCanvas)
-        self.liveFeedCanvas.create_window((0, 0), window=self.workoutFrame, anchor="nw")
+        self.liveFeedCanvas.create_window((0, 0), window=self.liveFeedFrame, anchor="nw")
         self.liveFeedCanvas.place(relx=0, rely=0.5, relwidth=1, relheight=0.5)
 
         self.backButton = tk.Button(self.canvas, text="Back", command=self.back)
