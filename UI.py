@@ -3,6 +3,7 @@ from tkinter import ttk, filedialog, messagebox
 import cv2
 from PIL import Image, ImageTk # For getting image for thumbnail
 from main import videoPose, livePose
+import threading
 import os
 
 class MainFrame:
@@ -239,8 +240,14 @@ class PlayFrame:
 
 
     def playWorkout(self, break_time):
-        liveVideo = livePose()
-        liveVideo.drawPose()
+        liveVideo = livePose(self.liveFeedCanvas)
+
+        # Start live feed in a separate thread
+        self.livePose_thread = threading.Thread(target=liveVideo.drawPose, daemon=True)
+        self.livePose_thread.start()
+
+        # liveVideo.drawPose()
+
         for video_path in self.video_paths:
             self.playVideo(video_path)
             self.breakTime(break_time)
