@@ -232,6 +232,7 @@ class PlayFrame:
         self.liveFeedCanvas.create_window((0, 0), window=self.workoutFrame, anchor="nw")
         self.liveFeedCanvas.place(relx=0, rely=0.5, relwidth=1, relheight=0.5)
 
+
     def playWorkout(self, break_time):
         for video_path in self.video_paths:
             self.playVideo(video_path)
