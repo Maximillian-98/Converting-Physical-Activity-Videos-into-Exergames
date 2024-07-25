@@ -2,7 +2,7 @@ import tkinter as tk
 from tkinter import ttk, filedialog, messagebox
 import cv2
 from PIL import Image, ImageTk # For getting image for thumbnail
-from main import videoPose
+from main import videoPose, livePose
 import os
 
 class MainFrame:
@@ -223,7 +223,13 @@ class PlayFrame:
         self.vidCanvas.place(relx=0, rely=0, relwidth=1, relheight=0.5)
 
         self.breakText = tk.Label(self.vidCanvas, text="00:00")
-        self.breakText.place(relx=0.4, rely=0.4, relwidth=0.1, relheight=0.05)
+        self.breakText.place(relx=0.45, rely=0.25, relwidth=0.1, relheight=0.05)
+
+        self.playButton = tk.Button(self.canvas, text="Play", command=self.playWorkout)
+        self.playButton.place(relx=0.45, rely=0.3, relwidth=0.1, relheight=0.05)
+
+        self.backButton = tk.Button(self.vidCanvas, text="Back", command=self.back)
+        self.backButton.place(relx=0.45, rely=0.35, relwidth=0.1, relheight=0.05)
 
         # Canvas for live feed
         self.liveFeedCanvas = tk.Canvas(self.canvas, bg='lightgreen')
@@ -231,11 +237,10 @@ class PlayFrame:
         self.liveFeedCanvas.create_window((0, 0), window=self.liveFeedFrame, anchor="nw")
         self.liveFeedCanvas.place(relx=0, rely=0.5, relwidth=1, relheight=0.5)
 
-        self.backButton = tk.Button(self.canvas, text="Back", command=self.back)
-        self.backButton.place(relx=0.4, rely=0.8, relwidth=0.1, relheight=0.05)
-
 
     def playWorkout(self, break_time):
+        liveVideo = livePose()
+        liveVideo.drawPose()
         for video_path in self.video_paths:
             self.playVideo(video_path)
             self.breakTime(break_time)
@@ -276,6 +281,11 @@ class PlayFrame:
 
 
 
+
+
+class ResultsFrame:
+    def __init__(self, root, main_frame, video_paths, break_time):
+        self.root = root
 
 
 # Test
