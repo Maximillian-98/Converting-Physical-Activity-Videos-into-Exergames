@@ -105,12 +105,25 @@ class livePose:
 
             # Used GPT here, apparently this is changed to help with threading used in UI.py
             self.canvas.after(0, self.update_canvas, photo)
+
+        self.cap.release()
+        cv2.destroyAllWindows()
     
     def update_canvas(self, photo):
         self.canvas.create_image(0, 0, image=photo, anchor='nw')
         self.canvas.image = photo 
-            
-        '''
+        
+
+#video_path = r'C:\Users\max\Documents\GitHub\Converting-Physical-Activity-Videos-into-Exergames\Exercise Videos\PushupsTop.mp4'
+
+#video_landmarker = videoPose(video_path)
+#video_landmarker.drawPose
+
+#live_landmarker = livePose()
+#live_landmarker.drawPose()
+
+# This was at the end of livePose
+'''
             # Update canvas with the image
             self.canvas.create_image(0, 0, image=photo, anchor='nw')
             self.canvas.update_idletasks()
@@ -122,14 +135,3 @@ class livePose:
             if cv2.waitKey(10) & 0xFF == ord('q'):
                 break
         '''
-
-        self.cap.release()
-        cv2.destroyAllWindows()
-
-video_path = r'C:\Users\max\Documents\GitHub\Converting-Physical-Activity-Videos-into-Exergames\Exercise Videos\PushupsTop.mp4'
-
-#video_landmarker = videoPose(video_path)
-#video_landmarker.drawPose
-
-#live_landmarker = livePose()
-#live_landmarker.drawPose()
