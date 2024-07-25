@@ -225,7 +225,7 @@ class PlayFrame:
         self.breakText = tk.Label(self.vidCanvas, text="00:00")
         self.breakText.place(relx=0.45, rely=0.2, relwidth=0.1, relheight=0.1)
 
-        self.playButton = tk.Button(self.vidCanvas, text="Play", command=self.playWorkout)
+        self.playButton = tk.Button(self.vidCanvas, text="Play", command=self.playWorkout(self.break_time))
         self.playButton.place(relx=0.45, rely=0.3, relwidth=0.1, relheight=0.1)
 
         self.backButton = tk.Button(self.vidCanvas, text="Back", command=self.back)
