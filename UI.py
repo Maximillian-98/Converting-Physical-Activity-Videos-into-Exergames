@@ -264,7 +264,7 @@ class PlayFrame:
             # Call this function again after 1 second (1000 ms)
             self.root.after(1000, self.breakTime, break_time - 1)
         else:
-            self.breakText
+            self.breakText.config(text="")
 
 
 
