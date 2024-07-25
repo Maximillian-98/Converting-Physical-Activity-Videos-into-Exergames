@@ -271,8 +271,8 @@ class PlayFrame:
 
 
     def back(self):
-        self.canvas.destroy()
-        self.canvas.master.deiconify()
+        self.root.withdraw()
+        self.main_frame.deiconify()
 
 
 
