@@ -72,7 +72,7 @@ class livePose:
         self.pose = self.mp_pose.Pose(min_detection_confidence=0.5, min_tracking_confidence=0.5)
 
         # Canvas input so the feed appears within the selected canvas
-        self.canvas = self.canvas
+        self.canvas = canvas
 
     def drawPose(self):
         while self.cap.isOpened():
