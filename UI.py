@@ -226,9 +226,6 @@ class PlayFrame:
         self.breakText = tk.Label(self.vidCanvas, text="00:00")
         self.breakText.place(relx=0.45, rely=0.2, relwidth=0.1, relheight=0.1)
 
-        self.playButton = tk.Button(self.vidCanvas, text="Play", command=self.playWorkout(self.break_time, self.liveFeedCanvas))
-        self.playButton.place(relx=0.45, rely=0.3, relwidth=0.1, relheight=0.1)
-
         self.backButton = tk.Button(self.vidCanvas, text="Back", command=self.back)
         self.backButton.place(relx=0.45, rely=0.4, relwidth=0.1, relheight=0.1)
 
@@ -237,6 +234,9 @@ class PlayFrame:
         self.liveFeedFrame = ttk.Frame(self.liveFeedCanvas)
         self.liveFeedCanvas.create_window((0, 0), window=self.liveFeedFrame, anchor="nw")
         self.liveFeedCanvas.place(relx=0, rely=0.5, relwidth=1, relheight=0.5)
+
+        self.playButton = tk.Button(self.vidCanvas, text="Play", command=self.playWorkout(self.break_time, self.liveFeedCanvas))
+        self.playButton.place(relx=0.45, rely=0.3, relwidth=0.1, relheight=0.1)
 
 
     def playWorkout(self, break_time, canvas):
