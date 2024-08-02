@@ -94,34 +94,24 @@ class MainFrame:
         file_path = filedialog.askopenfilename(filetypes=[("Video files", "*.mp4")])
         if file_path:
             output_path = file_path.replace(".mp4", "_processed.mp4") # This creates the output path for use in processing the video and add _process onto the end to differentiate the video
-            processed_video = self.processVideo(file_path, output_path)
-            self.addThumbnail(output_path)
+            processed_video = self.processVideo(output_path)
+            self.addThumbnail(processed_video)
 
-    def processVideo(self, video_path, output_path):
+    def processVideo(self, video_path):
         try:
-            processedVideo = videoPose(video_path, output_path)
+            processedVideo = videoPose(video_path)
             processedVideo.drawPose()
-            return processedVideo
+            # processedVideo should now contain the stored frames
         except:
             print("error processing video") 
             return None
-
-    def getThumbnail(self, video_path):
-        cap = cv2.VideoCapture(video_path)
-        ret, frame = cap.read()
-        if ret:
-            frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-            frame = cv2.resize(frame, (120, 90))  # Resize to thumbnail size
-            image = Image.fromarray(frame)
-            return ImageTk.PhotoImage(image)
-        cap.release()
-        return None
-    
-    def addThumbnail(self, video_path):
-        thumbnail = self.getThumbnail(video_path)
+        
+    def addThumbnail(self, processed_video):
+        if processed_video.frames:
+            thumbnail = processed_video.frames[0]
         label = tk.Label(self.exVidFrame, bg="lightgreen", image=thumbnail)
         label.image = thumbnail  # Keep a reference to avoid garbage collection, python may delete the image without a reference
-        label.video_path = video_path # Store the video path in the thumbnail
+        label.video_path = processed_video # Store the video path in the thumbnail
         label.pack(padx=10, pady=10)
         label.bind("<Button-1>", lambda e: self.selectThumbnail(label))
         label.bind("<Button-3>", lambda e: self.playVideo(label.video_path))

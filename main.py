@@ -6,9 +6,8 @@ from PIL import Image, ImageTk
 import numpy as np
 
 class videoPose:
-    def __init__(self, video_path, canvas):
+    def __init__(self, video_path):
         self.video_path = video_path
-        self.output_path = output_path
         self.cap = cv2.VideoCapture(self.video_path)
 
         # Get video properties
@@ -25,9 +24,6 @@ class videoPose:
 
         # List to store frames as PhotoImage objects
         self.frames = []
-
-        # Canvas input so the feed appears within the selected canvas
-        self.canvas = canvas
 
     def drawPose(self):
         while self.cap.isOpened():
@@ -60,10 +56,6 @@ class videoPose:
 
         self.cap.release()
         cv2.destroyAllWindows()
-    
-    def update_canvas(self, photo):
-        self.canvas.create_image(0, 0, image=photo, anchor='nw')
-        self.canvas.image = photo 
 
 
 
