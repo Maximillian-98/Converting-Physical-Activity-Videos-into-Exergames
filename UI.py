@@ -255,23 +255,16 @@ class PlayFrame:
     # Might have to change this to the dual thing that jim did in his thing
     def playVideo(self, video_path, canvas):
         cap = cv2.VideoCapture(video_path)
-        self.imgtk = None
-
-        def update_frame():
+        while cap.isOpened():
             ret, frame = cap.read()
             if ret:
-                frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-                image = Image.fromarray(frame)
-                photo = ImageTk.PhotoImage(image=image)
-                canvas.create_image(0, 0, image=photo, anchor='nw')
-                canvas.image = photo  # Keep a reference to avoid garbage collection
-                self.root.update()
-                self.root.after(25, update_frame)
+                cv2.imshow('Video', frame)
+                if cv2.waitKey(25) & 0xFF == ord('q'):
+                    break
             else:
-                cap.release()
-                # self.show_break_screen()
-
-        update_frame()
+                break
+        cap.release()
+        cv2.destroyAllWindows()
 
 
     def breakTime(self, break_time):
