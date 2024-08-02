@@ -101,6 +101,10 @@ class MainFrame:
         try:
             processedVideo = videoPose(video_path)
             processedVideo.drawPose()
+            if processedVideo.frames:
+                print('frames available')
+            else:
+                print('frames unavailable')
             return processedVideo # should now contain the stored frames
         except:
             print("error processing video") 
