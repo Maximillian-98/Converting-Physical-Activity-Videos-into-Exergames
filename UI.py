@@ -242,18 +242,13 @@ class PlayFrame:
     def playWorkout(self, break_time, liveCanvas):
         liveVideo = livePose(liveCanvas)
 
-        # Start live feed in a separate thread
-        self.livePose_thread = threading.Thread(target=liveVideo.drawPose, daemon=True)
-        self.livePose_thread.start()
-
-        # liveVideo.drawPose()
-
         for video_path in self.video_paths:
-            self.playVideo(video_path)
+            self.startTime()
+            self.startVideoandLive(video_path)
             self.breakTime(break_time)
 
     # Might have to change this to the dual thing that jim did in his thing
-    def playVideo(self, video_path):
+    def startVideoandLive(self, video_path):
         cap = cv2.VideoCapture(video_path)
         while cap.isOpened():
             ret, frame = cap.read()
@@ -266,6 +261,11 @@ class PlayFrame:
         cap.release()
         cv2.destroyAllWindows()
 
+    def startTime(self):
+        seconds = 5
+        self.breakText.config(text=time_str)
+        # Call this function again after 1 second (1000 ms)
+        self.root.after(1000, self.breakTime, break_time - 1)
 
     def breakTime(self, break_time):
         if break_time > 0:

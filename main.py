@@ -91,14 +91,6 @@ class livePose:
                                     self.mp_drawing.DrawingSpec(color=(0,0,245), thickness=2, circle_radius=2) 
                                     )           
 
-            # Convert image to PhotoImage
-            image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
-            image = Image.fromarray(image)
-            photo = ImageTk.PhotoImage(image=image)
-
-            # Used GPT here, apparently this is changed to help with threading used in UI.py
-            self.canvas.after(0, self.update_canvas, photo)
-
         self.cap.release()
         cv2.destroyAllWindows()
     
