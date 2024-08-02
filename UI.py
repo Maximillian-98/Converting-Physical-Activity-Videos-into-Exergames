@@ -109,12 +109,12 @@ class MainFrame:
     def addThumbnail(self, processed_video):
         if processed_video.frames:
             thumbnail = processed_video.frames[0]
-        label = tk.Label(self.exVidFrame, bg="lightgreen", image=thumbnail)
-        label.image = thumbnail  # Keep a reference to avoid garbage collection, python may delete the image without a reference
-        label.video_path = processed_video # Store the video path in the thumbnail
-        label.pack(padx=10, pady=10)
-        label.bind("<Button-1>", lambda e: self.selectThumbnail(label))
-        label.bind("<Button-3>", lambda e: self.playVideo(label.video_path))
+            label = tk.Label(self.exVidFrame, bg="lightgreen", image=thumbnail)
+            label.image = thumbnail  # Keep a reference to avoid garbage collection, python may delete the image without a reference
+            label.video_path = processed_video # Store the video path in the thumbnail
+            label.pack(padx=10, pady=10)
+            label.bind("<Button-1>", lambda e: self.selectThumbnail(label))
+            label.bind("<Button-3>", lambda e: self.playVideo(label.video_path))
 
     # Thumbnail functions
     def selectThumbnail(self, label):
