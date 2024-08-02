@@ -115,6 +115,8 @@ class MainFrame:
             label.pack(padx=10, pady=10)
             label.bind("<Button-1>", lambda e: self.selectThumbnail(label))
             label.bind("<Button-3>", lambda e: self.playVideo(label.video_path))
+        else:
+            print('error adding thumbnail')
 
     # Thumbnail functions
     def selectThumbnail(self, label):
