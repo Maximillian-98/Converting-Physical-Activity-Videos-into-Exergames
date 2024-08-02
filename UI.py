@@ -263,7 +263,7 @@ class PlayFrame:
                 frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
                 image = Image.fromarray(frame)
                 photo = ImageTk.PhotoImage(image=image)
-                canvas.create_image(0, 0, anchor=tk.NW, image=photo)
+                canvas.create_image(0, 0, image=photo, anchor='nw')
                 canvas.image = photo  # Keep a reference to avoid garbage collection
                 self.root.update()
                 self.root.after(25, update_frame)
