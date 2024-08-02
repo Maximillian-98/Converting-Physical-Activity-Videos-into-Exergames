@@ -232,11 +232,12 @@ class PlayFrame:
 
         for video_path in self.video_paths:
             self.startTime()
-            self.startVideoandLive(video_path)
+            self.startVideoandLive(liveVideo, video_path)
             self.breakTime(break_time)
 
     # Might have to change this to the dual thing that jim did in his thing
-    def startVideoandLive(self, video_path):
+    def startVideoandLive(self, live_video, video_path):
+        # Edit this tomorrow to add  concatanate the two
         cap = cv2.VideoCapture(video_path)
         while cap.isOpened():
             ret, frame = cap.read()
