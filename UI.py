@@ -249,7 +249,7 @@ class PlayFrame:
         # liveVideo.drawPose()
 
         for video_path in self.video_paths:
-            self.playVideo(video_path, self.vidCanvas)
+            self.playVideo(video_path)
             self.breakTime(break_time)
 
     # Might have to change this to the dual thing that jim did in his thing

@@ -6,7 +6,7 @@ from PIL import Image, ImageTk
 import numpy as np
 
 class videoPose:
-    def __init__(self, video_path, output_path, canvas):
+    def __init__(self, video_path, output_path):
         self.video_path = video_path
         self.output_path = output_path
         self.cap = cv2.VideoCapture(self.video_path)
@@ -26,9 +26,6 @@ class videoPose:
 
         # Setup mediapipe instance
         self.pose = self.mp_pose.Pose(min_detection_confidence=0.5, min_tracking_confidence=0.5)
-
-        # Canvas input so the feed appears within the selected canvas
-        self.canvas = canvas
 
     def drawPose(self):
         while self.cap.isOpened():
@@ -52,23 +49,11 @@ class videoPose:
                                     )          
 
             # Write the frame to the output video
-            self.out.write(image)     
-            
-            # Convert image to PhotoImage
-            image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
-            image = Image.fromarray(image)
-            photo = ImageTk.PhotoImage(image=image)
-
-            # Used GPT here, apparently this is changed to help with threading used in UI.py
-            self.canvas.after(0, self.update_canvas, photo)
+            self.out.write(image) 
 
         self.cap.release()
         self.out.release()
         cv2.destroyAllWindows()
-    
-    def update_canvas(self, photo):
-        self.canvas.create_image(0, 0, image=photo, anchor='nw')
-        self.canvas.image = photo 
 
 
 
