@@ -10,6 +10,9 @@ class videoPose:
         self.video_path = video_path
         self.cap = cv2.VideoCapture(self.video_path)
 
+        if not self.cap.isOpened():
+            print(f"Error: Could not open video file {video_path}")
+
         # Get video properties
         fps = self.cap.get(cv2.CAP_PROP_FPS)
         width = int(self.cap.get(cv2.CAP_PROP_FRAME_WIDTH))
@@ -47,15 +50,16 @@ class videoPose:
                                     )          
 
             # Convert processed frame to PhotoImage
-            image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
-            image = Image.fromarray(image)
-            photo = ImageTk.PhotoImage(image=image)
+            imageph = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+            imageph = Image.fromarray(imageph)
+            photo = ImageTk.PhotoImage(image=imageph)
 
             # Store the PhotoImage object
             self.frames.append(photo)
 
         self.cap.release()
         cv2.destroyAllWindows()
+        print(f"Total frames processed: {len(self.frames)}")
 
 
 
