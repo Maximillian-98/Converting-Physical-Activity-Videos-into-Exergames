@@ -49,7 +49,10 @@ class videoPose:
             self.mp_drawing.draw_landmarks(image, results.pose_landmarks, self.mp_pose.POSE_CONNECTIONS,
                                     self.mp_drawing.DrawingSpec(color=(245,0,0), thickness=2, circle_radius=2), 
                                     self.mp_drawing.DrawingSpec(color=(0,0,245), thickness=2, circle_radius=2) 
-                                    )               
+                                    )          
+
+            # Write the frame to the output video
+            self.out.write(image)     
             
             # Convert image to PhotoImage
             image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
