@@ -249,22 +249,29 @@ class PlayFrame:
         # liveVideo.drawPose()
 
         for video_path in self.video_paths:
-            self.playVideo(video_path)
+            self.playVideo(video_path, self.vidCanvas)
             self.breakTime(break_time)
 
     # Might have to change this to the dual thing that jim did in his thing
-    def playVideo(self, video_path):
+    def playVideo(self, video_path, canvas):
         cap = cv2.VideoCapture(video_path)
-        while cap.isOpened():
+        self.imgtk = None
+
+        def update_frame():
             ret, frame = cap.read()
             if ret:
-                cv2.imshow('Video', frame)
-                if cv2.waitKey(25) & 0xFF == ord('q'):
-                    break
+                frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+                image = Image.fromarray(frame)
+                photo = ImageTk.PhotoImage(image=image)
+                canvas.create_image(0, 0, anchor=tk.NW, image=photo)
+                canvas.image = photo  # Keep a reference to avoid garbage collection
+                self.root.update()
+                self.root.after(25, update_frame)
             else:
-                break
-        cap.release()
-        cv2.destroyAllWindows()
+                cap.release()
+                # self.show_break_screen()
+
+        update_frame()
 
 
     def breakTime(self, break_time):
