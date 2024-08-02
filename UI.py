@@ -263,9 +263,9 @@ class PlayFrame:
 
     def startTime(self):
         seconds = 5
-        self.breakText.config(text=time_str)
+        self.breakText.config(text=seconds)
         # Call this function again after 1 second (1000 ms)
-        self.root.after(1000, self.breakTime, break_time - 1)
+        self.root.after(1000, self.breakTime, seconds - 1)
 
     def breakTime(self, break_time):
         if break_time > 0:
