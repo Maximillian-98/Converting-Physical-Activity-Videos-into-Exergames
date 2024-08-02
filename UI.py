@@ -253,7 +253,7 @@ class PlayFrame:
             self.breakTime(break_time)
 
     # Might have to change this to the dual thing that jim did in his thing
-    def playVideo(self, video_path, canvas):
+    def playVideo(self, video_path):
         cap = cv2.VideoCapture(video_path)
         while cap.isOpened():
             ret, frame = cap.read()

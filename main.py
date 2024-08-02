@@ -48,11 +48,16 @@ class videoPose:
                                     self.mp_drawing.DrawingSpec(color=(0,0,245), thickness=2, circle_radius=2) 
                                     )               
             
+            # Convert image to PhotoImage
+            image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+            image = Image.fromarray(image)
+            photo = ImageTk.PhotoImage(image=image)
+
             # Write the frame to the output video file
-            self.out.write(image)
+            self.out.write(photo)
             
             # Display the frame
-            cv2.imshow('Mediapipe Feed', image)
+            cv2.imshow('Mediapipe Feed', photo)
 
             if cv2.waitKey(10) & 0xFF == ord('q'):
                 break
