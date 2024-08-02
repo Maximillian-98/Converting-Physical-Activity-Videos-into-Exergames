@@ -101,7 +101,7 @@ class MainFrame:
         try:
             processedVideo = videoPose(video_path)
             processedVideo.drawPose()
-            # processedVideo should now contain the stored frames
+            return processedVideo # should now contain the stored frames
         except:
             print("error processing video") 
             return None
