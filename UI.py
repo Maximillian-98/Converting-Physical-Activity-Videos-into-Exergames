@@ -240,14 +240,11 @@ class PlayFrame:
     def startVideoandLive(self, live_video, video_path):
         vid = cv2.VideoCapture(video_path)
         while vid.isOpened():
-            live_frame = live_video.drawPose()
+            cap_frame = live_video.drawPose()
             vid_ret, vid_frame = vid.read()
 
-            if live_frame is None or not vid_ret:
+            if cap_frame is None or not vid_ret:
                 break
-            
-            cap_ret, cap_frame = cap.read()
-            vid_ret, vid_frame = vid.read()
 
             # Resize frames
             height, width = 400, 600
@@ -260,7 +257,8 @@ class PlayFrame:
                 break
             else:
                 break
-        cap.release()
+        live_video.release()
+        vid.release()
         cv2.destroyAllWindows()
 
     def startTime(self):
