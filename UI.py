@@ -2,9 +2,11 @@ import tkinter as tk
 from tkinter import ttk, filedialog, messagebox
 import cv2
 from PIL import Image, ImageTk # For getting image for thumbnail
-from main import videoPose, # livePose
-import threading
+from main import videoPose # livePose
 import os
+import mediapipe as mp
+from mediapipe import solutions
+from mediapipe.framework.formats import landmark_pb2
 
 class MainFrame:
     def __init__(self, root):
@@ -271,10 +273,13 @@ class PlayFrame:
             except:
                 pass
 
+            mp_drawing = mp.solutions.drawing_utils
+            mp_pose = mp.solutions.pose
+
             # Render detections
-            self.mp_drawing.draw_landmarks(image, results.pose_landmarks, self.mp_pose.POSE_CONNECTIONS,
-                                    self.mp_drawing.DrawingSpec(color=(245,0,0), thickness=2, circle_radius=2),
-                                    self.mp_drawing.DrawingSpec(color=(0,0,245), thickness=2, circle_radius=2) 
+            mp_drawing.draw_landmarks(image, results.pose_landmarks, mp_pose.POSE_CONNECTIONS,
+                                    mp_drawing.DrawingSpec(color=(245,0,0), thickness=2, circle_radius=2),
+                                    mp_drawing.DrawingSpec(color=(0,0,245), thickness=2, circle_radius=2) 
                                     ) 
 
 
