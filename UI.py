@@ -231,20 +231,28 @@ class PlayFrame:
         liveVideo = livePose(liveCanvas)
 
         self.startTime()
-        
+
         for video_path in self.video_paths:
-            
             self.startVideoandLive(liveVideo, video_path)
             self.breakTime(break_time)
 
     # Might have to change this to the dual thing that jim did in his thing
     def startVideoandLive(self, live_video, video_path):
-        # cap = cv2.VideoCapture(live_video)
-        cap = cv2.VideoCapture(video_path)
-        while cap.isOpened():
-            ret, frame = cap.read()
-            if ret:
-                cv2.imshow('Video', frame)
+        cap = cv2.VideoCapture(live_video)
+        vid = cv2.VideoCapture(video_path)
+        while cap.isOpened() and vid.isOpened():
+            
+            cap_ret, cap_frame = cap.read()
+            vid_ret, vid_frame = vid.read()
+
+            # Resize frames
+            height, width = 400, 600
+            cap_frame = cv2.resize(cap_frame, (width, height))
+            vid_frame = cv2.resize(vid_frame, (width, height))
+
+            if cap_ret and vid_ret:
+                combined_frame = cv2.hconcat([cap_frame, vid_frame])
+                cv2.imshow('Combined Feed', combined_frame)
                 if cv2.waitKey(25) & 0xFF == ord('q'):
                     break
             else:
