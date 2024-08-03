@@ -41,6 +41,13 @@ class videoPose:
             # Recolor back to BGR
             image.flags.writeable = True
             image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
+
+            # Extract Landmarks
+            try:
+                landmarks = results.pose_landmarks.landmark
+                print(landmarks)
+            except:
+                pass
             
             # Render detections
             self.mp_drawing.draw_landmarks(image, results.pose_landmarks, self.mp_pose.POSE_CONNECTIONS,
@@ -84,6 +91,13 @@ class livePose:
             # Recolor back to BGR
             image.flags.writeable = True
             image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
+
+            # Extract Landmarks
+            try:
+                landmarks = results.pose_landmarks.landmark
+                print(landmarks)
+            except:
+                pass
 
             # Render detections
             self.mp_drawing.draw_landmarks(image, results.pose_landmarks, self.mp_pose.POSE_CONNECTIONS,
