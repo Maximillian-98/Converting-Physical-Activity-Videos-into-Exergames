@@ -54,6 +54,11 @@ class videoPose:
                                     self.mp_drawing.DrawingSpec(color=(245,0,0), thickness=2, circle_radius=2), 
                                     self.mp_drawing.DrawingSpec(color=(0,0,245), thickness=2, circle_radius=2) 
                                     )          
+            
+            # Play the video
+            cv2.imshow('Mediapipe Feed', image)
+            if cv2.waitKey(10) & 0xFF == ord('q'):
+                break
 
             # Write the frame to the output video
             self.out.write(image) 
