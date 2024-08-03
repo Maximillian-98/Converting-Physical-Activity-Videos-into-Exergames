@@ -93,10 +93,6 @@ class livePose:
 
         self.cap.release()
         cv2.destroyAllWindows()
-    
-    def update_canvas(self, photo):
-        self.canvas.create_image(0, 0, image=photo, anchor='nw')
-        self.canvas.image = photo 
         
 
 #video_path = r'C:\Users\max\Documents\GitHub\Converting-Physical-Activity-Videos-into-Exergames\Exercise Videos\PushupsTop.mp4'
