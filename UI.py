@@ -230,7 +230,7 @@ class PlayFrame:
 
     def playWorkout(self, break_time):
         self.startTime()
-
+        
         for video_path in self.video_paths:
             self.startVideoandLive(video_path)
             self.breakTime(break_time)
