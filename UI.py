@@ -2,7 +2,7 @@ import tkinter as tk
 from tkinter import ttk, filedialog, messagebox
 import cv2
 from PIL import Image, ImageTk # For getting image for thumbnail
-from main import videoPose, livePose
+from main import videoPose, # livePose
 import threading
 import os
 
@@ -235,13 +235,15 @@ class PlayFrame:
 
     # Might have to change this to the dual thing that jim did in his thing
     def startVideoandLive(self, video_path):
-        live_video = livePose()
+        # Start video and live camera
         vid = cv2.VideoCapture(video_path)
-        while vid.isOpened():
-            cap_frame = live_video.drawPose()
+        cap = cv2.VideoCapture(0)
+        while cap.isOpened and vid.isOpened():
             vid_ret, vid_frame = vid.read()
+            cap_ret, cap_frame = cap.read()
 
-            if cap_frame is None or not vid_ret:
+            # Stop if video or live feed fail
+            if not vid_ret or not cap_ret:
                 break
 
             # Resize frames
@@ -249,13 +251,41 @@ class PlayFrame:
             cap_frame = cv2.resize(cap_frame, (width, height))
             vid_frame = cv2.resize(vid_frame, (width, height))
 
-            combined_frame = cv2.vconcat([cap_frame, vid_frame])
+
+            # Process live frame
+            # Recolor image to RGB
+            image = cv2.cvtColor(cap_frame, cv2.COLOR_BGR2RGB)
+            image.flags.writeable = False
+        
+            # Make detection
+            results = self.pose.process(image)
+
+            # Recolor back to BGR
+            image.flags.writeable = True
+            image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
+
+            # Extract Landmarks
+            try:
+                landmarks = results.pose_landmarks.landmark
+                #print(landmarks)
+            except:
+                pass
+
+            # Render detections
+            self.mp_drawing.draw_landmarks(image, results.pose_landmarks, self.mp_pose.POSE_CONNECTIONS,
+                                    self.mp_drawing.DrawingSpec(color=(245,0,0), thickness=2, circle_radius=2),
+                                    self.mp_drawing.DrawingSpec(color=(0,0,245), thickness=2, circle_radius=2) 
+                                    ) 
+
+
+
+            # Combine the frames
+            combined_frame = cv2.vconcat([image, vid_frame])
             cv2.imshow('Combined Feed', combined_frame)
             if cv2.waitKey(25) & 0xFF == ord('q'):
                 break
             else:
                 break
-        live_video.release()
         vid.release()
         cv2.destroyAllWindows()
 
