@@ -236,7 +236,7 @@ class PlayFrame:
 
     # Might have to change this to the dual thing that jim did in his thing
     def startVideoandLive(self, video_path):
-        liveVideo = livePose()
+        live_video = livePose()
         vid = cv2.VideoCapture(video_path)
         while vid.isOpened():
             cap_frame = live_video.drawPose()
