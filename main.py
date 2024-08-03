@@ -45,7 +45,7 @@ class videoPose:
             # Extract Landmarks
             try:
                 landmarks = results.pose_landmarks.landmark
-                print(landmarks)
+                #print(landmarks)
             except:
                 pass
             
@@ -95,7 +95,7 @@ class livePose:
             # Extract Landmarks
             try:
                 landmarks = results.pose_landmarks.landmark
-                print(landmarks)
+                #print(landmarks)
             except:
                 pass
 
