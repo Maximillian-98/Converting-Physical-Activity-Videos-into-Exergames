@@ -223,8 +223,7 @@ class PlayFrame:
         self.backButton = tk.Button(self.canvas, text="Back", command=self.back)
         self.backButton.place(relx=0.45, rely=0.4, relwidth=0.1, relheight=0.1)
 
-        self.Button = tk.Button(self.canvas, text="P", command=self.playWorkout(self.break_time))
-        self.Button.place(relx=0.45, rely=0.3, relwidth=0.1, relheight=0.1)
+        self.playWorkout(self.break_time)
 
 
     def playWorkout(self, break_time):
