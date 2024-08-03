@@ -223,21 +223,20 @@ class PlayFrame:
         self.backButton = tk.Button(self.canvas, text="Back", command=self.back)
         self.backButton.place(relx=0.45, rely=0.4, relwidth=0.1, relheight=0.1)
 
-        self.playButton = tk.Button(self.canvas, text="Play", command=self.playWorkout(self.break_time, self.canvas))
-        self.playButton.place(relx=0.45, rely=0.3, relwidth=0.1, relheight=0.1)
+        self.Button = tk.Button(self.canvas, text="P", command=self.playWorkout)
+        self.Button.place(relx=0.45, rely=0.3, relwidth=0.1, relheight=0.1)
 
 
-    def playWorkout(self, break_time, liveCanvas):
-        liveVideo = livePose(liveCanvas)
-
+    def playWorkout(self, break_time):
         self.startTime()
 
         for video_path in self.video_paths:
-            self.startVideoandLive(liveVideo, video_path)
+            self.startVideoandLive(video_path)
             self.breakTime(break_time)
 
     # Might have to change this to the dual thing that jim did in his thing
-    def startVideoandLive(self, live_video, video_path):
+    def startVideoandLive(self, video_path):
+        liveVideo = livePose()
         vid = cv2.VideoCapture(video_path)
         while vid.isOpened():
             cap_frame = live_video.drawPose()
