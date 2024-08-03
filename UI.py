@@ -249,7 +249,7 @@ class PlayFrame:
             cap_frame = cv2.resize(cap_frame, (width, height))
             vid_frame = cv2.resize(vid_frame, (width, height))
 
-            combined_frame = cv2.hconcat([cap_frame, vid_frame])
+            combined_frame = cv2.vconcat([cap_frame, vid_frame])
             cv2.imshow('Combined Feed', combined_frame)
             if cv2.waitKey(25) & 0xFF == ord('q'):
                 break
