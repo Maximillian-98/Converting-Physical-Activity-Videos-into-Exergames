@@ -237,10 +237,15 @@ class PlayFrame:
 
     # Might have to change this to the dual thing that jim did in his thing
     def startVideoandLive(self, video_path):
+        # Initialise Mediapipe pose
+        pose = mp_pose.Pose(min_detection_confidence=0.5, min_tracking_confidence=0.5)
+        mp_drawing = mp.solutions.drawing_utils
+        mp_pose = mp.solutions.pose
+
         # Start video and live camera
         vid = cv2.VideoCapture(video_path)
         cap = cv2.VideoCapture(0)
-        while cap.isOpened and vid.isOpened():
+        while cap.isOpened() and vid.isOpened():
             vid_ret, vid_frame = vid.read()
             cap_ret, cap_frame = cap.read()
 
@@ -260,7 +265,7 @@ class PlayFrame:
             image.flags.writeable = False
         
             # Make detection
-            results = self.pose.process(image)
+            results = pose.process(image)
 
             # Recolor back to BGR
             image.flags.writeable = True
@@ -272,9 +277,7 @@ class PlayFrame:
                 #print(landmarks)
             except:
                 pass
-
-            mp_drawing = mp.solutions.drawing_utils
-            mp_pose = mp.solutions.pose
+            
 
             # Render detections
             mp_drawing.draw_landmarks(image, results.pose_landmarks, mp_pose.POSE_CONNECTIONS,
@@ -289,9 +292,9 @@ class PlayFrame:
             cv2.imshow('Combined Feed', combined_frame)
             if cv2.waitKey(25) & 0xFF == ord('q'):
                 break
-            else:
-                break
+
         vid.release()
+        cap.release()
         cv2.destroyAllWindows()
 
     def startTime(self):
