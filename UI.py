@@ -238,9 +238,9 @@ class PlayFrame:
     # Might have to change this to the dual thing that jim did in his thing
     def startVideoandLive(self, video_path):
         # Initialise Mediapipe pose
-        pose = mp_pose.Pose(min_detection_confidence=0.5, min_tracking_confidence=0.5)
         mp_drawing = mp.solutions.drawing_utils
         mp_pose = mp.solutions.pose
+        pose = mp_pose.Pose(min_detection_confidence=0.5, min_tracking_confidence=0.5)
 
         # Start video and live camera
         vid = cv2.VideoCapture(video_path)
@@ -257,7 +257,6 @@ class PlayFrame:
             height, width = 400, 600
             cap_frame = cv2.resize(cap_frame, (width, height))
             vid_frame = cv2.resize(vid_frame, (width, height))
-
 
             # Process live frame
             # Recolor image to RGB
@@ -278,14 +277,11 @@ class PlayFrame:
             except:
                 pass
             
-
             # Render detections
             mp_drawing.draw_landmarks(image, results.pose_landmarks, mp_pose.POSE_CONNECTIONS,
                                     mp_drawing.DrawingSpec(color=(245,0,0), thickness=2, circle_radius=2),
                                     mp_drawing.DrawingSpec(color=(0,0,245), thickness=2, circle_radius=2) 
                                     ) 
-
-
 
             # Combine the frames
             combined_frame = cv2.vconcat([image, vid_frame])
