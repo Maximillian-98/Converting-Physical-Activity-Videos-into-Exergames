@@ -262,7 +262,8 @@ class PlayFrame:
 
     def startTime(self):
         seconds = 5
-        self.breakText.config(text=seconds)
+        time_str = f"{00:02}:{seconds:02}"
+        self.breakText.config(text=time_str)
         # Call this function again after 1 second (1000 ms)
         self.root.after(1000, self.breakTime, seconds - 1)
 
