@@ -242,7 +242,7 @@ class PlayFrame:
 
         vid = cv2.VideoCapture(video_path)
 
-        self.createCountdown(break_time, live_pose.cap)
+        self.createCountdown(break_time, live_pose)
 
         while live_pose.cap.isOpened() and vid.isOpened():
             vid_ret, vid_frame = vid.read()
@@ -267,11 +267,13 @@ class PlayFrame:
         vid.release()
         live_pose.cap.release()
 
-    def createCountdown(self, time):
+    def createCountdown(self, time, live_pose):
         fps = 30
 
         for t in range(time, -1, -1):
             # Create black image
+            cap_frame = live_pose.drawPose()
+            cap_frame = cv2.resize(cap_frame, (self.cvWidth, self.cvHeight))
             vid_frame = np.zeros((self.cvHeight, self.cvWidth, 3), dtype=np.uint8)
 
             # Display countdown timer
