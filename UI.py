@@ -304,7 +304,7 @@ class PlayFrame:
             # Display countdown timer
             minutes, seconds = divmod(t, 60)
             timer_str = f"{minutes:02}:{seconds:02}"
-            cv2.putText(frame, timer_str, (self.cvWidth // 2 - 50, self.cvHeight // 2), cv2.FONT_HERSHEY_SIMPLEX, 2, (255, 255, 255), 4, cv2.LINE_AA)
+            cv2.putText(frame, timer_str, (self.cvWidth // 2 - 50, self.cvHeight // 2), cv2.FONT_HERSHEY_DUPLEX, 2, (255, 255, 255), 4, cv2.LINE_AA)
 
             # Show the frame multiple times to achieve the desired duration
             for _ in range(fps):
