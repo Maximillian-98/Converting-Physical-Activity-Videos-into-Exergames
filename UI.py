@@ -248,7 +248,7 @@ class PlayFrame:
             vid_ret, vid_frame = vid.read()
 
             # Stop if video or live feed fail
-            if not vid_ret
+            if not vid_ret:
                 break
 
             # Process live frame
