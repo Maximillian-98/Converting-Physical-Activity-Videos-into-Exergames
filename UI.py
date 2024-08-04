@@ -244,20 +244,12 @@ class PlayFrame:
         mp_pose = mp.solutions.pose
         pose = mp_pose.Pose(min_detection_confidence=0.5, min_tracking_confidence=0.5)
 
-        # Start video and live camera
-        vid = cv2.VideoCapture(video_path)
         cap = cv2.VideoCapture(0)
-        while cap.isOpened() and vid.isOpened():
-            vid_ret, vid_frame = vid.read()
+        while cap.isOpened():
             cap_ret, cap_frame = cap.read()
 
-            # Stop if video or live feed fail
-            if not vid_ret or not cap_ret:
-                break
-
-            # Resize frames
+            # Resize live frames
             cap_frame = cv2.resize(cap_frame, (self.cvWidth, self.cvHeight))
-            vid_frame = cv2.resize(vid_frame, (self.cvWidth, self.cvHeight))
 
             # Process live frame
             # Recolor image to RGB
@@ -286,6 +278,33 @@ class PlayFrame:
 
             # Combine the frames
             combined_frame = cv2.vconcat([image, vid_frame])
+
+
+            for t in range(5, -1, -1):
+            # Create black image
+                vid_frame = np.zeros((self.cvHeight, self.cvWidth, 3), dtype=np.uint8)
+
+                # Display countdown timer
+                minutes, seconds = divmod(t, 60)
+                timer_str = f"{minutes:02}:{seconds:02}"
+                cv2.putText(vid_frame, timer_str, (self.cvWidth // 2 - 50, self.cvHeight // 2), cv2.FONT_HERSHEY_DUPLEX, 2, (255, 255, 255), 4, cv2.LINE_AA)
+
+        # Start video and live camera
+        vid = cv2.VideoCapture(video_path)
+        cap = cv2.VideoCapture(0)
+        while cap.isOpened() and vid.isOpened():
+            vid_ret, vid_frame = vid.read()
+            cap_ret, cap_frame = cap.read()
+
+            # Stop if video or live feed fail
+            if not vid_ret or not cap_ret:
+                break
+
+            # Resize frames
+            
+            vid_frame = cv2.resize(vid_frame, (self.cvWidth, self.cvHeight))
+
+            
             cv2.imshow('Combined Feed', combined_frame)
             if cv2.waitKey(25) & 0xFF == ord('q'):
                 break
@@ -298,7 +317,7 @@ class PlayFrame:
         fps = 30
 
         for t in range(time, -1, -1):
-            cap_frame = np.zeros((self.cvHeight, self.cvWidth, 3), dtype=np.uint8)
+            # Create black image
             vid_frame = np.zeros((self.cvHeight, self.cvWidth, 3), dtype=np.uint8)
 
             # Display countdown timer
