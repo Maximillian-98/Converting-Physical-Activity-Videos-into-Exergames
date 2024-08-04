@@ -2,9 +2,11 @@ import tkinter as tk
 from tkinter import ttk, filedialog, messagebox
 import cv2
 from PIL import Image, ImageTk # For getting image for thumbnail
-from main import videoPose, livePose
-import threading
+from main import videoPose # livePose
 import os
+import mediapipe as mp
+from mediapipe import solutions
+from mediapipe.framework.formats import landmark_pb2
 
 class MainFrame:
     def __init__(self, root):
@@ -217,55 +219,86 @@ class PlayFrame:
         self.canvas = tk.Canvas(self.root, width=1000, height=800, bg='white')
         self.canvas.pack(anchor=tk.CENTER, expand=True)
 
-        # Canvas for video and break text
-        self.vidCanvas = tk.Canvas(self.canvas, bg='lightblue')
-        self.vidFrame = ttk.Frame(self.vidCanvas)
-        self.vidCanvas.create_window((0, 0), window=self.vidFrame, anchor="nw")
-        self.vidCanvas.place(relx=0, rely=0, relwidth=1, relheight=0.5)
-
-        self.breakText = tk.Label(self.vidCanvas, text="00:00")
+        self.breakText = tk.Label(self.canvas, text="00:00")
         self.breakText.place(relx=0.45, rely=0.2, relwidth=0.1, relheight=0.1)
 
-        self.backButton = tk.Button(self.vidCanvas, text="Back", command=self.back)
+        self.backButton = tk.Button(self.canvas, text="Back", command=self.back)
         self.backButton.place(relx=0.45, rely=0.4, relwidth=0.1, relheight=0.1)
 
-        # Canvas for live feed
-        self.liveFeedCanvas = tk.Canvas(self.canvas, bg='lightgreen')
-        self.liveFeedFrame = ttk.Frame(self.liveFeedCanvas)
-        self.liveFeedCanvas.create_window((0, 0), window=self.liveFeedFrame, anchor="nw")
-        self.liveFeedCanvas.place(relx=0, rely=0.5, relwidth=1, relheight=0.5)
-
-        self.playButton = tk.Button(self.vidCanvas, text="Play", command=self.playWorkout(self.break_time, self.liveFeedCanvas))
-        self.playButton.place(relx=0.45, rely=0.3, relwidth=0.1, relheight=0.1)
+        self.playWorkout(self.break_time)
 
 
-    def playWorkout(self, break_time, liveCanvas):
-        liveVideo = livePose(liveCanvas)
-
-        # Start live feed in a separate thread
-        self.livePose_thread = threading.Thread(target=liveVideo.drawPose, daemon=True)
-        self.livePose_thread.start()
-
-        # liveVideo.drawPose()
-
+    def playWorkout(self, break_time):
+        self.startTime()
+        
         for video_path in self.video_paths:
-            self.playVideo(video_path)
+            self.startVideoandLive(video_path)
             self.breakTime(break_time)
 
     # Might have to change this to the dual thing that jim did in his thing
-    def playVideo(self, video_path):
-        cap = cv2.VideoCapture(video_path)
-        while cap.isOpened():
-            ret, frame = cap.read()
-            if ret:
-                cv2.imshow('Video', frame)
-                if cv2.waitKey(25) & 0xFF == ord('q'):
-                    break
-            else:
+    def startVideoandLive(self, video_path):
+        # Initialise Mediapipe pose
+        mp_drawing = mp.solutions.drawing_utils
+        mp_pose = mp.solutions.pose
+        pose = mp_pose.Pose(min_detection_confidence=0.5, min_tracking_confidence=0.5)
+
+        # Start video and live camera
+        vid = cv2.VideoCapture(video_path)
+        cap = cv2.VideoCapture(0)
+        while cap.isOpened() and vid.isOpened():
+            vid_ret, vid_frame = vid.read()
+            cap_ret, cap_frame = cap.read()
+
+            # Stop if video or live feed fail
+            if not vid_ret or not cap_ret:
                 break
+
+            # Resize frames
+            height, width = 400, 600
+            cap_frame = cv2.resize(cap_frame, (width, height))
+            vid_frame = cv2.resize(vid_frame, (width, height))
+
+            # Process live frame
+            # Recolor image to RGB
+            image = cv2.cvtColor(cap_frame, cv2.COLOR_BGR2RGB)
+            image.flags.writeable = False
+        
+            # Make detection
+            results = pose.process(image)
+
+            # Recolor back to BGR
+            image.flags.writeable = True
+            image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
+
+            # Extract Landmarks
+            try:
+                landmarks = results.pose_landmarks.landmark
+                #print(landmarks)
+            except:
+                pass
+            
+            # Render detections
+            mp_drawing.draw_landmarks(image, results.pose_landmarks, mp_pose.POSE_CONNECTIONS,
+                                    mp_drawing.DrawingSpec(color=(245,0,0), thickness=2, circle_radius=2),
+                                    mp_drawing.DrawingSpec(color=(0,0,245), thickness=2, circle_radius=2) 
+                                    ) 
+
+            # Combine the frames
+            combined_frame = cv2.vconcat([image, vid_frame])
+            cv2.imshow('Combined Feed', combined_frame)
+            if cv2.waitKey(25) & 0xFF == ord('q'):
+                break
+
+        vid.release()
         cap.release()
         cv2.destroyAllWindows()
 
+    def startTime(self):
+        seconds = 5
+        time_str = f"{00:02}:{seconds:02}"
+        self.breakText.config(text=time_str)
+        # Call this function again after 1 second (1000 ms)
+        self.root.after(1000, self.breakTime, seconds - 1)
 
     def breakTime(self, break_time):
         if break_time > 0:
