@@ -232,11 +232,11 @@ class PlayFrame:
 
 
     def playWorkout(self, break_time):
-        self.startTime()
+        self.createCountdown(5)
         
         for video_path in self.video_paths:
             self.startVideoandLive(video_path)
-            self.breakTime(break_time)
+            self.createCountdown(break_time)
 
     # Might have to change this to the dual thing that jim did in his thing
     def startVideoandLive(self, video_path):
@@ -295,7 +295,7 @@ class PlayFrame:
         cap.release()
         cv2.destroyAllWindows()
 
-    def creatCountdown(self, time):
+    def createCountdown(self, time):
         fps = 30
 
         for t in range(time, -1, -1):
@@ -305,32 +305,16 @@ class PlayFrame:
             # Display countdown timer
             minutes, seconds = divmod(t, 60)
             timer_str = f"{minutes:02}:{seconds:02}"
-            cv2.putText(frame, timer_str, (width // 2 - 50, height // 2), cv2.FONT_HERSHEY_SIMPLEX, 2, (255, 255, 255), 4, cv2.LINE_AA)
+            cv2.putText(frame, timer_str, (self.cvWidth // 2 - 50, self.cvHeight // 2), cv2.FONT_HERSHEY_SIMPLEX, 2, (255, 255, 255), 4, cv2.LINE_AA)
 
-            # Write the frame multiple times to achieve the desired duration
+            # Show the frame multiple times to achieve the desired duration
             for _ in range(fps):
-                out.write(frame)
+                cv2.imshow('Countdown', frame)
+                if cv2.waitKey(int(1000 / fps)) & 0xFF == ord('q'):
+                    break
 
-        # Release everything if job is finished
-        out.release()
-
-    def startTime(self):
-        seconds = 5
-        time_str = f"{00:02}:{seconds:02}"
-        self.breakText.config(text=time_str)
-        # Call this function again after 1 second (1000 ms)
-        self.root.after(1000, self.breakTime, seconds - 1)
-
-    def breakTime(self, break_time):
-        if break_time > 0:
-            minutes, seconds = divmod(break_time, 60)
-            time_str = f"{minutes:02}:{seconds:02}"
-            self.breakText.config(text=time_str)
-            # Call this function again after 1 second (1000 ms)
-            self.root.after(1000, self.breakTime, break_time - 1)
-        else:
-            self.breakText.config(text="")
-
+        # Destroy the window after countdown
+        cv2.destroyAllWindows()
 
     def back(self):
         self.root.withdraw()
