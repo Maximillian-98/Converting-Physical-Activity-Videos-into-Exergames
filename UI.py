@@ -256,9 +256,6 @@ class PlayFrame:
             cap_frame = cv2.resize(cap_frame, (self.cvWidth, self.cvHeight))
             vid_frame = cv2.resize(vid_frame, (self.cvWidth, self.cvHeight))
 
-            # Process live frame
-            image = self.process_live_frame(cap_frame, mp_drawing, mp_pose)
-
             # Combine the frames
             combined_frame = cv2.vconcat([image, vid_frame])
             cv2.imshow('Combined Feed', combined_frame)
@@ -266,7 +263,7 @@ class PlayFrame:
                 break
 
         vid.release()
-        cap.release()
+        live_pose.cap.release()
 
     def createCountdown(self, time):
         fps = 30
