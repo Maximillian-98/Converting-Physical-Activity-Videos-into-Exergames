@@ -70,7 +70,7 @@ class videoPose:
 
 
 class livePose:
-    def __init__(self, canvas):
+    def __init__(self):
         self.cap = cv2.VideoCapture(0)
 
         self.mp_drawing = mp.solutions.drawing_utils
