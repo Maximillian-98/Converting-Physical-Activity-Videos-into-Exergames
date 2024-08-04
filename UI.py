@@ -246,12 +246,12 @@ class PlayFrame:
 
         while live_pose.cap.isOpened() and vid.isOpened():
             vid_ret, vid_frame = vid.read()
-            cap_ret, cap_frame = live_pose.cap.read()
 
             # Stop if video or live feed fail
-            if not vid_ret or not cap_ret:
+            if not vid_ret
                 break
 
+            # Process live frame
             image = live_pose.drawPose()
 
             # Resize frames
