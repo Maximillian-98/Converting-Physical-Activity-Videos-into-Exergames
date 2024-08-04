@@ -304,7 +304,8 @@ class PlayFrame:
             # Display countdown timer
             minutes, seconds = divmod(t, 60)
             timer_str = f"{minutes:02}:{seconds:02}"
-            cv2.putText(cap_frame, timer_str, (self.cvWidth, self.cvHeight), cv2.FONT_HERSHEY_DUPLEX, 2, (255, 255, 255), 4, cv2.LINE_AA)
+            cv2.putText(vid_frame, timer_str, (self.cvWidth // 2 - 50, self.cvHeight // 2), cv2.FONT_HERSHEY_DUPLEX, 2, (255, 255, 255), 4, cv2.LINE_AA)
+            # Really odd but the text is placed in a weird position so //2-50 is required to move it in place
 
             # Combine the frames (empty cap_frame for now)
             combined_frame = cv2.vconcat([cap_frame, vid_frame])
