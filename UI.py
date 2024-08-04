@@ -298,22 +298,22 @@ class PlayFrame:
         fps = 30
 
         for t in range(time, -1, -1):
-            # Create a black image
-            frame = np.zeros((self.cvHeight, self.cvWidth, 3), dtype=np.uint8)
+            cap_frame = np.zeros((self.cvHeight, self.cvWidth, 3), dtype=np.uint8)
+            vid_frame = np.zeros((self.cvHeight, self.cvWidth, 3), dtype=np.uint8)
 
             # Display countdown timer
             minutes, seconds = divmod(t, 60)
             timer_str = f"{minutes:02}:{seconds:02}"
-            cv2.putText(frame, timer_str, (self.cvWidth // 2 - 50, self.cvHeight // 2), cv2.FONT_HERSHEY_DUPLEX, 2, (255, 255, 255), 4, cv2.LINE_AA)
+            cv2.putText(cap_frame, timer_str, (self.cvWidth, self.cvHeight), cv2.FONT_HERSHEY_DUPLEX, 2, (255, 255, 255), 4, cv2.LINE_AA)
+
+            # Combine the frames (empty cap_frame for now)
+            combined_frame = cv2.vconcat([cap_frame, vid_frame])
 
             # Show the frame multiple times to achieve the desired duration
             for _ in range(fps):
-                cv2.imshow('Countdown', frame)
+                cv2.imshow('Combined Feed', combined_frame)
                 if cv2.waitKey(int(1000 / fps)) & 0xFF == ord('q'):
                     break
-
-        # Destroy the window after countdown
-        cv2.destroyAllWindows()
 
     def back(self):
         self.root.withdraw()
