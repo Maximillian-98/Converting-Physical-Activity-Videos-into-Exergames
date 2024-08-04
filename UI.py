@@ -238,7 +238,7 @@ class PlayFrame:
 
     def startVideoandLive(self, video_path, break_time):
         live_pose = livePose()
-        image = live_pose.drawPose()
+        
 
         vid = cv2.VideoCapture(video_path)
 
@@ -252,8 +252,10 @@ class PlayFrame:
             if not vid_ret or not cap_ret:
                 break
 
+            image = live_pose.drawPose()
+
             # Resize frames
-            cap_frame = cv2.resize(cap_frame, (self.cvWidth, self.cvHeight))
+            image = cv2.resize(image, (self.cvWidth, self.cvHeight))
             vid_frame = cv2.resize(vid_frame, (self.cvWidth, self.cvHeight))
 
             # Combine the frames
