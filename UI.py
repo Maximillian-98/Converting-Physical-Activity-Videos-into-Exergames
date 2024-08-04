@@ -2,7 +2,7 @@ import tkinter as tk
 from tkinter import ttk, filedialog, messagebox
 import cv2
 from PIL import Image, ImageTk # For getting image for thumbnail
-from main import videoPose # livePose
+from main import videoPose, livePose
 import os
 import numpy as np
 import mediapipe as mp
@@ -232,86 +232,41 @@ class PlayFrame:
 
 
     def playWorkout(self, break_time):
-        self.createCountdown(5)
-        
         for video_path in self.video_paths:
-            self.startVideoandLive(video_path)
-            self.createCountdown(break_time)
+            self.startVideoandLive(video_path, 5)
+            self.startVideoandLive(video_path, break_time)
 
-    def startVideoandLive(self, video_path):
-        # Initialise Mediapipe pose
-        mp_drawing = mp.solutions.drawing_utils
-        mp_pose = mp.solutions.pose
-        pose = mp_pose.Pose(min_detection_confidence=0.5, min_tracking_confidence=0.5)
+    def startVideoandLive(self, video_path, break_time):
+        live_pose = livePose()
+        image = live_pose.drawPose()
 
-        cap = cv2.VideoCapture(0)
-        while cap.isOpened():
-            cap_ret, cap_frame = cap.read()
-
-            # Resize live frames
-            cap_frame = cv2.resize(cap_frame, (self.cvWidth, self.cvHeight))
-
-            # Process live frame
-            # Recolor image to RGB
-            image = cv2.cvtColor(cap_frame, cv2.COLOR_BGR2RGB)
-            image.flags.writeable = False
-        
-            # Make detection
-            results = pose.process(image)
-
-            # Recolor back to BGR
-            image.flags.writeable = True
-            image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
-
-            # Extract Landmarks
-            try:
-                landmarks = results.pose_landmarks.landmark
-                #print(landmarks)
-            except:
-                pass
-            
-            # Render detections
-            mp_drawing.draw_landmarks(image, results.pose_landmarks, mp_pose.POSE_CONNECTIONS,
-                                    mp_drawing.DrawingSpec(color=(245,0,0), thickness=2, circle_radius=2),
-                                    mp_drawing.DrawingSpec(color=(0,0,245), thickness=2, circle_radius=2) 
-                                    ) 
-
-            # Combine the frames
-            combined_frame = cv2.vconcat([image, vid_frame])
-
-
-            for t in range(5, -1, -1):
-            # Create black image
-                vid_frame = np.zeros((self.cvHeight, self.cvWidth, 3), dtype=np.uint8)
-
-                # Display countdown timer
-                minutes, seconds = divmod(t, 60)
-                timer_str = f"{minutes:02}:{seconds:02}"
-                cv2.putText(vid_frame, timer_str, (self.cvWidth // 2 - 50, self.cvHeight // 2), cv2.FONT_HERSHEY_DUPLEX, 2, (255, 255, 255), 4, cv2.LINE_AA)
-
-        # Start video and live camera
         vid = cv2.VideoCapture(video_path)
-        cap = cv2.VideoCapture(0)
-        while cap.isOpened() and vid.isOpened():
+
+        self.createCountdown(break_time, live_pose.cap)
+
+        while live_pose.cap.isOpened() and vid.isOpened():
             vid_ret, vid_frame = vid.read()
-            cap_ret, cap_frame = cap.read()
+            cap_ret, cap_frame = live_pose.cap.read()
 
             # Stop if video or live feed fail
             if not vid_ret or not cap_ret:
                 break
 
             # Resize frames
-            
+            cap_frame = cv2.resize(cap_frame, (self.cvWidth, self.cvHeight))
             vid_frame = cv2.resize(vid_frame, (self.cvWidth, self.cvHeight))
 
-            
+            # Process live frame
+            image = self.process_live_frame(cap_frame, mp_drawing, mp_pose)
+
+            # Combine the frames
+            combined_frame = cv2.vconcat([image, vid_frame])
             cv2.imshow('Combined Feed', combined_frame)
             if cv2.waitKey(25) & 0xFF == ord('q'):
                 break
 
         vid.release()
         cap.release()
-        cv2.destroyAllWindows()
 
     def createCountdown(self, time):
         fps = 30
