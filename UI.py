@@ -4,6 +4,7 @@ import cv2
 from PIL import Image, ImageTk # For getting image for thumbnail
 from main import videoPose # livePose
 import os
+import numpy as np
 import mediapipe as mp
 from mediapipe import solutions
 from mediapipe.framework.formats import landmark_pb2
@@ -11,12 +12,11 @@ from mediapipe.framework.formats import landmark_pb2
 class MainFrame:
     def __init__(self, root):
         self.root = root
-        self.root.title("to be named")
+        self.root.title("Workout App")
 
         self.windowPlacey = 0.1
         self.windowHeight = 0.65
         self.buttonPlacey = 0.75
-
 
         # Create Base canvas layer
         self.canvas = tk.Canvas(self.root, width=1000, height=800, bg='white')
@@ -214,13 +214,16 @@ class PlayFrame:
         self.video_paths = video_paths
         self.break_time = break_time
 
+        self.cvHeight = 400
+        self.cvWidth = 600
+
         # Create Base canvas layer
-        self.root.title("Workout")
+        self.root.title("Results")
         self.canvas = tk.Canvas(self.root, width=1000, height=800, bg='white')
         self.canvas.pack(anchor=tk.CENTER, expand=True)
 
-        self.breakText = tk.Label(self.canvas, text="00:00")
-        self.breakText.place(relx=0.45, rely=0.2, relwidth=0.1, relheight=0.1)
+        self.ResultsText = tk.Label(self.canvas, text="Results")
+        self.ResultsText.place(relx=0.45, rely=0.2, relwidth=0.1, relheight=0.1)
 
         self.backButton = tk.Button(self.canvas, text="Back", command=self.back)
         self.backButton.place(relx=0.45, rely=0.4, relwidth=0.1, relheight=0.1)
@@ -254,9 +257,8 @@ class PlayFrame:
                 break
 
             # Resize frames
-            height, width = 400, 600
-            cap_frame = cv2.resize(cap_frame, (width, height))
-            vid_frame = cv2.resize(vid_frame, (width, height))
+            cap_frame = cv2.resize(cap_frame, (self.cvWidth, self.cvHeight))
+            vid_frame = cv2.resize(vid_frame, (self.cvWidth, self.cvHeight))
 
             # Process live frame
             # Recolor image to RGB
@@ -292,6 +294,25 @@ class PlayFrame:
         vid.release()
         cap.release()
         cv2.destroyAllWindows()
+
+    def creatCountdown(self, time):
+        fps = 30
+
+        for t in range(time, -1, -1):
+            # Create a black image
+            frame = np.zeros((self.cvHeight, self.cvWidth, 3), dtype=np.uint8)
+
+            # Display countdown timer
+            minutes, seconds = divmod(t, 60)
+            timer_str = f"{minutes:02}:{seconds:02}"
+            cv2.putText(frame, timer_str, (width // 2 - 50, height // 2), cv2.FONT_HERSHEY_SIMPLEX, 2, (255, 255, 255), 4, cv2.LINE_AA)
+
+            # Write the frame multiple times to achieve the desired duration
+            for _ in range(fps):
+                out.write(frame)
+
+        # Release everything if job is finished
+        out.release()
 
     def startTime(self):
         seconds = 5
