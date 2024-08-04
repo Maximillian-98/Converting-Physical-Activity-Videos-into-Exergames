@@ -238,7 +238,6 @@ class PlayFrame:
             self.startVideoandLive(video_path)
             self.createCountdown(break_time)
 
-    # Might have to change this to the dual thing that jim did in his thing
     def startVideoandLive(self, video_path):
         # Initialise Mediapipe pose
         mp_drawing = mp.solutions.drawing_utils
