@@ -232,11 +232,14 @@ class PlayFrame:
 
 
     def playWorkout(self, break_time):
-        for video_path in self.video_paths:
-            self.startVideoandLive(video_path, break_time)
-
-    def startVideoandLive(self, video_path, break_time):
         live_pose = livePose()
+
+        self.createCountdown(5, live_pose)
+
+        for video_path in self.video_paths:
+            self.startVideoandLive(live_pose, video_path, break_time)
+
+    def startVideoandLive(self, live_pose, video_path, break_time):
 
         vid = cv2.VideoCapture(video_path)
 
