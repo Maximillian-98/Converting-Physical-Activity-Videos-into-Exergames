@@ -56,7 +56,7 @@ class videoPose:
                                     )        
 
             # This causes the thumbnails to break
-            # image = cv2.resize(image, (600, 400))
+            # image = cv2.resize(image, (1000, 800))
             
             # Play the video
             cv2.imshow('Mediapipe Feed', image)

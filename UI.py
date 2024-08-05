@@ -113,7 +113,7 @@ class MainFrame:
         ret, frame = cap.read()
         if ret:
             frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-            frame = cv2.resize(frame, (120, 90))  # Resize to thumbnail size
+            frame = cv2.resize(frame, (120, 90))  # Resize to thumbnail size 120, 90
             image = Image.fromarray(frame)
             return ImageTk.PhotoImage(image)
         cap.release()
