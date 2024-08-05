@@ -55,7 +55,8 @@ class videoPose:
                                     self.mp_drawing.DrawingSpec(color=(0,0,245), thickness=2, circle_radius=2) 
                                     )        
 
-            image = cv2.resize(image, (400, 600))
+            # This causes the thumbnails to break
+            # image = cv2.resize(image, (600, 400))
             
             # Play the video
             cv2.imshow('Mediapipe Feed', image)
