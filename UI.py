@@ -243,8 +243,6 @@ class PlayFrame:
 
         vid = cv2.VideoCapture(video_path)
 
-        self.createCountdown(break_time, live_pose)
-
         while live_pose.cap.isOpened() and vid.isOpened():
             vid_ret, vid_frame = vid.read()
 
@@ -264,6 +262,8 @@ class PlayFrame:
             cv2.imshow('Combined Feed', combined_frame)
             if cv2.waitKey(25) & 0xFF == ord('q'):
                 break
+        
+        self.createCountdown(break_time, live_pose)
 
         vid.release()
         live_pose.cap.release()
