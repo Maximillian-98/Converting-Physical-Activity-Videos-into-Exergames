@@ -297,6 +297,12 @@ class PlayFrame:
             if cv2.waitKey(int(1000 / fps)) & 0xFF == ord('q'):
                 break
 
+    
+    def getKeypoints(self, results, indices):
+        if results.pose_landmarks:
+            return results
+        return []
+
 
     def back(self):
         self.root.withdraw()
