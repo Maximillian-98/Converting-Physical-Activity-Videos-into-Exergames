@@ -297,6 +297,7 @@ class PlayFrame:
             if cv2.waitKey(int(1000 / fps)) & 0xFF == ord('q'):
                 break
 
+
     def back(self):
         self.root.withdraw()
         self.main_frame.deiconify()
