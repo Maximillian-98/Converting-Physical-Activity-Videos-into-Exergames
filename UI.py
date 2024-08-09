@@ -240,6 +240,7 @@ class PlayFrame:
         for video_path in self.video_paths:
             self.startVideoandLive(live_pose, video_path, break_time)
 
+
     def startVideoandLive(self, live_pose, video_path, break_time):
 
         vid = cv2.VideoCapture(video_path)
@@ -268,6 +269,7 @@ class PlayFrame:
 
         vid.release()
         live_pose.cap.release()
+
 
     def createCountdown(self, time, live_pose):
         fps = 30
