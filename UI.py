@@ -2,21 +2,22 @@ import tkinter as tk
 from tkinter import ttk, filedialog, messagebox
 import cv2
 from PIL import Image, ImageTk # For getting image for thumbnail
-from main import videoPose # livePose
+from main import videoPose, livePose
 import os
+import numpy as np
 import mediapipe as mp
 from mediapipe import solutions
 from mediapipe.framework.formats import landmark_pb2
+import time
 
 class MainFrame:
     def __init__(self, root):
         self.root = root
-        self.root.title("to be named")
+        self.root.title("Workout App")
 
         self.windowPlacey = 0.1
         self.windowHeight = 0.65
         self.buttonPlacey = 0.75
-
 
         # Create Base canvas layer
         self.canvas = tk.Canvas(self.root, width=1000, height=800, bg='white')
@@ -113,7 +114,7 @@ class MainFrame:
         ret, frame = cap.read()
         if ret:
             frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-            frame = cv2.resize(frame, (120, 90))  # Resize to thumbnail size
+            frame = cv2.resize(frame, (120, 90))  # Resize to thumbnail size 120, 90
             image = Image.fromarray(frame)
             return ImageTk.PhotoImage(image)
         cap.release()
@@ -214,13 +215,16 @@ class PlayFrame:
         self.video_paths = video_paths
         self.break_time = break_time
 
+        self.cvHeight = 400
+        self.cvWidth = 600
+
         # Create Base canvas layer
-        self.root.title("Workout")
+        self.root.title("Results")
         self.canvas = tk.Canvas(self.root, width=1000, height=800, bg='white')
         self.canvas.pack(anchor=tk.CENTER, expand=True)
 
-        self.breakText = tk.Label(self.canvas, text="00:00")
-        self.breakText.place(relx=0.45, rely=0.2, relwidth=0.1, relheight=0.1)
+        self.ResultsText = tk.Label(self.canvas, text="Results")
+        self.ResultsText.place(relx=0.45, rely=0.2, relwidth=0.1, relheight=0.1)
 
         self.backButton = tk.Button(self.canvas, text="Back", command=self.back)
         self.backButton.place(relx=0.45, rely=0.4, relwidth=0.1, relheight=0.1)
@@ -229,99 +233,74 @@ class PlayFrame:
 
 
     def playWorkout(self, break_time):
-        self.startTime()
-        
+        live_pose = livePose()
+
+        self.createCountdown(5, live_pose)
+
         for video_path in self.video_paths:
-            self.startVideoandLive(video_path)
-            self.breakTime(break_time)
+            self.startVideoandLive(live_pose, video_path, break_time)
 
-    # Might have to change this to the dual thing that jim did in his thing
-    def startVideoandLive(self, video_path):
-        # Initialise Mediapipe pose
-        mp_drawing = mp.solutions.drawing_utils
-        mp_pose = mp.solutions.pose
-        pose = mp_pose.Pose(min_detection_confidence=0.5, min_tracking_confidence=0.5)
 
-        # Start video and live camera
+    def startVideoandLive(self, live_pose, video_path, break_time):
+
         vid = cv2.VideoCapture(video_path)
-        cap = cv2.VideoCapture(0)
-        while cap.isOpened() and vid.isOpened():
+
+        while live_pose.cap.isOpened() and vid.isOpened():
             vid_ret, vid_frame = vid.read()
-            cap_ret, cap_frame = cap.read()
 
             # Stop if video or live feed fail
-            if not vid_ret or not cap_ret:
+            if not vid_ret:
                 break
 
-            # Resize frames
-            height, width = 400, 600
-            cap_frame = cv2.resize(cap_frame, (width, height))
-            vid_frame = cv2.resize(vid_frame, (width, height))
-
             # Process live frame
-            # Recolor image to RGB
-            image = cv2.cvtColor(cap_frame, cv2.COLOR_BGR2RGB)
-            image.flags.writeable = False
-        
-            # Make detection
-            results = pose.process(image)
+            image = live_pose.drawPose()
 
-            # Recolor back to BGR
-            image.flags.writeable = True
-            image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
-
-            # Extract Landmarks
-            try:
-                landmarks = results.pose_landmarks.landmark
-                #print(landmarks)
-            except:
-                pass
-            
-            # Render detections
-            mp_drawing.draw_landmarks(image, results.pose_landmarks, mp_pose.POSE_CONNECTIONS,
-                                    mp_drawing.DrawingSpec(color=(245,0,0), thickness=2, circle_radius=2),
-                                    mp_drawing.DrawingSpec(color=(0,0,245), thickness=2, circle_radius=2) 
-                                    ) 
+            # Resize frames
+            image = cv2.resize(image, (self.cvWidth, self.cvHeight))
+            vid_frame = cv2.resize(vid_frame, (self.cvWidth, self.cvHeight))
 
             # Combine the frames
             combined_frame = cv2.vconcat([image, vid_frame])
             cv2.imshow('Combined Feed', combined_frame)
             if cv2.waitKey(25) & 0xFF == ord('q'):
                 break
+        
+        self.createCountdown(break_time, live_pose)
 
         vid.release()
-        cap.release()
-        cv2.destroyAllWindows()
+        live_pose.cap.release()
 
-    def startTime(self):
-        seconds = 5
-        time_str = f"{00:02}:{seconds:02}"
-        self.breakText.config(text=time_str)
-        # Call this function again after 1 second (1000 ms)
-        self.root.after(1000, self.breakTime, seconds - 1)
 
-    def breakTime(self, break_time):
-        if break_time > 0:
-            minutes, seconds = divmod(break_time, 60)
-            time_str = f"{minutes:02}:{seconds:02}"
-            self.breakText.config(text=time_str)
-            # Call this function again after 1 second (1000 ms)
-            self.root.after(1000, self.breakTime, break_time - 1)
-        else:
-            self.breakText.config(text="")
+    def createCountdown(self, time, live_pose):
+        fps = 30
+
+        for t in range(time*fps, -1, -1):
+            # Create black image
+            cap_frame = live_pose.drawPose()
+            cap_frame = cv2.resize(cap_frame, (self.cvWidth, self.cvHeight))
+            vid_frame = np.zeros((self.cvHeight, self.cvWidth, 3), dtype=np.uint8)
+
+            # Display countdown timer
+            # Change this so the number only updates at each second
+            time_sec = t//30
+            minutes, seconds = divmod(time_sec, 60)
+            timer_str = f"{minutes:02}:{seconds:02}"
+            cv2.putText(vid_frame, timer_str, (self.cvWidth // 2 - 50, self.cvHeight // 2), cv2.FONT_HERSHEY_DUPLEX, 2, (255, 255, 255), 4, cv2.LINE_AA)
+            # Really odd but the text is placed in a weird position so //2-50 is required to move it in place
+
+            # Combine the frames
+            combined_frame = cv2.vconcat([cap_frame, vid_frame])
+
+            # Show the frame multiple times to achieve the desired duration
+            #for _ in range(fps):
+            cv2.imshow('Combined Feed', combined_frame)
+            if cv2.waitKey(int(1000 / fps)) & 0xFF == ord('q'):
+                break
 
 
     def back(self):
         self.root.withdraw()
         self.main_frame.deiconify()
-
-
-
-
-
-class ResultsFrame:
-    def __init__(self, root, main_frame, video_paths, break_time):
-        self.root = root
 
 
 # Test

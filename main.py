@@ -53,7 +53,10 @@ class videoPose:
             self.mp_drawing.draw_landmarks(image, results.pose_landmarks, self.mp_pose.POSE_CONNECTIONS,
                                     self.mp_drawing.DrawingSpec(color=(245,0,0), thickness=2, circle_radius=2), 
                                     self.mp_drawing.DrawingSpec(color=(0,0,245), thickness=2, circle_radius=2) 
-                                    )          
+                                    )        
+
+            # This causes the thumbnails to break
+            # image = cv2.resize(image, (1000, 800))
             
             # Play the video
             cv2.imshow('Mediapipe Feed', image)
@@ -70,7 +73,7 @@ class videoPose:
 
 
 class livePose:
-    def __init__(self, canvas):
+    def __init__(self):
         self.cap = cv2.VideoCapture(0)
 
         self.mp_drawing = mp.solutions.drawing_utils
