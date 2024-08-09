@@ -8,6 +8,7 @@ import numpy as np
 import mediapipe as mp
 from mediapipe import solutions
 from mediapipe.framework.formats import landmark_pb2
+import time
 
 class MainFrame:
     def __init__(self, root):
@@ -271,26 +272,28 @@ class PlayFrame:
     def createCountdown(self, time, live_pose):
         fps = 30
 
-        for t in range(time, -1, -1):
+        for t in range(time*fps, -1, -1):
             # Create black image
             cap_frame = live_pose.drawPose()
             cap_frame = cv2.resize(cap_frame, (self.cvWidth, self.cvHeight))
             vid_frame = np.zeros((self.cvHeight, self.cvWidth, 3), dtype=np.uint8)
 
             # Display countdown timer
-            minutes, seconds = divmod(t, 60)
+            # Change this so the number only updates at each second
+            time_sec = t//30
+            minutes, seconds = divmod(time_sec, 60)
             timer_str = f"{minutes:02}:{seconds:02}"
             cv2.putText(vid_frame, timer_str, (self.cvWidth // 2 - 50, self.cvHeight // 2), cv2.FONT_HERSHEY_DUPLEX, 2, (255, 255, 255), 4, cv2.LINE_AA)
             # Really odd but the text is placed in a weird position so //2-50 is required to move it in place
 
-            # Combine the frames (empty cap_frame for now)
+            # Combine the frames
             combined_frame = cv2.vconcat([cap_frame, vid_frame])
 
             # Show the frame multiple times to achieve the desired duration
-            for _ in range(fps):
-                cv2.imshow('Combined Feed', combined_frame)
-                if cv2.waitKey(int(1000 / fps)) & 0xFF == ord('q'):
-                    break
+            #for _ in range(fps):
+            cv2.imshow('Combined Feed', combined_frame)
+            if cv2.waitKey(int(1000 / fps)) & 0xFF == ord('q'):
+                break
 
     def back(self):
         self.root.withdraw()
