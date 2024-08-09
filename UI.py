@@ -303,14 +303,6 @@ class PlayFrame:
         self.main_frame.deiconify()
 
 
-
-
-
-class ResultsFrame:
-    def __init__(self, root, main_frame, video_paths, break_time):
-        self.root = root
-
-
 # Test
 testroot = tk.Tk()
 
