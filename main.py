@@ -125,15 +125,19 @@ class livePose:
             # Render detections
             # Draw keypoints and selected connections
             #for idx in self.keypoint_indices:
-            for connection in self.connections:
-                start, end = connection
-                self.mp_drawing.draw_landmarks(
-                    image,
-                    results.pose_landmarks,
-                    [(start, end)],
-                    self.mp_drawing.DrawingSpec(color=(245, 0, 0), thickness=2, circle_radius=2),
-                    self.mp_drawing.DrawingSpec(color=(0, 0, 245), thickness=2, circle_radius=2)
-                    )
+            for i, (idx1, idx2) in enumerate(self.connections):
+                point1 = landmarks.landmark[idx1]
+                point2 = landmarks.landmark[idx2]
+                cv2.line(image, 
+                        (int(point1.x * image.shape[1]), int(point1.y * image.shape[0])),
+                        (int(point2.x * image.shape[1]), int(point2.y * image.shape[0])),
+                        (0, 0, 245), 2)
+
+            for idx in self.keypoint_indices:
+                point = results.pose_landmarks.landmark[idx]
+                cv2.circle(image,
+                        (int(point.x * image.shape[1]), int(point.y * image.shape[0])),
+                        5, (245, 0, 0), -1)
             '''
             # Old drawing method
             self.mp_drawing.draw_landmarks(image, results.pose_landmarks, self.mp_pose.POSE_CONNECTIONS,
