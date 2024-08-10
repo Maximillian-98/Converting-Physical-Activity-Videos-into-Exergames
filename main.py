@@ -11,6 +11,7 @@ class videoPose:
         self.output_path = output_path
         self.cap = cv2.VideoCapture(self.video_path)
 
+        # Keypoints for drawing
         self.keypoint_indices = [11, 12, 13, 14, 15, 16, 23, 24, 25, 26, 27, 28]
         self.connections = [(11, 13), (13, 15), # Left arm
                             (12, 14), (14, 16), # Right arm
@@ -86,6 +87,15 @@ class livePose:
 
         self.mp_drawing = mp.solutions.drawing_utils
         self.mp_pose = mp.solutions.pose
+
+        # Keypoints for drawing
+        self.keypoint_indices = [11, 12, 13, 14, 15, 16, 23, 24, 25, 26, 27, 28]
+        self.connections = [(11, 13), (13, 15), # Left arm
+                            (12, 14), (14, 16), # Right arm
+                            (11, 12), (11, 23), (12, 24), (23, 24), # Torso
+                            (23, 25), (25, 27), # Left leg
+                            (24, 26), (26, 28), # Left leg
+                            ]
 
         # Setup mediapipe instance
         self.pose = self.mp_pose.Pose(min_detection_confidence=0.5, min_tracking_confidence=0.5)
