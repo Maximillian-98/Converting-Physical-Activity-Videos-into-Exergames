@@ -123,7 +123,8 @@ class livePose:
                 pass
 
             # Render detections
-            # Draw selected connections
+            # Draw keypoints and selected connections
+            #for idx in self.keypoint_indices:
             for connection in self.connections:
                 start, end = connection
                 self.mp_drawing.draw_landmarks(
@@ -134,6 +135,7 @@ class livePose:
                     self.mp_drawing.DrawingSpec(color=(0, 0, 245), thickness=2, circle_radius=2)
                     )
             '''
+            # Old drawing method
             self.mp_drawing.draw_landmarks(image, results.pose_landmarks, self.mp_pose.POSE_CONNECTIONS,
                                     self.mp_drawing.DrawingSpec(color=(245,0,0), thickness=2, circle_radius=2),
                                     self.mp_drawing.DrawingSpec(color=(0,0,245), thickness=2, circle_radius=2) 
