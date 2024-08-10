@@ -11,6 +11,14 @@ class videoPose:
         self.output_path = output_path
         self.cap = cv2.VideoCapture(self.video_path)
 
+        self.keypoint_indices = [11, 12, 13, 14, 15, 16, 23, 24, 25, 26, 27, 28]
+        self.connections = [(11, 13), (13, 15), # Left arm
+                            (12, 14), (14, 16), # Right arm
+                            (11, 12), (11, 23), (12, 24), (23, 24), # Torso
+                            (23, 25), (25, 27), # Left leg
+                            (24, 26), (26, 28), # Left leg
+                            ]
+
         # Get video properties
         fourcc = cv2.VideoWriter_fourcc(*'mp4v')
         fps = self.cap.get(cv2.CAP_PROP_FPS)
