@@ -126,8 +126,8 @@ class livePose:
             # Draw keypoints and selected connections
             #for idx in self.keypoint_indices:
             for i, (idx1, idx2) in enumerate(self.connections):
-                point1 = landmarks.landmark[idx1]
-                point2 = landmarks.landmark[idx2]
+                point1 = results.pose_landmarks.landmark[idx1]
+                point2 = results.pose_landmarks.landmark[idx2]
                 cv2.line(image, 
                         (int(point1.x * image.shape[1]), int(point1.y * image.shape[0])),
                         (int(point2.x * image.shape[1]), int(point2.y * image.shape[0])),
