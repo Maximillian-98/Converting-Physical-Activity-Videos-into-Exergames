@@ -124,7 +124,6 @@ class livePose:
 
             # Render detections
             # Draw keypoints and selected connections
-            #for idx in self.keypoint_indices:
             for i, (idx1, idx2) in enumerate(self.connections):
                 point1 = results.pose_landmarks.landmark[idx1]
                 point2 = results.pose_landmarks.landmark[idx2]
