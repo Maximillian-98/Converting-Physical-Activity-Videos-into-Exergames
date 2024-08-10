@@ -59,10 +59,20 @@ class videoPose:
                 pass
             
             # Render detections
-            self.mp_drawing.draw_landmarks(image, results.pose_landmarks, self.mp_pose.POSE_CONNECTIONS,
-                                    self.mp_drawing.DrawingSpec(color=(245,0,0), thickness=2, circle_radius=2), 
-                                    self.mp_drawing.DrawingSpec(color=(0,0,245), thickness=2, circle_radius=2) 
-                                    )        
+            # Draw keypoints and selected connections
+            for i, (idx1, idx2) in enumerate(self.connections):
+                point1 = results.pose_landmarks.landmark[idx1]
+                point2 = results.pose_landmarks.landmark[idx2]
+                cv2.line(image, 
+                        (int(point1.x * image.shape[1]), int(point1.y * image.shape[0])),
+                        (int(point2.x * image.shape[1]), int(point2.y * image.shape[0])),
+                        (0, 0, 245), 2)
+
+            for idx in self.keypoint_indices:
+                point = results.pose_landmarks.landmark[idx]
+                cv2.circle(image,
+                        (int(point.x * image.shape[1]), int(point.y * image.shape[0])),
+                        5, (245, 0, 0), -1)      
 
             # This causes the thumbnails to break
             # image = cv2.resize(image, (1000, 800))
@@ -137,13 +147,7 @@ class livePose:
                 cv2.circle(image,
                         (int(point.x * image.shape[1]), int(point.y * image.shape[0])),
                         5, (245, 0, 0), -1)
-            '''
-            # Old drawing method
-            self.mp_drawing.draw_landmarks(image, results.pose_landmarks, self.mp_pose.POSE_CONNECTIONS,
-                                    self.mp_drawing.DrawingSpec(color=(245,0,0), thickness=2, circle_radius=2),
-                                    self.mp_drawing.DrawingSpec(color=(0,0,245), thickness=2, circle_radius=2) 
-                                    )   
-            '''   
+            
 
             return image     
 
@@ -172,3 +176,11 @@ class livePose:
             if cv2.waitKey(10) & 0xFF == ord('q'):
                 break
         '''
+
+'''
+            # Old drawing method
+            self.mp_drawing.draw_landmarks(image, results.pose_landmarks, self.mp_pose.POSE_CONNECTIONS,
+                                    self.mp_drawing.DrawingSpec(color=(245,0,0), thickness=2, circle_radius=2),
+                                    self.mp_drawing.DrawingSpec(color=(0,0,245), thickness=2, circle_radius=2) 
+                                    )   
+            '''   
