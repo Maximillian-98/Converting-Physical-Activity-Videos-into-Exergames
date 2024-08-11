@@ -181,7 +181,7 @@ class livePose:
         angles = {}
         left_arm = [11, 13, 15]
 
-        if self.visibleCheck(left_arm):
+        if self.visibleCheck(left_arm, landmarks):
             angles["left_arm"] = self.calculateAngle(landmarks[left_arm[0]], landmarks[left_arm[1]], landmarks[left_arm[2]])
         else:
             return None
