@@ -158,6 +158,13 @@ class livePose:
                             (int(point.x * image.shape[1]), int(point.y * image.shape[0])),
                             5, (245, 0, 0), -1)
             
+            # Calculate the angle of the body parts, return each angle
+            angles = self.calculateAllAngles()
+
+            cv2.putText(image, str(angles["left_arm"]), 
+                           tuple(np.multiply((0,0), [640, 480]).astype(int)), 
+                           cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 2, cv2.LINE_AA
+                                )
 
             return image
 
@@ -192,6 +199,7 @@ class livePose:
 
         if self.visibleCheck(left_arm):
             angles["left_arm"] = self.calculateAngle(self.landmarks[left_arm[0]], self.landmarks[left_arm[1]], self.landmarks[left_arm[2]])
+            return angles
         else:
             return None
 
