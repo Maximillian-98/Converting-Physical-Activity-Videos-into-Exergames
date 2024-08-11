@@ -155,8 +155,17 @@ class livePose:
         self.cap.release()
         cv2.destroyAllWindows()
 
+    # Visibilty check for keypoints
+    def visibleCheck(self, keypoints):
+        visibility_threshold = 0.5
+        for keypoint in keypoints:
+            landmark = self.get_landmark_by_name(keypoint)
+            if landmark.visibility < visibility_threshold:
+                return False
+        return True
+
     # Angle points
-    def calculate_angle(a,b,c):
+    def calculateAngle(self, a, b, c):
         a = np.array(a) # First
         b = np.array(b) # Mid
         c = np.array(c) # End
@@ -168,7 +177,11 @@ class livePose:
             angle = 360-angle
         
         return angle
-
+    
+    
+    
+    def calculateAllAngles(self):
+        left_arm = [11, 13, 15]
 
     # Distance points
 
