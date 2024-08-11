@@ -113,6 +113,8 @@ class livePose:
         # Initialise landmarks attribute
         self.landmarks = {}
 
+        self.visibility_threshold = 0.5
+
         # Setup mediapipe instance
         self.pose = self.mp_pose.Pose(min_detection_confidence=0.5, min_tracking_confidence=0.5)
 
@@ -142,17 +144,19 @@ class livePose:
             for i, (idx1, idx2) in enumerate(self.connections):
                 point1 = self.landmarks[idx1]
                 point2 = self.landmarks[idx2]
-                cv2.line(image, 
-                        (int(point1.x * image.shape[1]), int(point1.y * image.shape[0])),
-                        (int(point2.x * image.shape[1]), int(point2.y * image.shape[0])),
-                        (0, 0, 245), 2)
+                if point1.visibility > self.visibility_threshold and point2.visibility > self.visibility_threshold:
+                    cv2.line(image, 
+                            (int(point1.x * image.shape[1]), int(point1.y * image.shape[0])),
+                            (int(point2.x * image.shape[1]), int(point2.y * image.shape[0])),
+                            (0, 0, 245), 2)
 
             # Draw keypoints
             for idx in self.keypoint_indices:
-                point = self.landmarks[idx]
-                cv2.circle(image,
-                        (int(point.x * image.shape[1]), int(point.y * image.shape[0])),
-                        5, (245, 0, 0), -1)
+                if self.landmarks[idx].visibility > self.visibility_threshold:
+                    point = self.landmarks[idx]
+                    cv2.circle(image,
+                            (int(point.x * image.shape[1]), int(point.y * image.shape[0])),
+                            5, (245, 0, 0), -1)
             
 
             return image
@@ -197,6 +201,10 @@ class livePose:
     # Normalisation
         
 
+# self.landmark contains an object of objects,
+# self.landmark[idx] contains an object of the x y z coordinates of the body part defined by idx (11 is right shoulders)
+
+
 #video_path = r'C:\Users\max\Documents\GitHub\Converting-Physical-Activity-Videos-into-Exergames\Exercise Videos\PushupsTop.mp4'
 
 #video_landmarker = videoPose(video_path)
@@ -206,6 +214,9 @@ class livePose:
 #live_landmarker.drawPose()
 
 # This was at the end of livePose
+
+# Place in Draw keypoints: print(self.landmarks[idx].visibility)
+
 '''
             # Update canvas with the image
             self.canvas.create_image(0, 0, image=photo, anchor='nw')
