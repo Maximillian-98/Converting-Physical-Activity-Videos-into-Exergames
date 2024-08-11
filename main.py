@@ -150,7 +150,7 @@ class livePose:
                         5, (245, 0, 0), -1)
             
 
-            return image, landmarks
+            return image
 
         self.cap.release()
         cv2.destroyAllWindows()
