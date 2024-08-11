@@ -297,6 +297,21 @@ class PlayFrame:
             if cv2.waitKey(int(1000 / fps)) & 0xFF == ord('q'):
                 break
 
+    
+    # Points System
+    def compare_angles(self, live_angles, video_angles):
+        # Compare angles between live and video
+        for key in live_angles:
+            live_angle = live_angles.get(key)
+            video_angle = video_angles.get(key)
+            
+            if live_angle is None or video_angle is None:
+                print(f"Angle at {key} could not be calculated in one of the feeds.")
+            else:
+                difference = abs(live_angle - video_angle)
+                print(f"Angle difference at {key}: {difference}")
+                # Add of statement, takes away a point every 100ms if the angle difference is greater than 2 or something
+
     def back(self):
         self.root.withdraw()
         self.main_frame.deiconify()
