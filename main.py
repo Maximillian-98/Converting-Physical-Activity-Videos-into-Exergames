@@ -104,7 +104,7 @@ class livePose:
                             (12, 14), (14, 16), # Right arm
                             (11, 12), (11, 23), (12, 24), (23, 24), # Torso
                             (23, 25), (25, 27), # Left leg
-                            (24, 26), (26, 28), # Left leg
+                            (24, 26), (26, 28), # Right leg
                             ]
 
         # Setup mediapipe instance
