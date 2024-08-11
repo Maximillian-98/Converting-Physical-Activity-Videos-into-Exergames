@@ -168,9 +168,8 @@ class livePose:
 
     # Visibilty check for keypoints
     def visibleCheck(self, keypoints):
-        visibility_threshold = 0.5
         for idx in keypoints:
-            if self.landmarks[idx].visibility > visibility_threshold:
+            if self.landmarks[idx].visibility > self.visibility_threshold:
                 return True
         return False
 
@@ -181,19 +180,27 @@ class livePose:
     
         if angle >180.0:
             angle = 360-angle
-            
+
         return angle
     
     def calculateAllAngles(self):
         angles = {}
         left_arm = [11, 13, 15]
+        right_arm = [12, 14, 16]
+        left_leg = [23, 25, 27]
+        right_leg = [24, 26, 28]
+        left_hip = [11, 23, 25]
+        right_hip = [12, 24, 26]
 
+        self.calculateAngle(left_arm)
+
+        # Put this in calculateAngle
         if self.visibleCheck(left_arm):
-            #print(self.landmarks[left_arm[2]])
             angles["left_arm"] = self.calculateAngle(self.landmarks[left_arm[0]], self.landmarks[left_arm[1]], self.landmarks[left_arm[2]])
-            #return angles
         else:
-            return None
+            angles["left_arm"] = None
+        
+        return angles
 
     # Distance points
 
