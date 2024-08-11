@@ -133,7 +133,7 @@ class livePose:
                 pass
 
             # Render detections
-            # Draw keypoints and selected connections
+            # Draw selected connections
             for i, (idx1, idx2) in enumerate(self.connections):
                 point1 = results.pose_landmarks.landmark[idx1]
                 point2 = results.pose_landmarks.landmark[idx2]
@@ -142,6 +142,7 @@ class livePose:
                         (int(point2.x * image.shape[1]), int(point2.y * image.shape[0])),
                         (0, 0, 245), 2)
 
+            # Draw keypoints
             for idx in self.keypoint_indices:
                 point = results.pose_landmarks.landmark[idx]
                 cv2.circle(image,
