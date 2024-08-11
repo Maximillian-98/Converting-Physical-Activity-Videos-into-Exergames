@@ -168,7 +168,7 @@ class livePose:
     def visibleCheck(self, keypoints):
         visibility_threshold = 0.5
         for idx in keypoints:
-            if self.landmarks[idx]["visibility"] < visibility_threshold:
+            if self.landmarks[idx].visibility > visibility_threshold:
                 return False
         return True
 
