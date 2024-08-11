@@ -19,6 +19,9 @@ class videoPose:
                             (23, 25), (25, 27), # Left leg
                             (24, 26), (26, 28), # Left leg
                             ]
+        
+        # Initialise landmarks attribute
+        self.landmarks = {}
 
         # Get video properties
         fourcc = cv2.VideoWriter_fourcc(*'mp4v')
@@ -53,7 +56,7 @@ class videoPose:
 
             # Extract Landmarks
             try:
-                landmarks = results.pose_landmarks.landmark
+                self.landmarks = results.pose_landmarks.landmark
                 #print(landmarks)
             except:
                 pass
@@ -106,6 +109,9 @@ class livePose:
                             (23, 25), (25, 27), # Left leg
                             (24, 26), (26, 28), # Right leg
                             ]
+        
+        # Initialise landmarks attribute
+        self.landmarks = {}
 
         # Setup mediapipe instance
         self.pose = self.mp_pose.Pose(min_detection_confidence=0.5, min_tracking_confidence=0.5)
@@ -127,8 +133,7 @@ class livePose:
 
             # Extract Landmarks
             try:
-                landmarks = results.pose_landmarks.landmark
-                #print(landmarks)
+                self.landmarks = results.pose_landmarks.landmark
             except:
                 pass
 
@@ -156,10 +161,10 @@ class livePose:
         cv2.destroyAllWindows()
 
     # Visibilty check for keypoints
-    def visibleCheck(self, keypoints, landmarks):
+    def visibleCheck(self, keypoints):
         visibility_threshold = 0.5
         for idx in keypoints:
-            if landmarks[idx] < visibility_threshold:
+            if self.landmarks[idx]["visibility"] < visibility_threshold:
                 return False
         return True
 
