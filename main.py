@@ -179,10 +179,13 @@ class livePose:
         return angle
     
     def calculateAllAngles(self):
+        angles = {}
         left_arm = [11, 13, 15]
+        right_arm = [12, 14, 16]
+        left_leg = []
 
         if self.visibleCheck(left_arm):
-            self.calculateAngle(left_arm[0], left_arm[1], left_arm[2])
+            angles["left_arm"] = self.calculateAngle(left_arm[0], left_arm[1], left_arm[2])
         else:
             return None
 
