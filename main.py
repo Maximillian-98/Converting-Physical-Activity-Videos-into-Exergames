@@ -161,11 +161,6 @@ class livePose:
             # Calculate the angle of the body parts, return each angle
             angles = self.calculateAllAngles()
 
-            cv2.putText(image, str(angles["left_arm"]), 
-                           tuple(np.multiply((0,0), [640, 480]).astype(int)), 
-                           cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 2, cv2.LINE_AA
-                                )
-
             return image
 
         self.cap.release()
@@ -176,20 +171,18 @@ class livePose:
         visibility_threshold = 0.5
         for idx in keypoints:
             if self.landmarks[idx].visibility > visibility_threshold:
-                return False
-        return True
+                return True
+        return False
 
     # Angle points
     def calculateAngle(self, a, b, c):
-        a = np.array(a) # First
-        b = np.array(b) # Mid
-        c = np.array(c) # End
-    
-        radians = np.arctan2(c[1]-b[1], c[0]-b[0]) - np.arctan2(a[1]-b[1], a[0]-b[0])
+        radians = np.arctan2(c.y-b.y, c.x-b.x) - np.arctan2(a.y-b.y, a.x-b.x)
         angle = np.abs(radians*180.0/np.pi)
     
         if angle >180.0:
             angle = 360-angle
+        
+        print(angle)
         
         return angle
     
@@ -198,8 +191,9 @@ class livePose:
         left_arm = [11, 13, 15]
 
         if self.visibleCheck(left_arm):
+            #print(self.landmarks[left_arm[2]])
             angles["left_arm"] = self.calculateAngle(self.landmarks[left_arm[0]], self.landmarks[left_arm[1]], self.landmarks[left_arm[2]])
-            return angles
+            #return angles
         else:
             return None
 
