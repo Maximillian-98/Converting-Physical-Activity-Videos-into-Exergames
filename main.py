@@ -174,14 +174,22 @@ class livePose:
         return False
 
     # Angle points
-    def calculateAngle(self, a, b, c):
-        radians = np.arctan2(c.y-b.y, c.x-b.x) - np.arctan2(a.y-b.y, a.x-b.x)
-        angle = np.abs(radians*180.0/np.pi)
-    
-        if angle >180.0:
-            angle = 360-angle
+    def calculateAngle(self, keypoints):
 
-        return angle
+        a = self.landmarks[keypoints[0]]
+        b = self.landmarks[keypoints[1]]
+        c = self.landmarks[keypoints[2]]
+
+        if self.visibleCheck(keypoints):
+            radians = np.arctan2(c.y-b.y, c.x-b.x) - np.arctan2(a.y-b.y, a.x-b.x)
+            angle = np.abs(radians*180.0/np.pi)
+        
+            if angle >180.0:
+                angle = 360-angle
+
+            return angle
+        else:
+            return None
     
     def calculateAllAngles(self):
         angles = {}
@@ -192,15 +200,15 @@ class livePose:
         left_hip = [11, 23, 25]
         right_hip = [12, 24, 26]
 
-        self.calculateAngle(left_arm)
+        angles["left_arm"] = self.calculateAngle(left_arm)
+        angles["right_arm"] = self.calculateAngle(right_arm)
+        angles["left_leg"] = self.calculateAngle(left_leg)
+        angles["right_leg"] = self.calculateAngle(right_leg)
+        angles["left_hip"] = self.calculateAngle(left_hip)
+        angles["right_hip"] = self.calculateAngle(right_hip)
 
-        # Put this in calculateAngle
-        if self.visibleCheck(left_arm):
-            angles["left_arm"] = self.calculateAngle(self.landmarks[left_arm[0]], self.landmarks[left_arm[1]], self.landmarks[left_arm[2]])
-        else:
-            angles["left_arm"] = None
-        
         return angles
+
 
     # Distance points
 
