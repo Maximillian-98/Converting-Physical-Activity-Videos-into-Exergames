@@ -150,17 +150,16 @@ class livePose:
                         5, (245, 0, 0), -1)
             
 
-            return image     
+            return image, landmarks
 
         self.cap.release()
         cv2.destroyAllWindows()
 
     # Visibilty check for keypoints
-    def visibleCheck(self, keypoints):
+    def visibleCheck(self, keypoints, landmarks):
         visibility_threshold = 0.5
-        for keypoint in keypoints:
-            landmark = self.get_landmark_by_name(keypoint)
-            if landmark.visibility < visibility_threshold:
+        for idx in keypoints:
+            if landmarks[idx] < visibility_threshold:
                 return False
         return True
 
@@ -178,14 +177,12 @@ class livePose:
         
         return angle
     
-    def calculateAllAngles(self):
+    def calculateAllAngles(self, landmarks):
         angles = {}
         left_arm = [11, 13, 15]
-        right_arm = [12, 14, 16]
-        left_leg = []
 
         if self.visibleCheck(left_arm):
-            angles["left_arm"] = self.calculateAngle(left_arm[0], left_arm[1], left_arm[2])
+            angles["left_arm"] = self.calculateAngle(landmarks[left_arm[0]], landmarks[left_arm[1]], landmarks[left_arm[2]])
         else:
             return None
 
