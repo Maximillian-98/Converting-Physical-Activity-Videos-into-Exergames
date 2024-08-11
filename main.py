@@ -181,9 +181,7 @@ class livePose:
     
         if angle >180.0:
             angle = 360-angle
-        
-        print(angle)
-        
+            
         return angle
     
     def calculateAllAngles(self):
