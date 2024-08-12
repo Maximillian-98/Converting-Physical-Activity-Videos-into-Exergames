@@ -92,11 +92,12 @@ class videoPose:
             # Write the frame to the output video
             self.out.write(image) 
 
+            # Write angles to json file
+            self.saveAngles(angles)
+
         self.cap.release()
         self.out.release()
         cv2.destroyAllWindows()
-
-        self.saveAngles(angles) # Not working right now, only saving one set of angles
 
     # Save angles to file
     def saveAngles(self, angles_dict):
