@@ -136,9 +136,6 @@ class videoPose:
         angles["left_hip"] = self.calculateAngle(left_hip)
         angles["right_hip"] = self.calculateAngle(right_hip)
 
-        # Angles being succesfully printed
-        #print(angles)
-
         return angles
 
 
@@ -209,7 +206,8 @@ class livePose:
             
             # Calculate the angle of the body parts, return each angle
             angles = self.calculateAllAngles()
-            print(angles)
+            # Successfully print angles
+            # print(angles)
 
             return image
 

@@ -254,14 +254,23 @@ class PlayFrame:
 
             # Stop if video or live feed fail
             if not vid_ret:
+                print("Error: Could not read frame from video.")
                 break
 
             # Process live frame
             image = live_pose.drawPose()
 
+            if image is None:
+                print("Error: No frame captured from live feed.")
+                break
+
             # Resize frames
-            image = cv2.resize(image, (self.cvWidth, self.cvHeight))
-            vid_frame = cv2.resize(vid_frame, (self.cvWidth, self.cvHeight))
+            try:
+                image = cv2.resize(image, (self.cvWidth, self.cvHeight))
+                vid_frame = cv2.resize(vid_frame, (self.cvWidth, self.cvHeight))
+            except cv2.error as e:
+                print(f"Error during resizing: {e}")
+                break
 
             # Combine the frames
             combined_frame = cv2.vconcat([image, vid_frame])
