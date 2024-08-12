@@ -313,7 +313,7 @@ class PlayFrame:
             # Compare angles from live and video frame
             self.compareAngles(live_pose.angles, self.video_angles)
         
-        self.createCountdown(break_time, live_pose)
+        self.createCountdown(break_time, live_pose) # Change for new countdown
 
         vid.release()
         live_pose.cap.release()
