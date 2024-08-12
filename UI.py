@@ -218,6 +218,10 @@ class PlayFrame:
         self.cvHeight = 400
         self.cvWidth = 600
 
+        self.differenceThreshold = 5
+
+        self.points = 100
+
         # Create Base canvas layer
         self.root.title("Results")
         self.canvas = tk.Canvas(self.root, width=1000, height=800, bg='white')
@@ -298,6 +302,9 @@ class PlayFrame:
                 break
 
     
+    # New function to do countdown with the points labelled
+
+    
     # Points System
     def compare_angles(self, live_angles, video_angles):
         # Compare angles between live and video
@@ -310,6 +317,11 @@ class PlayFrame:
             else:
                 difference = abs(live_angle - video_angle)
                 print(f"Angle difference at {key}: {difference}")
+                if difference > self.differenceThreshold:
+                    self.points -= 1
+                    # Have to minus 100 if they dont perform the exercise right? so how do i do the math
+                    # 100/(30*time)
+                    # Problem is this time is determined by how long the video is, need the info from the video_path somehow
                 # Add of statement, takes away a point every 100ms if the angle difference is greater than 2 or something
 
     def back(self):
