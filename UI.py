@@ -173,6 +173,7 @@ class MainFrame:
             new_label = tk.Label(self.workoutFrame, image=self.selected_thumbnail.image)
             new_label.image = self.selected_thumbnail.image  # Keep a reference to avoid garbage collection
             new_label.video_path = self.selected_thumbnail.video_path  # Store the video path in the new thumbnail
+            new_label.angles_path = self.selected_thumbnail.angles_path # Store the angles in the thumbnail
             new_label.pack(padx=10, pady=10)
             new_label.bind("<Button-1>", lambda e: self.selectThumbnail(new_label))
             new_label.bind("<Button-3>", lambda e: self.playVideo(new_label.video_path))
@@ -184,6 +185,7 @@ class MainFrame:
             new_label = tk.Label(self.exVidFrame, image=self.selected_thumbnail.image)
             new_label.image = self.selected_thumbnail.image  # Keep a reference to avoid garbage collection
             new_label.video_path = self.selected_thumbnail.video_path  # Store the video path in the new thumbnail
+            new_label.angles_path = self.selected_thumbnail.angles_path # Store the angles in the thumbnail
             new_label.pack(padx=10, pady=10)
             new_label.bind("<Button-1>", lambda e: self.selectThumbnail(new_label))
             new_label.bind("<Button-3>", lambda e: self.playVideo(new_label.video_path))
@@ -203,12 +205,13 @@ class MainFrame:
     # Functions for switching canvas
     def play(self):
         video_paths = [label.video_path for label in self.workoutFrame.winfo_children()]
+        angles_paths = [label.angles_path for label in self.workoutFrame.winfo_children()]
         time = self.breakTime.cget("text")
         minutes, seconds = map(int, time.split(":"))
         break_time = minutes * 60 + seconds
         self.root.withdraw()  # Hide the current window
         new_root = tk.Toplevel(self.root, height=1000, width=800)
-        PlayFrame(new_root, self.root, video_paths, break_time)
+        PlayFrame(new_root, self.root, video_paths, angles_paths, break_time)
 
 
 
@@ -219,10 +222,11 @@ class MainFrame:
 
 
 class PlayFrame:
-    def __init__(self, root, main_frame, video_paths, break_time):
+    def __init__(self, root, main_frame, video_paths, angles_paths, break_time):
         self.root = root
         self.main_frame = main_frame
         self.video_paths = video_paths
+        self.angles_paths = angles_paths
         self.break_time = break_time
 
         self.cvHeight = 400
