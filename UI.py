@@ -8,7 +8,7 @@ import numpy as np
 import mediapipe as mp
 from mediapipe import solutions
 from mediapipe.framework.formats import landmark_pb2
-import time
+import json
 
 class MainFrame:
     def __init__(self, root):
@@ -330,8 +330,14 @@ class PlayFrame:
                 break
 
     
-    # New function to do countdown with the points labelled
+    # New function to do countdown with the points labelled (for the second countdown after an exercise)
 
+
+    # Open json file
+    def load_angles(self, angles_path):
+        with open(angles_path, 'r') as f:
+            angles = json.load(f)
+        return angles
     
     # Points System
     def compare_angles(self, live_angles, video_angles):
