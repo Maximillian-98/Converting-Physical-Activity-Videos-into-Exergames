@@ -101,7 +101,7 @@ class MainFrame:
             output_path = file_path.replace(".mp4", "_processed.mp4") # This creates the output path for use in processing the video and add _process onto the end to differentiate the video
             angles_output_path = file_path.replace(".mp4", "_angles.json") # This should create a Json file and an output path leadin to that json file
             processed_video = self.processVideo(file_path, output_path, angles_output_path)
-            self.addThumbnail(output_path)
+            self.addThumbnail(output_path, angles_output_path)
 
     def processVideo(self, video_path, output_path, angles_output_path):
         try:
@@ -123,11 +123,12 @@ class MainFrame:
         cap.release()
         return None
     
-    def addThumbnail(self, video_path):
+    def addThumbnail(self, video_path, angles_path):
         thumbnail = self.getThumbnail(video_path)
         label = tk.Label(self.exVidFrame, bg="lightgreen", image=thumbnail)
         label.image = thumbnail  # Keep a reference to avoid garbage collection, python may delete the image without a reference
         label.video_path = video_path # Store the video path in the thumbnail
+        label.angles_path = angles_path
         label.pack(padx=10, pady=10)
         label.bind("<Button-1>", lambda e: self.selectThumbnail(label))
         label.bind("<Button-3>", lambda e: self.playVideo(label.video_path))
@@ -154,12 +155,18 @@ class MainFrame:
     def delete(self):
         if self.selected_thumbnail:
             video_path = self.selected_thumbnail.video_path
+            angles_path = self.selected_thumbnail.angles_path
             self.selected_thumbnail.destroy()
             self.selected_thumbnail = None
             try:
                 os.remove(video_path)
             except:
                 print("error deleting video path")
+
+            try:
+                os.remove(angles_path)
+            except:
+                print("error deleting angles file")
 
     def add(self):
         if self.selected_thumbnail:
