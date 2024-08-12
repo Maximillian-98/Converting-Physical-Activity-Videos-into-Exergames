@@ -236,6 +236,9 @@ class PlayFrame:
 
         self.points = 100
 
+        #Initialise angles dict to be filled with angles each frame
+        self.video_angles = {}
+
         # Create Base canvas layer
         self.root.title("Results")
         self.canvas = tk.Canvas(self.root, width=1000, height=800, bg='white')
@@ -299,6 +302,9 @@ class PlayFrame:
             cv2.imshow('Combined Feed', combined_frame)
             if cv2.waitKey(25) & 0xFF == ord('q'):
                 break
+
+            # Compare angles from live and video frame
+            self.compareAngles(live_pose.angles, self.video_angles)
         
         self.createCountdown(break_time, live_pose)
 
@@ -338,14 +344,14 @@ class PlayFrame:
         fps = 30
 
     # Open json file
-    def load_angles(self, angles_path):
+    def loadAngles(self, angles_path):
         with open(angles_path, 'r') as f:
             angles_list = json.load(f)
         return angles_list
     
     # Points System
     # This compares single set of live and video angles
-    def compare_angles(self, live_angles, video_angles):
+    def compareAngles(self, live_angles, video_angles):
         # Compare angles between live and video
         for key in live_angles:
             live_angle = live_angles.get(key)

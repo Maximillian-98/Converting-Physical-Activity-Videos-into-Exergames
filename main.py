@@ -171,8 +171,9 @@ class livePose:
                             (24, 26), (26, 28), # Right leg
                             ]
         
-        # Initialise landmarks attribute
+        # Initialise landmarks and angles attribute
         self.landmarks = {}
+        self.angles = {}
 
         self.visibility_threshold = 0.8
 
@@ -220,7 +221,7 @@ class livePose:
                             5, (245, 0, 0), -1)
             
             # Calculate the angle of the body parts, return each angle
-            angles = self.calculateAllAngles()
+            self.angles = self.calculateAllAngles()
             # Successfully print angles
             # print(angles)
 
