@@ -259,7 +259,9 @@ class PlayFrame:
             for angles_path in self.angles_paths:
                 self.startVideoandLive(live_pose, video_path, angles_path, break_time)
 
-
+    # Angles path should now be fed here, so all i need to do now
+    # is use the angles path and the method in livepose to get live
+    # angles and compare the two
     def startVideoandLive(self, live_pose, video_path, angles_path, break_time):
 
         vid = cv2.VideoCapture(video_path)
