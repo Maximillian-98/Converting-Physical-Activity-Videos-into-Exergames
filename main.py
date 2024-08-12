@@ -23,6 +23,8 @@ class videoPose:
         # Initialise landmarks attribute
         self.landmarks = {}
 
+        self.visibility_threshold = 0.8
+
         # Get video properties
         fourcc = cv2.VideoWriter_fourcc(*'mp4v')
         fps = self.cap.get(cv2.CAP_PROP_FPS)
@@ -133,7 +135,9 @@ class videoPose:
         angles["right_leg"] = self.calculateAngle(right_leg)
         angles["left_hip"] = self.calculateAngle(left_hip)
         angles["right_hip"] = self.calculateAngle(right_hip)
-        print(angles)
+
+        # Angles being succesfully printed
+        #print(angles)
 
         return angles
 
@@ -158,7 +162,7 @@ class livePose:
         # Initialise landmarks attribute
         self.landmarks = {}
 
-        self.visibility_threshold = 0.5
+        self.visibility_threshold = 0.8
 
         # Setup mediapipe instance
         self.pose = self.mp_pose.Pose(min_detection_confidence=0.5, min_tracking_confidence=0.5)
