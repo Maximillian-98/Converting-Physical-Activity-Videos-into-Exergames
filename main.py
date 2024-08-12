@@ -96,7 +96,7 @@ class videoPose:
         self.out.release()
         cv2.destroyAllWindows()
 
-        self.saveAngles(angles)
+        self.saveAngles(angles) # Not working right now, only saving one set of angles
 
     # Save angles to file
     def saveAngles(self, angles_dict):

@@ -128,7 +128,7 @@ class MainFrame:
         label = tk.Label(self.exVidFrame, bg="lightgreen", image=thumbnail)
         label.image = thumbnail  # Keep a reference to avoid garbage collection, python may delete the image without a reference
         label.video_path = video_path # Store the video path in the thumbnail
-        label.angles_path = angles_path
+        label.angles_path = angles_path # Store the angles in the thumbnail
         label.pack(padx=10, pady=10)
         label.bind("<Button-1>", lambda e: self.selectThumbnail(label))
         label.bind("<Button-3>", lambda e: self.playVideo(label.video_path))
