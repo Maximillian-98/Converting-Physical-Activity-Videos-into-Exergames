@@ -256,10 +256,11 @@ class PlayFrame:
         self.createCountdown(5, live_pose)
 
         for video_path in self.video_paths:
-            self.startVideoandLive(live_pose, video_path, break_time)
+            for angles_path in self.angles_paths:
+                self.startVideoandLive(live_pose, video_path, angles_path, break_time)
 
 
-    def startVideoandLive(self, live_pose, video_path, break_time):
+    def startVideoandLive(self, live_pose, video_path, angles_path, break_time):
 
         vid = cv2.VideoCapture(video_path)
 
@@ -331,7 +332,8 @@ class PlayFrame:
 
     
     # New function to do countdown with the points labelled (for the second countdown after an exercise)
-
+    def createCountdownPoints(self, time, live_pose, points):
+        fps = 30
 
     # Open json file
     def load_angles(self, angles_path):
