@@ -92,6 +92,50 @@ class videoPose:
         self.out.release()
         cv2.destroyAllWindows()
 
+    # Visibilty check for keypoints
+    def visibleCheck(self, keypoints):
+        for idx in keypoints:
+            if self.landmarks[idx].visibility > self.visibility_threshold:
+                return True
+        return False
+
+    # Angle points
+    def calculateAngle(self, keypoints):
+        
+        # For tomorrow, if this doesnt work, try pluggin in a bunch of print statements again to see the problems
+        a = self.landmarks[keypoints[0]]
+        b = self.landmarks[keypoints[1]]
+        c = self.landmarks[keypoints[2]]
+
+        if self.visibleCheck(keypoints):
+            radians = np.arctan2(c.y-b.y, c.x-b.x) - np.arctan2(a.y-b.y, a.x-b.x)
+            angle = np.abs(radians*180.0/np.pi)
+        
+            if angle >180.0:
+                angle = 360-angle
+
+            return angle
+        else:
+            return None
+    
+    def calculateAllAngles(self):
+        angles = {}
+        left_arm = [11, 13, 15]
+        right_arm = [12, 14, 16]
+        left_leg = [23, 25, 27]
+        right_leg = [24, 26, 28]
+        left_hip = [11, 23, 25]
+        right_hip = [12, 24, 26]
+
+        angles["left_arm"] = self.calculateAngle(left_arm)
+        angles["right_arm"] = self.calculateAngle(right_arm)
+        angles["left_leg"] = self.calculateAngle(left_leg)
+        angles["right_leg"] = self.calculateAngle(right_leg)
+        angles["left_hip"] = self.calculateAngle(left_hip)
+        angles["right_hip"] = self.calculateAngle(right_hip)
+
+        return angles
+
 
 
 class livePose:
