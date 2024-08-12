@@ -236,8 +236,9 @@ class PlayFrame:
 
         self.points = 100
 
-        #Initialise angles dict to be filled with angles each frame
+        #Initialise angles dict to be filled with angles each frame and the index of the angles list being read
         self.video_angles = {}
+        self.angles_idx = 0
 
         # Create Base canvas layer
         self.root.title("Results")
@@ -276,6 +277,11 @@ class PlayFrame:
         live_pose.cap = cv2.VideoCapture(0)
         while live_pose.cap.isOpened() and vid.isOpened():
             vid_ret, vid_frame = vid.read()
+
+            # Set the video angles dict to the next frame of angles
+            angles_list = self.loadAngles(angles_path)
+            self.video_angles = angles_list[self.angles_idx]
+            self.angles_idx += 1
 
             # Stop if video or live feed fail
             if not vid_ret:
