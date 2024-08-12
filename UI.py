@@ -340,10 +340,11 @@ class PlayFrame:
     # Open json file
     def load_angles(self, angles_path):
         with open(angles_path, 'r') as f:
-            angles = json.load(f)
-        return angles
+            angles_list = json.load(f)
+        return angles_list
     
     # Points System
+    # This compares single set of live and video angles
     def compare_angles(self, live_angles, video_angles):
         # Compare angles between live and video
         for key in live_angles:
