@@ -101,7 +101,7 @@ class videoPose:
         cv2.destroyAllWindows()
 
         # Write angles list to json file
-        self.saveAngles(angles)
+        self.saveAngles(self.angles_list)
 
     # Save list of dictionaries of angles to file
     def saveAngles(self, angles_list):
