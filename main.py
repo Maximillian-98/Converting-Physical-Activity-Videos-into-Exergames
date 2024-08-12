@@ -4,11 +4,13 @@ from mediapipe import solutions
 from mediapipe.framework.formats import landmark_pb2
 from PIL import Image, ImageTk
 import numpy as np
+import json
 
 class videoPose:
-    def __init__(self, video_path, output_path):
+    def __init__(self, video_path, output_path, angles_output_path):
         self.video_path = video_path
         self.output_path = output_path
+        self.angles_output_path = angles_output_path
         self.cap = cv2.VideoCapture(self.video_path)
 
         # Keypoints for drawing
@@ -62,7 +64,7 @@ class videoPose:
                 #print(landmarks)
             except:
                 pass
-            
+
             # Render detections
             # Draw keypoints and selected connections
             for i, (idx1, idx2) in enumerate(self.connections):
@@ -79,8 +81,8 @@ class videoPose:
                         (int(point.x * image.shape[1]), int(point.y * image.shape[0])),
                         5, (245, 0, 0), -1)      
 
-            # This causes the thumbnails to break
-            # image = cv2.resize(image, (1000, 800))
+            # Calculate angles and save them
+            angles = self.calculateAllAngles()
             
             # Play the video
             cv2.imshow('Mediapipe Feed', image)
@@ -93,6 +95,14 @@ class videoPose:
         self.cap.release()
         self.out.release()
         cv2.destroyAllWindows()
+
+        self.saveAngles(angles)
+
+    # Save angles to file
+    def saveAngles(self, angles_dict):
+        with open(self.angles_output_path, 'w') as f:
+            json.dump(angles_dict, f, indent = 4)
+
 
     # Visibilty check for keypoints
     def visibleCheck(self, keypoints):
