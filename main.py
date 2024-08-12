@@ -79,6 +79,10 @@ class videoPose:
 
             # This causes the thumbnails to break
             # image = cv2.resize(image, (1000, 800))
+
+            # Calculate the angle of the body parts, return each angle
+            angles = self.calculateAllAngles()
+            print(angles)
             
             # Play the video
             cv2.imshow('Mediapipe Feed', image)
@@ -133,6 +137,7 @@ class videoPose:
         angles["right_leg"] = self.calculateAngle(right_leg)
         angles["left_hip"] = self.calculateAngle(left_hip)
         angles["right_hip"] = self.calculateAngle(right_hip)
+        print(angles)
 
         return angles
 
@@ -204,6 +209,7 @@ class livePose:
             
             # Calculate the angle of the body parts, return each angle
             angles = self.calculateAllAngles()
+            print(angles)
 
             return image
 
