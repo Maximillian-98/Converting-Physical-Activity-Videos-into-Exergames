@@ -267,6 +267,8 @@ class PlayFrame:
     # is use the angles path and the method in livepose to get live
     # angles and compare the two
     def startVideoandLive(self, live_pose, video_path, angles_path, break_time):
+        # Load list of video angle dicts
+        angles_list = self.loadAngles(angles_path)
 
         vid = cv2.VideoCapture(video_path)
 
@@ -279,7 +281,6 @@ class PlayFrame:
             vid_ret, vid_frame = vid.read()
 
             # Set the video angles dict to the next frame of angles
-            angles_list = self.loadAngles(angles_path)
             self.video_angles = angles_list[self.angles_idx]
             self.angles_idx += 1
 
