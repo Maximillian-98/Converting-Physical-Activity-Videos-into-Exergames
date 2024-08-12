@@ -19,6 +19,8 @@ class MainFrame:
         self.windowHeight = 0.65
         self.buttonPlacey = 0.75
 
+        self.selected_thumbnail = None
+
         # Create Base canvas layer
         self.canvas = tk.Canvas(self.root, width=1000, height=800, bg='white')
         self.canvas.pack(anchor=tk.CENTER, expand=True)
