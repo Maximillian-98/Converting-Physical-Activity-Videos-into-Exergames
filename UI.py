@@ -252,7 +252,8 @@ class PlayFrame:
         if not vid.isOpened():
             print(f"Error: Cannot open video file {video_path}")
             return
-
+        
+        live_pose.cap = cv2.VideoCapture(0)
         while live_pose.cap.isOpened() and vid.isOpened():
             vid_ret, vid_frame = vid.read()
 
