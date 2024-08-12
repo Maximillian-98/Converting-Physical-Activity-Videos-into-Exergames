@@ -25,6 +25,9 @@ class videoPose:
         # Initialise landmarks attribute
         self.landmarks = {}
 
+        # Initialise angles list
+        self.angles_list = []
+
         self.visibility_threshold = 0.8
 
         # Get video properties
@@ -81,8 +84,9 @@ class videoPose:
                         (int(point.x * image.shape[1]), int(point.y * image.shape[0])),
                         5, (245, 0, 0), -1)      
 
-            # Calculate angles and save them
+            # Calculate angles and append them to list
             angles = self.calculateAllAngles()
+            self.angles_list.append(angles)
             
             # Play the video
             cv2.imshow('Mediapipe Feed', image)
@@ -92,17 +96,17 @@ class videoPose:
             # Write the frame to the output video
             self.out.write(image) 
 
-            # Write angles to json file
-            self.saveAngles(angles)
-
         self.cap.release()
         self.out.release()
         cv2.destroyAllWindows()
 
-    # Save angles to file
-    def saveAngles(self, angles_dict):
+        # Write angles list to json file
+        self.saveAngles(angles)
+
+    # Save list of dictionaries of angles to file
+    def saveAngles(self, angles_list):
         with open(self.angles_output_path, 'w') as f:
-            json.dump(angles_dict, f, indent = 4)
+            json.dump(angles_list, f, indent = 4)
 
 
     # Visibilty check for keypoints
