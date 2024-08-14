@@ -393,7 +393,7 @@ class PlayFrame:
                 difference = abs(live_angle - video_angle)
                 print(f"Angle difference at {key}: {difference}")
                 if difference > self.differenceThreshold:
-                    self.points -= 1
+                    self.points -= 1/6
                     """
                     TO DO: Get the frames from the video file the upload button saves
                     Math: divide by the number of frames
