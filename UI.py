@@ -382,7 +382,10 @@ class PlayFrame:
     # Points System
     # This compares single set of live and video angles
     def compareAngles(self, live_angles, video_angles):
-        # Compare angles between live and video
+        # Place holders
+        fps = 30
+        time = 1
+
         for key in live_angles:
             live_angle = live_angles.get(key)
             video_angle = video_angles.get(key)
@@ -393,13 +396,13 @@ class PlayFrame:
                 difference = abs(live_angle - video_angle)
                 print(f"Angle difference at {key}: {difference}")
                 if difference > self.differenceThreshold:
-                    self.points -= 1/6
+                    self.points -= round(100/(6*(fps*time)), 5)  # Cant be int but dont want recurring numbers (currently can do videos over 100 seconds, but not by much)
                     """
                     TO DO: Get the frames from the video file the upload button saves
-                    Math: divide by the number of frames
+                    Math: divide by the number of frames times time
                     divide by the number of angles being compared (6 right now)
                     doesnt matter if they return none, that means they just dont get points taken away
-                    put this in documentation
+                    put this in documentation, including length of videos it can take
                     """
                     # Have to minus 100 if they dont perform the exercise right? so how do i do the math
                     # 100/(30*time)
