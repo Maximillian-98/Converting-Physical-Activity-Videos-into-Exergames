@@ -394,6 +394,13 @@ class PlayFrame:
                 print(f"Angle difference at {key}: {difference}")
                 if difference > self.differenceThreshold:
                     self.points -= 1
+                    """
+                    TO DO: Get the frames from the video file the upload button saves
+                    Math: divide by the number of frames
+                    divide by the number of angles being compared (6 right now)
+                    doesnt matter if they return none, that means they just dont get points taken away
+                    put this in documentation
+                    """
                     # Have to minus 100 if they dont perform the exercise right? so how do i do the math
                     # 100/(30*time)
                     # Problem is this time is determined by how long the video is, need the info from the video_path somehow
