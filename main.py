@@ -32,12 +32,13 @@ class videoPose:
 
         # Get video properties
         fourcc = cv2.VideoWriter_fourcc(*'mp4v')
-        fps = self.cap.get(cv2.CAP_PROP_FPS)
+        self.frames = self.cap.get(cv2.CAP_PROP_FRAME_COUNT)
+        self.fps = self.cap.get(cv2.CAP_PROP_FPS)
         width = int(self.cap.get(cv2.CAP_PROP_FRAME_WIDTH))
         height = int(self.cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
         
         # Initialize VideoWriter
-        self.out = cv2.VideoWriter(self.output_path, fourcc, fps, (width, height))
+        self.out = cv2.VideoWriter(self.output_path, fourcc, self.fps, (width, height))
 
         # Setup drawing tools
         self.mp_drawing = mp.solutions.drawing_utils

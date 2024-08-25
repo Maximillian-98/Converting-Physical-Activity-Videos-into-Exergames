@@ -245,14 +245,31 @@ class PlayFrame:
         self.canvas = tk.Canvas(self.root, width=1000, height=800, bg='white')
         self.canvas.pack(anchor=tk.CENTER, expand=True)
 
-        self.ResultsText = tk.Label(self.canvas, text="Results")
-        self.ResultsText.place(relx=0.45, rely=0.2, relwidth=0.1, relheight=0.1)
+        self.nameEntryText = tk.Label(self.canvas, text="Name:")
+        self.nameEntryText.place(relx=0.2, rely=0.1, relwidth=0.1, relheight=0.1)
+        self.nameEntry = tk.Entry(self.canvas)
+        self.nameEntry.place(relx=0.3, rely=0.1, relwidth=0.1, relheight=0.1)
+
+        self.scoreText = tk.Label(self.canvas, text="Score:")
+        self.scoreText.place(relx=0.5, rely=0.1, relwidth=0.1, relheight=0.1)
+        self.scoreNum = tk.Label(self.canvas, text="Placeholder")
+        self.scoreNum.place(relx=0.6, rely=0.1, relwidth=0.1, relheight=0.1)
+
+        self.addButton = tk.Button(self.canvas, text="Add to Leaderboard", command=self.add)
+        self.addButton.place(relx=0.8, rely=0.1, relwidth=0.1, relheight=0.1)
+
+        self.leaderBoardText = tk.Label(self.canvas, text="Leaderboard")
+        self.leaderBoardText.place(relx=0.45, rely=0.3, relwidth=0.1, relheight=0.1)
+        self.leaderBoard = tk.Listbox(self.canvas, height=10, width=30)
+        self.leaderBoard.place(relx=0.6, rely=0.1, relwidth=0.1, relheight=0.1)
 
         self.backButton = tk.Button(self.canvas, text="Back", command=self.back)
         self.backButton.place(relx=0.45, rely=0.4, relwidth=0.1, relheight=0.1)
 
         self.playWorkout(self.break_time)
 
+    def add(self):
+        return
 
     def playWorkout(self, break_time):
         live_pose = livePose()
@@ -271,6 +288,10 @@ class PlayFrame:
         angles_list = self.loadAngles(angles_path)
 
         vid = cv2.VideoCapture(video_path)
+
+        # Get frames and fps for angle calculation
+        frames = vid.get(cv2.CAP_PROP_FRAME_COUNT)
+        fps = vid.get(cv2.CAP_PROP_FPS)
 
         if not vid.isOpened():
             print(f"Error: Cannot open video file {video_path}")
@@ -310,10 +331,11 @@ class PlayFrame:
             if cv2.waitKey(25) & 0xFF == ord('q'):
                 break
 
-            # Compare angles from live and video frame
-            self.compareAngles(live_pose.angles, self.video_angles)
+            # Initialise points and compare angles from live and video frame
+            self.points = 100
+            self.compareAngles(live_pose.angles, self.video_angles, frames)
         
-        self.createCountdown(break_time, live_pose) # Change for new countdown
+        self.createCountdownPoints(break_time, live_pose, self.points) # Change for new countdown
 
         vid.release()
         live_pose.cap.release()
@@ -381,28 +403,27 @@ class PlayFrame:
     
     # Points System
     # This compares single set of live and video angles
-    def compareAngles(self, live_angles, video_angles):
-        # Place holders
-        fps = 30
-        time = 1
+    def compareAngles(self, live_angles, video_angles, frames):
 
         for key in live_angles:
             live_angle = live_angles.get(key)
             video_angle = video_angles.get(key)
             
             if live_angle is None or video_angle is None:
-                print(f"Angle at {key} could not be calculated in one of the feeds.")
+                return None
+                # print(f"Angle at {key} could not be calculated in one of the feeds.")
             else:
                 difference = abs(live_angle - video_angle)
-                print(f"Angle difference at {key}: {difference}")
+                # print(f"Angle difference at {key}: {difference}")
                 if difference > self.differenceThreshold:
-                    self.points -= round(100/(6*(fps*time)), 5)  # Cant be int but dont want recurring numbers (currently can do videos over 100 seconds, but not by much)
+                    self.points -= round(100/(6*(frames)), 5)  # Cant be int but dont want recurring numbers (currently can do videos over 100 seconds, but not by much)
                     """
                     TO DO: Get the frames from the video file the upload button saves
                     Math: divide by the number of frames times time
                     divide by the number of angles being compared (6 right now)
                     doesnt matter if they return none, that means they just dont get points taken away
                     put this in documentation, including length of videos it can take
+                    self.points -= round(100/(6*(fps*time)), 5) fps * time just gives the frames, so can just divide by the frames
                     """
                     # Have to minus 100 if they dont perform the exercise right? so how do i do the math
                     # 100/(30*time)
