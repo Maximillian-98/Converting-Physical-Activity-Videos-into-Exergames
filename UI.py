@@ -261,8 +261,12 @@ class PlayFrame:
 
         self.leaderBoardText = tk.Label(self.canvas, text="Leaderboard")
         self.leaderBoardText.place(relx=0.45, rely=0.3, relwidth=0.1, relheight=0.05)
-        self.leaderBoard = tk.Listbox(self.canvas, height=10, width=30)
-        self.leaderBoard.place(relx=0.1, rely=0.35, relwidth=0.8, relheight=0.5)
+        self.leaderBoardNames = tk.Listbox(self.canvas, height=10, width=30)
+        #self.leaderBoardScore = tk.Listbox(self.canvas, height=10, width=30)
+        self.leaderBoardNames.place(relx=0.1, rely=0.35, relwidth=0.8, relheight=0.5)
+        #self.leaderBoardScore.place(relx=0.5, rely=0.35, relwidth=0.4, relheight=0.5)
+        self.leaderboardNameList = []
+        #self.leaderboardScoreList = []
 
         self.backButton = tk.Button(self.canvas, text="Back", command=self.back)
         self.backButton.place(relx=0.1, rely=0.25, relwidth=0.1, relheight=0.05)
@@ -270,6 +274,20 @@ class PlayFrame:
         self.playWorkout(self.break_time)
 
     def add(self):
+        name = self.nameEntry.get().strip()
+        score = str(self.totalPoints)
+
+        if name:  # Ensure the name is not empty
+            entry = f"{name}: {score}"
+            self.leaderboardNameList.append(entry)
+            self.update_leaderboard()
+            self.nameEntry.delete(0, tk.END)  # Clear the name entry after adding
+
+    # Function to update the leaderboard display
+    def update_leaderboard(self):
+        self.leaderBoardNames.delete(0, tk.END)
+        for i, entry in enumerate(self.leaderboardNameList):
+            self.leaderBoardNames.insert(tk.END, f"{i + 1}. {entry}")
         return
 
     def playWorkout(self, break_time):
@@ -280,6 +298,9 @@ class PlayFrame:
         for video_path in self.video_paths:
             for angles_path in self.angles_paths:
                 self.startVideoandLive(live_pose, video_path, angles_path, break_time)
+
+        # Update textbox with final score
+        self.scoreNum.config(text=str(self.totalPoints))
 
     # Angles path should now be fed here, so all i need to do now
     # is use the angles path and the method in livepose to get live
