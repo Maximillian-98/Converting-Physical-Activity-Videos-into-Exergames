@@ -119,8 +119,6 @@ class videoPose:
 
     # Angle points
     def calculateAngle(self, keypoints):
-        
-        # For tomorrow, if this doesnt work, try pluggin in a bunch of print statements again to see the problems
         a = self.landmarks[keypoints[0]]
         b = self.landmarks[keypoints[1]]
         c = self.landmarks[keypoints[2]]
