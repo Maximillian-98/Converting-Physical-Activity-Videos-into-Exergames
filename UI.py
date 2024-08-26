@@ -424,7 +424,7 @@ class PlayFrame:
     # New function to do countdown with the points labelled (for the second countdown after an exercise)
     def createCountdownPoints(self, time, live_pose, points):
         fps = 30
-        points_str = str(points)
+        points_str = "Points: " + str(int(points))
 
         for t in range(time*fps, -1, -1):
             # Create black image
@@ -437,8 +437,8 @@ class PlayFrame:
             time_sec = t//30
             minutes, seconds = divmod(time_sec, 60)
             timer_str = f"{minutes:02}:{seconds:02}"
-            cv2.putText(vid_frame, timer_str, (self.cvWidth // 2 - 50, self.cvHeight // 2), cv2.FONT_HERSHEY_DUPLEX, 2, (255, 255, 255), 4, cv2.LINE_AA)
-            cv2.putText(vid_frame, points_str, (self.cvWidth // 2 - 50, self.cvHeight // 2 - 20), cv2.FONT_HERSHEY_DUPLEX, 2, (255, 255, 255), 4, cv2.LINE_AA)
+            cv2.putText(vid_frame, timer_str, (self.cvWidth // 2 - 80, self.cvHeight // 2 + 50), cv2.FONT_HERSHEY_DUPLEX, 2, (255, 255, 255), 4, cv2.LINE_AA)
+            cv2.putText(vid_frame, points_str, (self.cvWidth // 2 - 160, self.cvHeight // 2 - 50), cv2.FONT_HERSHEY_DUPLEX, 2, (255, 255, 255), 4, cv2.LINE_AA)
 
             # Combine the frames
             combined_frame = cv2.vconcat([cap_frame, vid_frame])
