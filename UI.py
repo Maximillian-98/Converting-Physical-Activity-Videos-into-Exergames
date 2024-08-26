@@ -280,11 +280,11 @@ class PlayFrame:
         if name:  # Ensure the name is not empty
             entry = f"{name}: {score}"
             self.leaderboardNameList.append(entry)
-            self.update_leaderboard()
+            self.update()
             self.nameEntry.delete(0, tk.END)  # Clear the name entry after adding
 
     # Function to update the leaderboard display
-    def update_leaderboard(self):
+    def update(self):
         self.leaderBoardNames.delete(0, tk.END)
         for i, entry in enumerate(self.leaderboardNameList):
             self.leaderBoardNames.insert(tk.END, f"{i + 1}. {entry}")
