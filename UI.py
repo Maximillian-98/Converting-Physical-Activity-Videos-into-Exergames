@@ -278,7 +278,7 @@ class PlayFrame:
         self.playWorkout(self.break_time)
 
         # Initialize the leaderboard list and load any existing data
-        self.leaderboard = self.load()
+        self.leaderboardNameList = self.load()
         self.update()
 
 
@@ -304,7 +304,7 @@ class PlayFrame:
     
     def save(self):
         with open(self.leaderboardFile, "w") as file:
-            json.dump(self.leaderboard, file, indent=4)
+            json.dump(self.leaderboardNameList, file, indent=4)
 
     def load(self):
         if os.path.exists(self.leaderboardFile):
