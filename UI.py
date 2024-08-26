@@ -257,7 +257,7 @@ class PlayFrame:
 
         self.scoreText = tk.Label(self.canvas, text="Score:")
         self.scoreText.place(relx=0.4, rely=0.1, relwidth=0.1, relheight=0.05)
-        self.scoreNum = tk.Label(self.canvas, text=str(self.totalPoints))
+        self.scoreNum = tk.Label(self.canvas, text=str(int(self.totalPoints)))
         self.scoreNum.place(relx=0.5, rely=0.1, relwidth=0.2, relheight=0.05)
 
         self.addButton = tk.Button(self.canvas, text="Add to Leaderboard", command=self.add)
@@ -324,7 +324,7 @@ class PlayFrame:
                 self.startVideoandLive(live_pose, video_path, angles_path, break_time)
 
         # Update textbox with final score
-        self.scoreNum.config(text=str(self.totalPoints))
+        self.scoreNum.config(text=str(int(self.totalPoints)))
 
     # Angles path should now be fed here, so all i need to do now
     # is use the angles path and the method in livepose to get live
