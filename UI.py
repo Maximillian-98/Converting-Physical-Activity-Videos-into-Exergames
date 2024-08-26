@@ -234,8 +234,12 @@ class PlayFrame:
 
         self.differenceThreshold = 5
 
+        # Initialise points
         self.points = 100
         self.totalPoints = 0
+
+        # Leaderboard 
+        self.leaderboardFile = "leaderboard.json"
 
         #Initialise angles dict to be filled with angles each frame and the index of the angles list being read
         self.video_angles = {}
@@ -273,23 +277,43 @@ class PlayFrame:
 
         self.playWorkout(self.break_time)
 
+        # Initialize the leaderboard list and load any existing data
+        self.leaderboard = self.load()
+        self.update()
+
+
+    # Leaderboard functions
     def add(self):
         name = self.nameEntry.get().strip()
         score = str(self.totalPoints)
 
-        if name:  # Ensure the name is not empty
+        if name and self.totalPoints!=0:  # Ensure the name is not empty
             entry = f"{name}: {score}"
             self.leaderboardNameList.append(entry)
             self.update()
-            self.nameEntry.delete(0, tk.END)  # Clear the name entry after adding
+            self.nameEntry.delete(0, tk.END)
+            self.totalPoints = 0
+            self.scoreNum.config(text=str(self.totalPoints))
+            self.save()
 
-    # Function to update the leaderboard display
     def update(self):
         self.leaderBoardNames.delete(0, tk.END)
         for i, entry in enumerate(self.leaderboardNameList):
             self.leaderBoardNames.insert(tk.END, f"{i + 1}. {entry}")
         return
+    
+    def save(self):
+        with open(self.leaderboardFile, "w") as file:
+            json.dump(self.leaderboard, file, indent=4)
 
+    def load(self):
+        if os.path.exists(self.leaderboardFile):
+            with open(self.leaderboardFile, "r") as file:
+                return json.load(file)
+        return []
+
+
+    # Workout functions
     def playWorkout(self, break_time):
         live_pose = livePose()
 
