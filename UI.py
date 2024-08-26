@@ -247,25 +247,25 @@ class PlayFrame:
         self.canvas.pack(anchor=tk.CENTER, expand=True)
 
         self.nameEntryText = tk.Label(self.canvas, text="Name:")
-        self.nameEntryText.place(relx=0.2, rely=0.1, relwidth=0.1, relheight=0.1)
+        self.nameEntryText.place(relx=0.1, rely=0.1, relwidth=0.1, relheight=0.05)
         self.nameEntry = tk.Entry(self.canvas)
-        self.nameEntry.place(relx=0.3, rely=0.1, relwidth=0.1, relheight=0.1)
+        self.nameEntry.place(relx=0.2, rely=0.1, relwidth=0.2, relheight=0.05)
 
         self.scoreText = tk.Label(self.canvas, text="Score:")
-        self.scoreText.place(relx=0.5, rely=0.1, relwidth=0.1, relheight=0.1)
-        self.scoreNum = tk.Label(self.canvas, text="Placeholder")
-        self.scoreNum.place(relx=0.6, rely=0.1, relwidth=0.1, relheight=0.1)
+        self.scoreText.place(relx=0.4, rely=0.1, relwidth=0.1, relheight=0.05)
+        self.scoreNum = tk.Label(self.canvas, text=str(self.totalPoints))
+        self.scoreNum.place(relx=0.5, rely=0.1, relwidth=0.2, relheight=0.05)
 
         self.addButton = tk.Button(self.canvas, text="Add to Leaderboard", command=self.add)
-        self.addButton.place(relx=0.8, rely=0.1, relwidth=0.2, relheight=0.1)
+        self.addButton.place(relx=0.7, rely=0.1, relwidth=0.2, relheight=0.05)
 
         self.leaderBoardText = tk.Label(self.canvas, text="Leaderboard")
-        self.leaderBoardText.place(relx=0.45, rely=0.3, relwidth=0.1, relheight=0.1)
+        self.leaderBoardText.place(relx=0.45, rely=0.3, relwidth=0.1, relheight=0.05)
         self.leaderBoard = tk.Listbox(self.canvas, height=10, width=30)
-        self.leaderBoard.place(relx=0.6, rely=0.1, relwidth=0.1, relheight=0.1)
+        self.leaderBoard.place(relx=0.1, rely=0.35, relwidth=0.8, relheight=0.5)
 
         self.backButton = tk.Button(self.canvas, text="Back", command=self.back)
-        self.backButton.place(relx=0.2, rely=0.3, relwidth=0.1, relheight=0.1)
+        self.backButton.place(relx=0.1, rely=0.25, relwidth=0.1, relheight=0.05)
 
         self.playWorkout(self.break_time)
 
@@ -338,9 +338,12 @@ class PlayFrame:
             # Compare angles from live and video frame
             self.compareAngles(live_pose.angles, self.video_angles, frames)
         
-        self.createCountdownPoints(break_time, live_pose, self.points)
         # Add score to total points
         self.totalPoints += self.points
+
+        # Create countdown with points label
+        self.createCountdownPoints(break_time, live_pose, self.totalPoints)
+        
 
         vid.release()
         live_pose.cap.release()
