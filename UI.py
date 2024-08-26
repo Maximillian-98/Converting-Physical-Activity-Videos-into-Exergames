@@ -235,6 +235,7 @@ class PlayFrame:
         self.differenceThreshold = 5
 
         self.points = 100
+        self.totalPoints = 0
 
         #Initialise angles dict to be filled with angles each frame and the index of the angles list being read
         self.video_angles = {}
@@ -256,7 +257,7 @@ class PlayFrame:
         self.scoreNum.place(relx=0.6, rely=0.1, relwidth=0.1, relheight=0.1)
 
         self.addButton = tk.Button(self.canvas, text="Add to Leaderboard", command=self.add)
-        self.addButton.place(relx=0.8, rely=0.1, relwidth=0.1, relheight=0.1)
+        self.addButton.place(relx=0.8, rely=0.1, relwidth=0.2, relheight=0.1)
 
         self.leaderBoardText = tk.Label(self.canvas, text="Leaderboard")
         self.leaderBoardText.place(relx=0.45, rely=0.3, relwidth=0.1, relheight=0.1)
@@ -264,7 +265,7 @@ class PlayFrame:
         self.leaderBoard.place(relx=0.6, rely=0.1, relwidth=0.1, relheight=0.1)
 
         self.backButton = tk.Button(self.canvas, text="Back", command=self.back)
-        self.backButton.place(relx=0.45, rely=0.4, relwidth=0.1, relheight=0.1)
+        self.backButton.place(relx=0.2, rely=0.3, relwidth=0.1, relheight=0.1)
 
         self.playWorkout(self.break_time)
 
@@ -288,6 +289,9 @@ class PlayFrame:
         angles_list = self.loadAngles(angles_path)
 
         vid = cv2.VideoCapture(video_path)
+
+        # Reset points for each new exercise
+        self.points = 100
 
         # Get frames and fps for angle calculation
         frames = vid.get(cv2.CAP_PROP_FRAME_COUNT)
@@ -331,11 +335,12 @@ class PlayFrame:
             if cv2.waitKey(25) & 0xFF == ord('q'):
                 break
 
-            # Initialise points and compare angles from live and video frame
-            self.points = 100
+            # Compare angles from live and video frame
             self.compareAngles(live_pose.angles, self.video_angles, frames)
         
-        self.createCountdownPoints(break_time, live_pose, self.points) # Change for new countdown
+        self.createCountdownPoints(break_time, live_pose, self.points)
+        # Add score to total points
+        self.totalPoints += self.points
 
         vid.release()
         live_pose.cap.release()
@@ -371,6 +376,7 @@ class PlayFrame:
     # New function to do countdown with the points labelled (for the second countdown after an exercise)
     def createCountdownPoints(self, time, live_pose, points):
         fps = 30
+        points_str = str(points)
 
         for t in range(time*fps, -1, -1):
             # Create black image
@@ -384,7 +390,7 @@ class PlayFrame:
             minutes, seconds = divmod(time_sec, 60)
             timer_str = f"{minutes:02}:{seconds:02}"
             cv2.putText(vid_frame, timer_str, (self.cvWidth // 2 - 50, self.cvHeight // 2), cv2.FONT_HERSHEY_DUPLEX, 2, (255, 255, 255), 4, cv2.LINE_AA)
-            cv2.putText(vid_frame, points, (self.cvWidth // 2 - 50, self.cvHeight // 2 - 20), cv2.FONT_HERSHEY_DUPLEX, 2, (255, 255, 255), 4, cv2.LINE_AA)
+            cv2.putText(vid_frame, points_str, (self.cvWidth // 2 - 50, self.cvHeight // 2 - 20), cv2.FONT_HERSHEY_DUPLEX, 2, (255, 255, 255), 4, cv2.LINE_AA)
 
             # Combine the frames
             combined_frame = cv2.vconcat([cap_frame, vid_frame])
@@ -425,10 +431,6 @@ class PlayFrame:
                     put this in documentation, including length of videos it can take
                     self.points -= round(100/(6*(fps*time)), 5) fps * time just gives the frames, so can just divide by the frames
                     """
-                    # Have to minus 100 if they dont perform the exercise right? so how do i do the math
-                    # 100/(30*time)
-                    # Problem is this time is determined by how long the video is, need the info from the video_path somehow
-                # Add of statement, takes away a point every 100ms if the angle difference is greater than 2 or something
 
     def back(self):
         self.root.withdraw()
