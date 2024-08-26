@@ -8,7 +8,7 @@ import numpy as np
 import mediapipe as mp
 from mediapipe import solutions
 from mediapipe.framework.formats import landmark_pb2
-import time
+import json
 
 class MainFrame:
     def __init__(self, root):
@@ -18,6 +18,8 @@ class MainFrame:
         self.windowPlacey = 0.1
         self.windowHeight = 0.65
         self.buttonPlacey = 0.75
+
+        self.selected_thumbnail = None
 
         # Create Base canvas layer
         self.canvas = tk.Canvas(self.root, width=1000, height=800, bg='white')
@@ -97,12 +99,13 @@ class MainFrame:
         file_path = filedialog.askopenfilename(filetypes=[("Video files", "*.mp4")])
         if file_path:
             output_path = file_path.replace(".mp4", "_processed.mp4") # This creates the output path for use in processing the video and add _process onto the end to differentiate the video
-            processed_video = self.processVideo(file_path, output_path)
-            self.addThumbnail(output_path)
+            angles_output_path = file_path.replace(".mp4", "_angles.json") # This should create a Json file and an output path leadin to that json file
+            processed_video = self.processVideo(file_path, output_path, angles_output_path)
+            self.addThumbnail(output_path, angles_output_path)
 
-    def processVideo(self, video_path, output_path):
+    def processVideo(self, video_path, output_path, angles_output_path):
         try:
-            processedVideo = videoPose(video_path, output_path)
+            processedVideo = videoPose(video_path, output_path, angles_output_path)
             processedVideo.drawPose()
             return processedVideo
         except:
@@ -120,11 +123,12 @@ class MainFrame:
         cap.release()
         return None
     
-    def addThumbnail(self, video_path):
+    def addThumbnail(self, video_path, angles_path):
         thumbnail = self.getThumbnail(video_path)
         label = tk.Label(self.exVidFrame, bg="lightgreen", image=thumbnail)
         label.image = thumbnail  # Keep a reference to avoid garbage collection, python may delete the image without a reference
         label.video_path = video_path # Store the video path in the thumbnail
+        label.angles_path = angles_path # Store the angles in the thumbnail
         label.pack(padx=10, pady=10)
         label.bind("<Button-1>", lambda e: self.selectThumbnail(label))
         label.bind("<Button-3>", lambda e: self.playVideo(label.video_path))
@@ -151,6 +155,7 @@ class MainFrame:
     def delete(self):
         if self.selected_thumbnail:
             video_path = self.selected_thumbnail.video_path
+            angles_path = self.selected_thumbnail.angles_path
             self.selected_thumbnail.destroy()
             self.selected_thumbnail = None
             try:
@@ -158,11 +163,17 @@ class MainFrame:
             except:
                 print("error deleting video path")
 
+            try:
+                os.remove(angles_path)
+            except:
+                print("error deleting angles file")
+
     def add(self):
         if self.selected_thumbnail:
             new_label = tk.Label(self.workoutFrame, image=self.selected_thumbnail.image)
             new_label.image = self.selected_thumbnail.image  # Keep a reference to avoid garbage collection
             new_label.video_path = self.selected_thumbnail.video_path  # Store the video path in the new thumbnail
+            new_label.angles_path = self.selected_thumbnail.angles_path # Store the angles in the thumbnail
             new_label.pack(padx=10, pady=10)
             new_label.bind("<Button-1>", lambda e: self.selectThumbnail(new_label))
             new_label.bind("<Button-3>", lambda e: self.playVideo(new_label.video_path))
@@ -174,6 +185,7 @@ class MainFrame:
             new_label = tk.Label(self.exVidFrame, image=self.selected_thumbnail.image)
             new_label.image = self.selected_thumbnail.image  # Keep a reference to avoid garbage collection
             new_label.video_path = self.selected_thumbnail.video_path  # Store the video path in the new thumbnail
+            new_label.angles_path = self.selected_thumbnail.angles_path # Store the angles in the thumbnail
             new_label.pack(padx=10, pady=10)
             new_label.bind("<Button-1>", lambda e: self.selectThumbnail(new_label))
             new_label.bind("<Button-3>", lambda e: self.playVideo(new_label.video_path))
@@ -193,12 +205,13 @@ class MainFrame:
     # Functions for switching canvas
     def play(self):
         video_paths = [label.video_path for label in self.workoutFrame.winfo_children()]
+        angles_paths = [label.angles_path for label in self.workoutFrame.winfo_children()]
         time = self.breakTime.cget("text")
         minutes, seconds = map(int, time.split(":"))
         break_time = minutes * 60 + seconds
         self.root.withdraw()  # Hide the current window
         new_root = tk.Toplevel(self.root, height=1000, width=800)
-        PlayFrame(new_root, self.root, video_paths, break_time)
+        PlayFrame(new_root, self.root, video_paths, angles_paths, break_time)
 
 
 
@@ -209,63 +222,173 @@ class MainFrame:
 
 
 class PlayFrame:
-    def __init__(self, root, main_frame, video_paths, break_time):
+    def __init__(self, root, main_frame, video_paths, angles_paths, break_time):
         self.root = root
         self.main_frame = main_frame
         self.video_paths = video_paths
+        self.angles_paths = angles_paths
         self.break_time = break_time
 
         self.cvHeight = 400
         self.cvWidth = 600
+
+        self.differenceThreshold = 5
+
+        # Initialise points
+        self.points = 100
+        self.totalPoints = 0
+
+        # Leaderboard 
+        self.leaderboardFile = "leaderboard.json"
+
+        #Initialise angles dict to be filled with angles each frame and the index of the angles list being read
+        self.video_angles = {}
+        self.angles_idx = 0
 
         # Create Base canvas layer
         self.root.title("Results")
         self.canvas = tk.Canvas(self.root, width=1000, height=800, bg='white')
         self.canvas.pack(anchor=tk.CENTER, expand=True)
 
-        self.ResultsText = tk.Label(self.canvas, text="Results")
-        self.ResultsText.place(relx=0.45, rely=0.2, relwidth=0.1, relheight=0.1)
+        self.nameEntryText = tk.Label(self.canvas, text="Name:")
+        self.nameEntryText.place(relx=0.1, rely=0.1, relwidth=0.1, relheight=0.05)
+        self.nameEntry = tk.Entry(self.canvas)
+        self.nameEntry.place(relx=0.2, rely=0.1, relwidth=0.2, relheight=0.05)
+
+        self.scoreText = tk.Label(self.canvas, text="Score:")
+        self.scoreText.place(relx=0.4, rely=0.1, relwidth=0.1, relheight=0.05)
+        self.scoreNum = tk.Label(self.canvas, text=str(int(self.totalPoints)))
+        self.scoreNum.place(relx=0.5, rely=0.1, relwidth=0.2, relheight=0.05)
+
+        self.addButton = tk.Button(self.canvas, text="Add to Leaderboard", command=self.add)
+        self.addButton.place(relx=0.7, rely=0.1, relwidth=0.2, relheight=0.05)
+
+        self.leaderBoardText = tk.Label(self.canvas, text="Leaderboard")
+        self.leaderBoardText.place(relx=0.45, rely=0.3, relwidth=0.1, relheight=0.05)
+        self.leaderBoardNames = tk.Listbox(self.canvas, height=10, width=30)
+        #self.leaderBoardScore = tk.Listbox(self.canvas, height=10, width=30)
+        self.leaderBoardNames.place(relx=0.1, rely=0.35, relwidth=0.8, relheight=0.5)
+        #self.leaderBoardScore.place(relx=0.5, rely=0.35, relwidth=0.4, relheight=0.5)
+        self.leaderboardNameList = []
+        #self.leaderboardScoreList = []
 
         self.backButton = tk.Button(self.canvas, text="Back", command=self.back)
-        self.backButton.place(relx=0.45, rely=0.4, relwidth=0.1, relheight=0.1)
+        self.backButton.place(relx=0.1, rely=0.25, relwidth=0.1, relheight=0.05)
 
         self.playWorkout(self.break_time)
 
+        # Initialize the leaderboard list and load any existing data
+        self.leaderboardNameList = self.load()
+        self.update()
 
+
+    # Leaderboard functions
+    def add(self):
+        name = self.nameEntry.get().strip()
+        score = str(self.totalPoints)
+
+        if name and self.totalPoints!=0:  # Ensure the name is not empty
+            entry = f"{name}: {score}"
+            self.leaderboardNameList.append(entry)
+            self.update()
+            self.nameEntry.delete(0, tk.END)
+            self.totalPoints = 0
+            self.scoreNum.config(text=str(self.totalPoints))
+            self.save()
+
+    def update(self):
+        self.leaderBoardNames.delete(0, tk.END)
+        for i, entry in enumerate(self.leaderboardNameList):
+            self.leaderBoardNames.insert(tk.END, f"{i + 1}. {entry}")
+        return
+    
+    def save(self):
+        with open(self.leaderboardFile, "w") as file:
+            json.dump(self.leaderboardNameList, file, indent=4)
+
+    def load(self):
+        if os.path.exists(self.leaderboardFile):
+            with open(self.leaderboardFile, "r") as file:
+                return json.load(file)
+        return []
+
+
+    # Workout functions
     def playWorkout(self, break_time):
         live_pose = livePose()
 
         self.createCountdown(5, live_pose)
 
         for video_path in self.video_paths:
-            self.startVideoandLive(live_pose, video_path, break_time)
+            for angles_path in self.angles_paths:
+                self.startVideoandLive(live_pose, video_path, angles_path, break_time)
 
+        # Update textbox with final score
+        self.scoreNum.config(text=str(int(self.totalPoints)))
 
-    def startVideoandLive(self, live_pose, video_path, break_time):
+    # Angles path should now be fed here, so all i need to do now
+    # is use the angles path and the method in livepose to get live
+    # angles and compare the two
+    def startVideoandLive(self, live_pose, video_path, angles_path, break_time):
+        # Load list of video angle dicts
+        angles_list = self.loadAngles(angles_path)
 
         vid = cv2.VideoCapture(video_path)
 
+        # Reset points for each new exercise
+        self.points = 100
+
+        # Get frames and fps for angle calculation
+        frames = vid.get(cv2.CAP_PROP_FRAME_COUNT)
+        fps = vid.get(cv2.CAP_PROP_FPS)
+
+        if not vid.isOpened():
+            print(f"Error: Cannot open video file {video_path}")
+            return
+        
+        live_pose.cap = cv2.VideoCapture(0)
         while live_pose.cap.isOpened() and vid.isOpened():
             vid_ret, vid_frame = vid.read()
 
+            # Set the video angles dict to the next frame of angles
+            self.video_angles = angles_list[self.angles_idx]
+            self.angles_idx += 1
+
             # Stop if video or live feed fail
             if not vid_ret:
+                print("Error: Could not read frame from video.")
                 break
 
             # Process live frame
             image = live_pose.drawPose()
 
+            if image is None:
+                print("Error: No frame captured from live feed.")
+                break
+
             # Resize frames
-            image = cv2.resize(image, (self.cvWidth, self.cvHeight))
-            vid_frame = cv2.resize(vid_frame, (self.cvWidth, self.cvHeight))
+            try:
+                image = cv2.resize(image, (self.cvWidth, self.cvHeight))
+                vid_frame = cv2.resize(vid_frame, (self.cvWidth, self.cvHeight))
+            except cv2.error as e:
+                print(f"Error during resizing: {e}")
+                break
 
             # Combine the frames
             combined_frame = cv2.vconcat([image, vid_frame])
             cv2.imshow('Combined Feed', combined_frame)
             if cv2.waitKey(25) & 0xFF == ord('q'):
                 break
+
+            # Compare angles from live and video frame
+            self.compareAngles(live_pose.angles, self.video_angles, frames)
         
-        self.createCountdown(break_time, live_pose)
+        # Add score to total points
+        self.totalPoints += self.points
+
+        # Create countdown with points label
+        self.createCountdownPoints(break_time, live_pose, self.totalPoints)
+        
 
         vid.release()
         live_pose.cap.release()
@@ -297,6 +420,65 @@ class PlayFrame:
             if cv2.waitKey(int(1000 / fps)) & 0xFF == ord('q'):
                 break
 
+    
+    # New function to do countdown with the points labelled (for the second countdown after an exercise)
+    def createCountdownPoints(self, time, live_pose, points):
+        fps = 30
+        points_str = "Points: " + str(int(points))
+
+        for t in range(time*fps, -1, -1):
+            # Create black image
+            cap_frame = live_pose.drawPose()
+            cap_frame = cv2.resize(cap_frame, (self.cvWidth, self.cvHeight))
+            vid_frame = np.zeros((self.cvHeight, self.cvWidth, 3), dtype=np.uint8)
+
+            # Display countdown timer
+            # Change this so the number only updates at each second
+            time_sec = t//30
+            minutes, seconds = divmod(time_sec, 60)
+            timer_str = f"{minutes:02}:{seconds:02}"
+            cv2.putText(vid_frame, timer_str, (self.cvWidth // 2 - 80, self.cvHeight // 2 + 50), cv2.FONT_HERSHEY_DUPLEX, 2, (255, 255, 255), 4, cv2.LINE_AA)
+            cv2.putText(vid_frame, points_str, (self.cvWidth // 2 - 160, self.cvHeight // 2 - 50), cv2.FONT_HERSHEY_DUPLEX, 2, (255, 255, 255), 4, cv2.LINE_AA)
+
+            # Combine the frames
+            combined_frame = cv2.vconcat([cap_frame, vid_frame])
+
+            # Show the frame multiple times to achieve the desired duration
+            #for _ in range(fps):
+            cv2.imshow('Combined Feed', combined_frame)
+            if cv2.waitKey(int(1000 / fps)) & 0xFF == ord('q'):
+                break
+
+    # Open json file
+    def loadAngles(self, angles_path):
+        with open(angles_path, 'r') as f:
+            angles_list = json.load(f)
+        return angles_list
+    
+    # Points System
+    # This compares single set of live and video angles
+    def compareAngles(self, live_angles, video_angles, frames):
+
+        for key in live_angles:
+            live_angle = live_angles.get(key)
+            video_angle = video_angles.get(key)
+            
+            if live_angle is None or video_angle is None:
+                return None
+                # print(f"Angle at {key} could not be calculated in one of the feeds.")
+            else:
+                difference = abs(live_angle - video_angle)
+                # print(f"Angle difference at {key}: {difference}")
+                if difference > self.differenceThreshold:
+                    self.points -= round(100/(6*(frames)), 5)  # Cant be int but dont want recurring numbers (currently can do videos over 100 seconds, but not by much)
+                    """
+                    TO DO: Get the frames from the video file the upload button saves
+                    Math: divide by the number of frames times time
+                    divide by the number of angles being compared (6 right now)
+                    doesnt matter if they return none, that means they just dont get points taken away
+                    put this in documentation, including length of videos it can take
+                    self.points -= round(100/(6*(fps*time)), 5) fps * time just gives the frames, so can just divide by the frames
+                    """
 
     def back(self):
         self.root.withdraw()
