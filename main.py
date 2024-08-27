@@ -106,8 +106,11 @@ class videoPose:
 
     # Save list of dictionaries of angles to file
     def saveAngles(self, angles_list):
-        with open(self.angles_output_path, 'w') as f:
-            json.dump(angles_list, f, indent = 4)
+        try:
+            with open(self.angles_output_path, 'w') as f:
+                json.dump(angles_list, f, indent = 4)
+        except:
+            print("Error creating angles file")
 
 
     # Visibilty check for keypoints
