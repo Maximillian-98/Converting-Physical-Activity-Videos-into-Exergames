@@ -319,9 +319,12 @@ class PlayFrame:
 
         self.createCountdown(5, live_pose)
 
-        for video_path in self.video_paths:
-            for angles_path in self.angles_paths:
-                self.startVideoandLive(live_pose, video_path, angles_path, break_time)
+
+        for video_path, angles_path in zip(self.video_paths, self.angles_paths):
+            print(f"Output video path: {video_path}")
+            print(f"Angles output path: {angles_path}")
+        
+            self.startVideoandLive(live_pose, video_path, angles_path, break_time)
 
         # Update textbox with final score
         self.scoreNum.config(text=str(int(self.totalPoints)))
@@ -335,7 +338,8 @@ class PlayFrame:
 
         vid = cv2.VideoCapture(video_path)
 
-        # Reset points for each new exercise
+        # Reset points and angles index for each new exercise
+        self.angles_idx = 0
         self.points = 100
 
         # Get frames and fps for angle calculation
