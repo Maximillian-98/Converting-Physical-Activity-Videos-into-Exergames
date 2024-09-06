@@ -26,7 +26,7 @@ class MainFrame:
         self.canvas.pack(anchor=tk.CENTER, expand=True)
 
         # Text
-        self.title = tk.Label(self.canvas, text="To be Named")
+        self.title = tk.Label(self.canvas, text="Workout App")
         self.title.place(relx=0.45, rely=0, relwidth=0.1, relheight=0.05)
         self.exVidTitle = tk.Label(self.canvas, text="Exercise Videos")
         self.exVidTitle.place(relx=0.2, rely=0.05, relwidth=0.1, relheight=0.05)
